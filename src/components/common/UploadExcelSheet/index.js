@@ -50,8 +50,13 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const AddNewModal = ({ setIsModalOpen, isModalOpen }) => {
-  const [excelSheet, setExcelSheet] = useState(null);
+const AddNewModal = ({
+  setIsModalOpen,
+  isModalOpen,
+  excelSheet,
+  setExcelSheet,
+}) => {
+  
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -89,6 +94,7 @@ const AddNewModal = ({ setIsModalOpen, isModalOpen }) => {
             </svg>
             Excel sheet upload
             <input
+              style={{border:"0px", backgroundColor:"#ffff"}}
               type="file"
               id="uploadFile1"
               accept=".xlsx, .xls, .csv"

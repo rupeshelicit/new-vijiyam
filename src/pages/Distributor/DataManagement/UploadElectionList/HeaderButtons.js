@@ -17,7 +17,7 @@ const HeaderButtons = () => {
           onClick={() => navigate("/elections-list")}
         />
         {/* <ButtonComponent text={"Blank Excel Export"} Icons={<ExcelIcons />} /> */}
-        <ExportToExcel buttonText={"Blank Excel Export"} Icons={<ExcelIcons />}/>
+        <ExportToExcel buttonText={"Blank Excel Export"} Icons={<ExcelIcons />} excelName="ElectionDemo"/>
       </div>
     </div>
   );

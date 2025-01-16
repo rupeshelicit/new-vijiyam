@@ -8,7 +8,7 @@ const SwitchComponent = ({
   disabled,
 }) => {
   if (!record || !record.id) {
-    console.error("Record is not defined or missing id:", record);
+    // console.error("Record is not defined or missing id:", record);
     return null;
   }
 

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Button, Form, Modal, Upload } from "antd";
 import styled from "styled-components";
-import { UPLOAD_VOTER_EXCEL } from "constants/api";
 import usePost from "hooks/usePost";
+import { UPLOAD_KARYKARTA_LIST } from "constants/api";
+import { toast } from "react-toastify";
 
 const StyledModal = styled(Modal)`
   .ant-modal-content {
@@ -52,10 +53,10 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
-  const [uploadFile, setuploadFile] = useState(null);
-  const { mutateAsync: UploadVotersExcel } = usePost();
-    const [loading, setLoading] = useState(false);
+const AddNewKaryKarta = ({ setIsModalOpen, isModalOpen }) => {
+  const [excelSheet, setExcelSheet] = useState();
+  const [loading, setLoading] = useState(false);
+  const { mutateAsync: UploadKaryakarta } = usePost();
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const closeModal = () => {
     setIsModalOpen(false);
@@ -63,22 +64,22 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setuploadFile(file);
+    setExcelSheet(file);
   };
 
   const handleUploadExcel = async () => {
-    if (uploadFile) {
-      console.log(uploadFile);
-      const upladeFileName = uploadFile;
+    if (excelSheet) {
+      console.log(excelSheet);
+      const upladeFileName = excelSheet;
       const formData = new FormData();
-      formData.append("excelFile", uploadFile);
+      formData.append("excelFile", excelSheet);
       formData.append("createdBy", loginUsers.id);
 
       try {
         setLoading(true);
 
-        const response = await UploadVotersExcel({
-          url: UPLOAD_VOTER_EXCEL,
+        const response = await UploadKaryakarta({
+          url: UPLOAD_KARYKARTA_LIST,
           type: "details",
           payload: formData,
           token: true,
@@ -87,12 +88,15 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
 
         if (response) {
           toast.success("Files uploaded successfully!", {
-                   position: "top-right",
+            position: "top-right",
           });
-          setIsModalOpen(false)
+          setIsModalOpen(false);
         }
       } catch (err) {
         console.error("Error uploading file:", err);
+        toast.error("Error uploading files. Please try again.", {
+          position: "top-right",
+        });
       } finally {
         setLoading(false);
       }
@@ -100,6 +104,7 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
       console.warn("No file selected for upload.");
     }
   };
+
   return (
     <StyledModal
       title="Upload Voter List"
@@ -117,9 +122,8 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
               <path d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z" />
               <path d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z" />
             </svg>
-            Excel sheet upload
+            Mobile No. excel sheet upload
             <input
-              style={{border:"0px",backgroundColor:"#fff"}}
               type="file"
               id="uploadFile1"
               accept=".xlsx, .xls, .csv"
@@ -128,9 +132,8 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
           </UploadLabel>
         </Form.Item>
 
-        {/* Submit Button */}
         <Form.Item>
-          <StyledButton type="primary" htmlType="submit">
+          <StyledButton type="primary" htmlType="submit" loading={loading}>
             Submit
           </StyledButton>
         </Form.Item>
@@ -139,4 +142,4 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
   );
 };
 
-export default AddNewVoters;
+export default AddNewKaryKarta;

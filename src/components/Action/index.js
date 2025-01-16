@@ -4,13 +4,13 @@ import React from "react";
 
 const ActionsButton = ({ record }) => {
   const handleAction = (action, record) => {
-    if (action === "view") {
-      console.log("View action for:", record);
-    } else if (action === "edit") {
-      console.log("Edit action for:", record);
-    } else if (action === "delete") {
-      console.log("Delete action for:", record);
-    }
+    // if (action === "view") {
+    //   // console.log("View action for:", record);
+    // } else if (action === "edit") {
+    //   console.log("Edit action for:", record);
+    // } else if (action === "delete") {
+    //   console.log("Delete action for:", record);
+    // }
   };
   const menu = (
     <Menu>

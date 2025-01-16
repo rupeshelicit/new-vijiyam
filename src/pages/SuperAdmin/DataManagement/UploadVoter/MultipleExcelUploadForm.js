@@ -6,13 +6,13 @@ import usePost from "hooks/usePost";
 import { UPLOAD_VOTER_EXCEL } from "constants/api";
 
 export default function ExcelUpload() {
-  const [files, setFiles] = useState([]);
-  const [uploadingFile, setUploadingFile] = useState(null);
-  const [uploadedFile, setUploadedFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const { mutateAsync: uploadExcelFile } = usePost();
+  const [files, setFiles] = useState([]); // Holds file objects with progress
+  const [uploadingFile, setUploadingFile] = useState(null); // Current file being uploaded
+  const [loading, setLoading] = useState(false); // Form loading state
+  const { mutateAsync: uploadExcelFile } = usePost(); // API hook for POST requests
   const loginUser = JSON.parse(localStorage.getItem("userDetails"));
   const [form] = Form.useForm();
+
 
   const updateProgress = (file) => {
     const interval = setInterval(() => {
@@ -28,42 +28,44 @@ export default function ExcelUpload() {
     setTimeout(() => {
       clearInterval(interval);
       setUploadingFile(null);
-      setUploadedFile(file.name);
     }, 3000);
-  };
-
-  const simulateFileUpload = (file) => {
-    setUploadingFile(file.name);
-    updateProgress(file);
   };
 
   const onDrop = useCallback((acceptedFiles) => {
     const newFiles = acceptedFiles.map((file) => ({
+      file, // Store the actual file object
       name: file.name,
       progress: 0,
     }));
     setFiles((prev) => [...prev, ...newFiles]);
-    newFiles.forEach(simulateFileUpload);
+    newFiles.forEach(updateProgress);
   }, []);
 
+  // Remove a file from the list
   const removeFile = (fileName) => {
     setFiles((prev) => prev.filter((file) => file.name !== fileName));
     if (uploadingFile === fileName) setUploadingFile(null);
-    if (uploadedFile === fileName) setUploadedFile(null);
   };
 
-  const handleUpload = async () => {
-    const fileNamesArray = files.map((file) => file.name);
 
-    if (fileNamesArray.length === 0) {
+  const handleUpload = async () => {
+    if (files.length === 0) {
       console.warn("No files to upload.");
       return;
     }
-
+  
     const formData = new FormData();
-    formData.append("excelFile", fileNamesArray.join(","));
+  
+    // Create an array of file objects with name and file content
+    const fileArray = files.map((fileObj) => ({
+      name: fileObj.name,
+      file: fileObj.file, // Actual file object
+    }));
+  
+    // Append serialized array of file objects to FormData
+    formData.append("excelFiles", JSON.stringify(fileArray));
     formData.append("createdBy", loginUser.id);
-
+  
     try {
       setLoading(true);
       const response = await uploadExcelFile({
@@ -80,7 +82,7 @@ export default function ExcelUpload() {
       setLoading(false);
     }
   };
-
+  
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
@@ -101,7 +103,10 @@ export default function ExcelUpload() {
       <Form form={form} layout="vertical" onFinish={handleUpload}>
         <div className="content pt-[20px] bg-[#EEEEEE63] p-[15px] rounded-[8px]">
           <Form.Item>
-            <div {...getRootProps()} className="bg-white hover:bg-gray-50 transition-colors">
+            <div
+              {...getRootProps()}
+              className="bg-white hover:bg-gray-50 transition-colors"
+            >
               <div className="border-2 border-dashed border-[#54408C] rounded-lg p-8 cursor-pointer">
                 <input {...getInputProps()} />
                 <div className="text-center">
@@ -118,14 +123,16 @@ export default function ExcelUpload() {
           {files.length > 0 && (
             <div className="uploaded-files-section">
               {files.map((file) => (
-                <div key={file.name} className="uploaded-file bg-white border border-green-500 rounded-md mb-5 p-[5px] flex justify-between items-center max-w-[445px]">
+                <div
+                  key={file.name}
+                  className="uploaded-file bg-white border border-green-500 rounded-md mb-5 p-[5px] flex justify-between items-center max-w-[445px]"
+                >
                   <span className="text-gray-800 font-medium">{file.name}</span>
                   <Button
                     type="text"
                     icon={<CloseOutlined />}
                     onClick={() => removeFile(file.name)}
                     className="text-red-500 hover:text-red-700"
-                    disabled={uploadingFile === file.name}
                   />
                 </div>
               ))}
@@ -155,8 +162,9 @@ export default function ExcelUpload() {
             style={{ width: "100%" }}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#432C6A")}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#54408C")}
+            loading={loading}
           >
-            Submit Sheet
+            {loading ? "Uploading..." : "Submit Sheet"}
           </Button>
         </Form.Item>
       </Form>

@@ -212,6 +212,7 @@ export const UploadElectionListDistributorRoute = {
   restricted: true,
 };
 
+
 export const ClientListDistributorRoute = {
   component: ClientListDistributor,
   path: "/client-list",

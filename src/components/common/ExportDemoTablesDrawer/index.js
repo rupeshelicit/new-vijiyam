@@ -84,6 +84,7 @@ const ExportTable = ({ setOpen, open, title, columns, data = [] }) => {
             buttonText={"Download Table"}
             columns={selectHeaders}
             type="excel"
+            excelName="VoterList"
           />
         </Form>
       </Drawer>

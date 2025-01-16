@@ -172,3 +172,6 @@ span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
   flex-direction: row-reverse !important;
 }
 
+.ant-btn-primary:hover{
+  background-color: #55418d !important;
+}
