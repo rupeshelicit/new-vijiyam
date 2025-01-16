@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body,
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+b,
+strong,
+div,
+td,
+th {
+  font-family: "Poppins", serif;
+}
+
+.ant-menu-submenu-popup:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 1;
+  width: 20px;
+  height: 20px;
+  transform: rotate(-45deg);
+  border-top: 1px solid #fff;
+  border-right: 1px solid #fff;
+  text-align: center;
+  background: #fff;
+  margin-left: 10px;
+  border-radius: 4px;
+  box-shadow: 1px 4px 7px #fff;
+}
+
+.login-shortcut-modal .ant-modal-content {
+  padding: 0px;
+}
+
+.login-shortcut-modal .login-type-btn .ant-radio-group .ant-radio-wrapper .ant-radio {
+  opacity: 0;
+}
+
+.login-shortcut-modal .login-type-btn .ant-radio-group .ant-radio-wrapper {
+  background-color: #d9d9d97d;
+  color: #9b9595;
+  opacity: 0.5;
+}
+
+.login-shortcut-modal .login-type-btn .ant-radio-group .ant-radio-wrapper-checked {
+  background-color: #fff;
+  opacity: 1;
+  color: #000;
+}
+
+.login-shortcut-modal .login-type-btn .ant-radio-group .ant-radio-wrapper {
+  width: 50%;
+  justify-content: center;
+  padding: 16px;
+  margin: 0px;
+}
+
+.login-shortcut-modal .login-type-btn .ant-radio-group {
+  width: 100%;
+  border-radius: 7px 7px 0px 0px;
+  overflow: hidden;
+}
+
+.login-shortcut-modal .login-form {
+  padding: 20px;
+}
+
+.user-profile-Modal button {
+  display: block;
+  width: 70%;
+  margin: 0 auto 20px;
+  padding: 10px 0;
+  height: auto;
+}
+
+.user-profile-Modal .userImage img {
+  width: 100%;
+  object-fit: cover;
+  height: auto;
+  border-radius: 50%;
+}
+
+.user-profile-Modal .userImage {
+  width: 70px;
+  height: 70px;
+}
+
+.user-profile-Modal {
+  min-width: 400px;
+  text-align: center;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.user-profile-Modal .userName {
+  text-align: center;
+  margin: 10px 0px 20px;
+  font-size: 24px;
+}
+
+.profile-iamge input {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  width: 30px;
+}
+
+.editicon {
+  position: relative;
+  top: -23px;
+  right: -43px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  overflow: hidden;
+
+}
+
+.profile-iamge {
+  width: 70px;
+  margin: 0 auto;
+}
+
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar,
+::-webkit-scrollbar-track {
+  width: 3px;
+  height: 3px;
+}
+
+.custom-pophover .ant-popover-inner {
+  border-radius: 20px;
+  margin-right: 10px;
+  box-shadow: rgb(187 183 183 / 78%) -4px 6px 20px !important;
+}
+
+.custom-pophover {
+  border-radius: 20px;
+}
+
+main.ant-layout-content {
+
+  overflow: auto;
+  margin: 10px 0 0;
+  padding: 0px 16px;
+  min-height: 280px;
+  height: calc(100vh - 100px);
+}
+
+/* form inputFiled css */
+
+.ant-input-outlined:focus,
+.ant-input-outlined:focus-within {
+  border-color: #604d94;
+  background-color: #ffffff;
+  box-shadow: none;
+}
+
+span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
+
+  border-color: #55418d;
+}
+
+.ant-drawer-header-title {
+  flex-direction: row-reverse !important;
+}
+
