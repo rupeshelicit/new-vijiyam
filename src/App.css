@@ -172,3 +172,42 @@ span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
   flex-direction: row-reverse !important;
 }
 
+.sidebar-item:hover svg rect,
+.sidebar-item:hover svg path {
+  stroke: #fff !important;
+  /* fill: #fff; */
+}
+
+.iconimages {
+  min-width: 24px;
+}
+.ant-table::-webkit-scrollbar,
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.ant-table::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #f1f1f1;
+}
+ .ant-table-content table  th {
+  text-align: left !important;
+  white-space: nowrap;
+}
+.ant-table-content table tr td {
+    text-align: left !important;
+  white-space: nowrap;
+}
