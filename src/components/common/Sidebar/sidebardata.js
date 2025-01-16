@@ -63,6 +63,14 @@ const SidebarData = [
     roleId: ["5"],
     children: [
       {
+        id: 1203,
+        title: "Distributor  User",
+        icon: <UserIcon />,
+        path: "/distributor",
+        disable: true,
+        roleId: [ "5" ],
+      },
+      {
         id: 1201,
         title: "Client Admin",
         icon: <UserIcon />,
@@ -77,15 +85,8 @@ const SidebarData = [
         // path: "text-message",
         disable: true,
         roleId: ["5"],
-      },
-      {
-        id: 1203,
-        title: "Distributor  User",
-        icon: <UserIcon />,
-        path: "/distributor",
-        disable: true,
-        roleId: ["5"],
-      },
+      }
+    
     ],
   },
   {
@@ -240,7 +241,7 @@ const SidebarData = [
         icon: <SendMessageIcon />,
         path: "/text-message",
         disable: true,
-        roleId: [, "3"],
+        roleId: [ "3"],
       },
     ],
   },

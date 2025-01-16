@@ -17,9 +17,7 @@ const ButtonComponent = ({ text, subText, onClick, Icons }) => {
           className="flex gap-[5px] items-center border-[1px] border-[#D0D5DD] px-[15px] py-[10px] rounded-[4px]"
           onClick={handleButtonClick}
         >
-          <span className="icon">
-            {React.isValidElement(Icons) ? Icons : ""}
-          </span>
+         
           <div className="text-wrapper">
             <span className="text-[13px] font-medium text-[#344054]">
               {text}

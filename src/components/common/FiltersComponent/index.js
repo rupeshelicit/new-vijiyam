@@ -81,11 +81,21 @@ export default function VoterFilter() {
                 <FilterOutlined className="text-lg" />
                 <h3 className="text-xl font-bold">Filters</h3>
               </div>
-              {isExpanded ? (
-                <UpOutlined className="text-lg" />
-              ) : (
-                <DownOutlined className="text-lg" />
-              )}
+              <svg
+                className={ `transition-[0.3s] ${ isExpanded ? '-rotate-180' : '' }` }
+                width="12"
+                height="7"
+                viewBox="0 0 12 7"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M11.1984 0.416992L11.8799 1.14279L6.88099 6.46719C6.75887 6.59533 6.59546 6.66699 6.42537 6.66699C6.25528 6.66699 6.09187 6.59533 5.96976 6.46719L0.970825 1.14279L1.65296 0.416992L6.42537 5.49968L11.1984 0.416992Z"
+                  fill="#000"
+                />
+              </svg>
             </div>
 
             {filters.length > 0 && (

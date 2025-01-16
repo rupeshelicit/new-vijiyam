@@ -70,12 +70,12 @@ const PrivateLayout = ( { children } ) =>
     children.map( ( child, index ) => (
       <div
         key={ `child-${ parentIndex }-${ index }` }
-        className={ `py-2 px-2 cursor-pointer hover-links mb-2 ${ activePath === child.path ? "child-active" : ""
+        className={ `sidebar-item py-2 px-2 cursor-pointer hover-links mb-2 ${ activePath === child.path ? "child-active" : ""
           }` }
         onClick={ ( e ) => handleChildClick( child.path, e ) }
       >
         <div className="flex items-center">
-          <span className="icon">{ renderIcon( child.icon, child.title ) }</span>
+          <span className="icon iconimages">{ renderIcon( child.icon, child.title ) }</span>
           <span className="ml-2 text-base font-semibold">{ child.title }</span>
         </div>
       </div>
@@ -89,11 +89,11 @@ const PrivateLayout = ( { children } ) =>
       return (
         <div key={ `sidebar-item-${ index }` } className="py-2 mb-1">
           <div
-            className={ `flex items-center cursor-pointer px-4 py-2 relative hover-links ${ isActive ? "active" : isExpanded ? "active-parent" : ""
+            className={ ` sidebar-item flex items-center cursor-pointer px-4 py-2 relative hover-links ${ isActive ? "active" : isExpanded ? "active-parent" : ""
               }` }
             onClick={ ( e ) => handleSidebarClick( index, !!data.children, e ) }
           >
-            <span className="icon">{ renderIcon( data.icons, data.title ) }</span>
+            <span className="icon iconimages">{ renderIcon( data.icons, data.title ) }</span>
             <span className="ml-2 font-semibold text-base">{ data.title }</span>
             { data.children && (
               <img
@@ -118,7 +118,7 @@ const PrivateLayout = ( { children } ) =>
           <div className="flex">
             {/* Sidebar */ }
             <div className="w-[310px] pt-5 pl-5 pr-4 [box-shadow:0px_2px_10px_0px_#0000002B] min-h-[100vh]">
-              <div className="logo pb-16">
+              <div className="logo pb-10">
                 <img src={ sideBarLogo } alt="Sidebar Logo" />
               </div>
               { renderSidebarItems() }

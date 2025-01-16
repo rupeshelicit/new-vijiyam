@@ -35,7 +35,5 @@ export const VoterFilterContainer = styled.div`
     box-shadow: none;
     outline: 0;
   }
-  span.anticon.anticon-filter.text-lg svg {
-    margin-top: -11px;
-  }
+
 `;

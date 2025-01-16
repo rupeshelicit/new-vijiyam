@@ -135,21 +135,16 @@ const AddNewClient = () => {
                     {
                       required: false,
                       message: "Please enter the Gmail",
-                    },
-                    {
-                      pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
-                      message:
-                        "Please enter a valid Gmail address (e.g., user@gmail.com)",
-                    },
+                    }
                   ]}
                 >
-                  <Input
-                    placeholder="Enter Gmail"
-                    maxLength={50}
+                  <FormInput
                     name="email"
-                    className="email"
+                    placeholder="Enter Gmail"
+                    required={ false }
                   />
                 </Form.Item>
+                
               </Col>
 
               <Col span={8}>
