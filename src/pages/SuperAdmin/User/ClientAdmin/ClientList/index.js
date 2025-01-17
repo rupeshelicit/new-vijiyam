@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Container } from "styles/components/common/Layout";
 import deleteIcon from "assets/svg/trans-icon.svg";
 
@@ -10,6 +10,7 @@ import SwitchComponent from "components/common/SwitchComponent";
 import { ClientListSection } from "styles/pages/SuperAdmin/user";
 import { useNavigate } from "react-router-dom";
 import useGet from "hooks/useGet";
+import { GET_CLIENTS_LIST } from "constants/api";
 
 function ClientList() {
   const navigate = useNavigate();
@@ -20,8 +21,10 @@ function ClientList() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [clientData, setClientData] = useState([]);
+  const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const { mutateAsync: ClientList } = useGet();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [prevPage, setPrevPage] = useState(0);
   const handleAddnewclient = () => {
     navigate("/add-new-client");
   };
@@ -175,21 +178,28 @@ function ClientList() {
     },
   ];
 
-  const getClientData = () => {
-    ClientList({
-      url: "url",
+  const getClietnList = async (page, limit) => {
+    const id = loginUsers.role;
+    await ClientList({
+      url: `${GET_CLIENTS_LIST+id}?page=${page}&limit=${limit}`,
       type: "details",
+      token: true,
     })
       .then((res) => {
         if (res) {
-          console.log(res);
+          let newRes = [...voterData];
+          newRes = newRes.concat(res?.items);
+          setClientData(newRes);
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.log(error));
   };
-
+  useMemo(() => {
+    if (currentPage > prevPage) {
+      getClietnList(currentPage, 10);
+      setPrevPage((prev) => prev + 1);
+    }
+  }, [currentPage]);
   const onSelectChange = (newSelectedRowKeys, newSelectedRows) => {
     console.log("Selected Row Keys:", newSelectedRowKeys);
     console.log("Selected Rows:", newSelectedRows);
@@ -243,6 +253,7 @@ function ClientList() {
               rowSelection={rowSelection}
               columns={columns}
               data={data}
+              setCurrentPage={10}
             />
             <div className="flex items-center mb-4">
               <input

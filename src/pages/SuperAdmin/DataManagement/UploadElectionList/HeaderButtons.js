@@ -2,9 +2,11 @@ import React from "react";
 import ButtonComponent from "components/common/FormControl/ButtonComponent";
 import ExcelIcons from "assets/svg/excelIcons";
 import { useNavigate } from "react-router-dom";
-
+import ExportToExcel from "components/common/ExportToExcel";
+import ElectionExcelColum from "Data/Election";
 const HeaderButtons = () => {
   const navigate = useNavigate();
+
   return (
     <div
       style={{ justifyContent: "end" }}
@@ -13,9 +15,14 @@ const HeaderButtons = () => {
       <div className="flex gap-[30px]">
         <ButtonComponent
           text={"Election List"}
-          // onClick={() => navigate("/voter-list")}
+          onClick={() => navigate("/elections-list")}
         />
-        <ButtonComponent text={"Blank Excel Export"} Icons={<ExcelIcons />} />
+        <ExportToExcel
+          buttonText={"Export Demo Excel"}
+          Icons={<ExcelIcons />}
+          columns={ElectionExcelColum}
+          excelName="ElectionDemo"
+        />
       </div>
     </div>
   );

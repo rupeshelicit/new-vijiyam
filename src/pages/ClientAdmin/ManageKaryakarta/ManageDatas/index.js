@@ -219,6 +219,7 @@ const ManageData = () => {
                     columns={columns}
                     Icons={<ExcelIcons />}
                     buttonText={" Export Blank Excel"}
+                    excelName="ManageDataList"
                     // subText={"    for Demo add Member list"}
                   />
                 </div>

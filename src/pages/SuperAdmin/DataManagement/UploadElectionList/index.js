@@ -21,7 +21,7 @@ const UploadElectionList = () => {
         <HeaderButtons />
         <div className="content-section mt-[15px]">
           <Card className="[box-shadow:0px_4px_4px_0px_#00000040]">
-            <Tabs className="custom-tabs p-[40px]" defaultActiveKey="1">
+            <Tabs className="custom-tabs p-[0px]" defaultActiveKey="1">
               <TabPane tab="Single Excel Upload" key="1">
                 <SingleExcelUploadForm
                   setSeletedAssembly={setSeletedAssembly}

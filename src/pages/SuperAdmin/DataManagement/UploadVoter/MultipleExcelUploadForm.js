@@ -67,7 +67,7 @@ export default function ExcelUpload ()
       console.warn( "No files to upload." );
       return;
     }
-
+  
     const formData = new FormData();
 
     // Append each file to the FormData object
@@ -173,7 +173,7 @@ export default function ExcelUpload ()
             onMouseEnter={ ( e ) => ( e.currentTarget.style.backgroundColor = "#432C6A" ) }
             onMouseLeave={ ( e ) => ( e.currentTarget.style.backgroundColor = "#54408C" ) }
           >
-            Submit Sheet
+            {loading ? "Uploading..." : "Submit Sheet"}
           </Button>
         </Form.Item>
       </Form>

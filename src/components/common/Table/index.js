@@ -11,7 +11,6 @@ const TableComponent = ({ title, columns, data, rowSelection, setCurrentPage }) 
   });
 
   const handleTableChange = (pagination, filters, sorter) => {
-    console.log("pagination---->>>>>", pagination)
     setCurrentPage(pagination?.current);
     setTableParams({
       pagination,

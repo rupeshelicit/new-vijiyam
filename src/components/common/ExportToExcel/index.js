@@ -10,6 +10,7 @@ const ExportToExcel = ({
   Icons,
   buttonText,
   type,
+  excelName
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +47,7 @@ const ExportToExcel = ({
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Table Data");
-    XLSX.writeFile(workbook, "ExportedData.xlsx");
+    XLSX.writeFile(workbook, `${excelName?excelName:'ExcelSheet'}.xlsx`);
   };
 
   const handleExportPDF = () => {

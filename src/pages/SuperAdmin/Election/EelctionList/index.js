@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Container } from "styles/components/common/Layout";
 import deleteIcon from "assets/svg/trans-icon.svg";
 
@@ -9,19 +9,24 @@ import PlusIcons from "assets/svg/plusIcons";
 import SwitchComponent from "components/common/SwitchComponent";
 import { ClientListSection } from "styles/pages/SuperAdmin/user";
 import { useNavigate } from "react-router-dom";
+import useGet from "hooks/useGet";
+import { GET_ELECTION_LIST } from "constants/api";
+import { Button } from "antd";
+import EditComponent from "components/common/Action/Edit";
+import DeleteComponet from "components/common/Action/Delete";
+import ViewComponent from "components/common/Action/View";
+import ExportToExcel from "components/common/ExportToExcel";
+import ExcelIcons from "assets/svg/excelIcons";
 
 function ElectionsList() {
   const navigate = useNavigate();
-  const [activeButton, setActiveButton] = useState("addNewclient");
-  const [accountStatus, setAccountStatus] = useState(false);
-  const [userPermissions, setUserPermissions] = useState(false);
-  const [openExportDrawer, setOpeExportDrawer] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-
-  const handleAddnewclient = () => {
-    navigate("/add-new-client");
-  };
+  const [ElecotionData, setElecotionData] = useState([]);
+  const { mutateAsync: GetElectionsList } = useGet();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [prevPage, setPrevPage] = useState(0);
+  const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
 
   const columns = [
     {
@@ -29,94 +34,88 @@ function ElectionsList() {
       dataIndex: "serialNumber",
       key: "serialNumber",
       align: "center",
-      sorter: (a, b) => a.serialNumber - b.serialNumber,
-    },
-
-    {
-      title: "Sheet ",
-      dataIndex: "sheet",
-      key: "sheet",
-      align: "center",
-      sorter: (a, b) => a.sheet?.localeCompare(b.sheet ?? "") ?? 0,
+      render: (text, record, index) => {
+        return index + 1;
+      },
     },
     {
       title: "Election Type",
-      dataIndex: "electionType",
-      key: "electionType",
+      dataIndex: "districtId",
+      key: "districtId",
       align: "center",
-      sorter: (a, b) =>
-        a.electionType?.localeCompare(b.electionType ?? "") ?? 0,
+      render: (text, record) => record?.district,
+      sorter: (a, b) => a.districtId.localeCompare(b.districtId),
+    },
+    {
+      title: "State Name",
+      dataIndex: "stateId",
+      key: "stateId",
+      align: "center",
+      render: (text, record) => record?.state?.name,
+      // {
+      //   console.log(record?.state?.name, "ddddddddddddddd");
+      // },
+
+      sorter: (a, b) => a.stateId.localeCompare(b.stateId),
+    },
+
+    {
+      title: "District",
+      dataIndex: "districtId",
+      key: "districtId",
+      align: "center",
+      render: (text, record) => record?.district,
+      sorter: (a, b) => a.districtId.localeCompare(b.districtId),
+    },
+    {
+      title: "Vidhansabha",
+      dataIndex: "vidhansabhaId",
+      key: "vidhansabhaId",
+      align: "center",
+      render: (text, record) => record?.vidhansabha?.name,
+      sorter: (a, b) => a.vidhansabhaId.localeCompare(b.vidhansabhaId),
+    },
+
+    {
+      title: "AcharSanhita Date",
+      dataIndex: "acharSanhitaDate",
+      key: "acharSanhitaDate",
+      align: "center",
+      sorter: (a, b) => a.acharSanhitaDate.localeCompare(b.acharSanhitaDate),
     },
     {
       title: "Election Date",
       dataIndex: "electionDate",
       key: "electionDate",
       align: "center",
-      sorter: (a, b) =>
-        a.electionDate?.localeCompare(b.electionDate ?? "") ?? 0,
+      sorter: (a, b) => a.electionDate.localeCompare(b.electionDate),
     },
     {
-      title: "Achar sanhita Date",
-      dataIndex: "acharSanhitaDate",
-      key: "acharSanhitaDate",
+      title: "Create Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
       align: "center",
-      sorter: (a, b) =>
-        a.acharSanhitaDate?.localeCompare(b.acharSanhitaDate ?? "") ?? 0,
+      sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
     {
-      title: "State",
-      dataIndex: "state",
-      key: "state",
+      title: "Update Date",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
       align: "center",
-      sorter: (a, b) => a.state?.localeCompare(b.state ?? "") ?? 0,
-    },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      serialNumber: "01",
-      sheet: "Sheet 1",
-      electionType: "General Election",
-      electionDate: "2025-01-01",
-      acharSanhitaDate: "2024-12-01",
-      state: "Madhya Pradesh",
+      sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
     },
     {
-      key: "2",
-      serialNumber: "02",
-      sheet: "Sheet 2",
-      electionType: "Assembly Election",
-      electionDate: "2025-03-15",
-      acharSanhitaDate: "2025-02-15",
-      state: "Uttar Pradesh",
-    },
-    {
-      key: "3",
-      serialNumber: "03",
-      sheet: "Sheet 3",
-      electionType: "Municipal Election",
-      electionDate: "2025-05-10",
-      acharSanhitaDate: "2025-04-10",
-      state: "Rajasthan",
-    },
-    {
-      key: "4",
-      serialNumber: "04",
-      sheet: "Sheet 4",
-      electionType: "General Election",
-      electionDate: "2025-07-20",
-      acharSanhitaDate: "2025-06-20",
-      state: "Gujarat",
-    },
-    {
-      key: "5",
-      serialNumber: "05",
-      sheet: "Sheet 5",
-      electionType: "Panchayat Election",
-      electionDate: "2025-09-05",
-      acharSanhitaDate: "2025-08-05",
-      state: "Maharashtra",
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      render: (text, record) => (
+        <div className="flex gap-[10px]">
+          <EditComponent record={record} />
+          <DeleteComponet record={record} />
+          <ViewComponent record={record} />
+        </div>
+      ),
     },
   ];
 
@@ -131,13 +130,38 @@ function ElectionsList() {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
+  const getElectionList = async (page, limit) => {
+    const id = loginUsers.role;
+    await GetElectionsList({
+      url: `${GET_ELECTION_LIST}?page=${page}&limit=${limit}`,
+
+      type: "details",
+      token: true,
+    })
+      .then((res) => {
+        if (res) {
+          let newRes = [...ElecotionData];
+          newRes = newRes.concat(res?.items);
+          // console.log(newRes, "newRowsssssssssss");
+
+          setElecotionData(res);
+          console.log(res, "newRowsssssssssss");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useMemo(() => {
+    if (currentPage > prevPage) {
+      getElectionList(currentPage, 10);
+      setPrevPage((prev) => prev + 1);
+    }
+  }, [currentPage]);
   return (
     <ClientListSection>
       <Container>
         <div className="py-[20px]">
-          {/* <div className="client-list-fillter">
-            <VoterFilter />
-          </div> */}
           <div className="client-list-header flex justify-between items-center px-[22px] py-[20px] flex-wrap bg-[#FFFFFF] border-[1px] border-[#EAECF0] rounded-[4px]">
             <div>
               <h3 className="text-[17px] font-bold mb-[10px]">
@@ -168,11 +192,22 @@ function ElectionsList() {
                   onClick={() => navigate("/add-new-client")}
                 />
               </div>
+              <div className="add-new-client">
+                <ExportToExcel
+                  buttonText={"Export Election List"}
+                  Icons={<ExcelIcons />}
+                  data={ElecotionData}
+                  columns={columns}
+                  excelName="ElectionList"
+                />
+              </div>
             </div>
+
             <TableComponent
               rowSelection={rowSelection}
               columns={columns}
-              data={data}
+              data={ElecotionData}
+              setCurrentPage={SwitchComponent}
             />
             <div className="flex items-center mb-4">
               <input
