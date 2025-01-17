@@ -15,6 +15,9 @@ import { GET_KARYKARTA_AUTHORIZED_USER_LIST } from "constants/api";
 import EditComponent from "components/common/Action/Edit";
 import DeleteComponet from "components/common/Action/Delete";
 import ViewComponent from "components/common/Action/View";
+import ExportToExcel from "components/common/ExportToExcel";
+import ExcelIcons from "assets/svg/excelIcons";
+import AddNewKaryKarta from "../AddNewKarykartaModal";
 const KaryaKartaList = () => {
   const [accountStatus, setAccountStatus] = useState({});
   const [addNew, setAddNew] = useState(false);
@@ -33,8 +36,8 @@ const KaryaKartaList = () => {
     );
   };
 
-  console.log(accountStatus,'')
-const columns = [
+  console.log(accountStatus, "");
+  const columns = [
     {
       title: "S.NO",
       dataIndex: "serialNumber",
@@ -50,16 +53,14 @@ const columns = [
       key: "isPermission",
       align: "center",
       render: (text, record) => (
-          <SwitchComponent  
-         switchStates={accountStatus}  
+        <SwitchComponent
+          switchStates={accountStatus}
           setSwitchStates={setAccountStatus}
           record={record}
         />
-      )
-      
-   
+      ),
     },
-    
+
     {
       title: "User Permissions",
       dataIndex: "status",
@@ -71,7 +72,8 @@ const columns = [
             disabled={true}
             className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#54408C] text-[12px] font-medium bg-[#54408C66] border-[none]"
           >
-            <b className="h-[8px] w-[8px] bg-[#14BA6D] rounded-[50px]"></b> Active
+            <b className="h-[8px] w-[8px] bg-[#14BA6D] rounded-[50px]"></b>{" "}
+            Active
           </Button>
         ) : (
           <Button
@@ -196,7 +198,7 @@ const columns = [
       align: "center",
       sorter: (a, b) => a.loksabhaId.localeCompare(b.loksabhaId),
     },
-  
+
     {
       title: "House No",
       dataIndex: "houseNo",
@@ -246,7 +248,7 @@ const columns = [
       align: "center",
       sorter: (a, b) => a.newAddress.localeCompare(b.newAddress),
     },
-  
+
     {
       title: "Create Date",
       dataIndex: "createdAt",
@@ -270,17 +272,31 @@ const columns = [
         <div className="flex gap-[10px]">
           <EditComponent />
           <DeleteComponet />
-          <ViewComponent/>
-      
+          <ViewComponent />
         </div>
       ),
     },
   ];
-  
+
+  const Democolumns = [
+    {
+      title: "name",
+      dataIndex: "name",
+      key: "name",
+      align: "center",
+    },
+    {
+      title: "Mobile Number",
+      dataIndex: "mobileNumber",
+      key: "mobileNumber",
+      align: "center",
+    },
+  ];
+
   useEffect(() => {
     GetKarykartaList();
   }, []);
- 
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       console.log("Selected Row Keys:", selectedRowKeys);
@@ -348,7 +364,17 @@ const columns = [
                   </span>
                 </button>
               </div>
-
+              <div className="demo-excel-voter">
+                <div className="export-file">
+                  <ExportToExcel
+                    buttonText={" Export Blank Excel"}
+                    Icons={<ExcelIcons />}
+                    columns={Democolumns}
+                    excelName="KarykartaDemo"
+                    // subText={" for Demo add Member list"}
+                  />
+                </div>
+              </div>
               <div className="add-new-voter">
                 <ButtonComponent
                   Icons={<PlusIcons />}
@@ -366,18 +392,18 @@ const columns = [
             />
           </div>
         </div>
-        <AddNewModal
+        <AddNewKaryKarta
           title={"Upload Mobile No. List"}
           inputLable={"Mobile No.excel sheet upload"}
           setIsModalOpen={setAddNew}
           isModalOpen={addNew}
-        />
+                  />
         <ExportTable
           open={openExportDrawer}
           setOpen={setOpeExportDrawer}
           title={"Export Table For Demo"}
           columns={columns}
-          data={kayrkartaData&&kayrkartaData}
+          data={kayrkartaData && kayrkartaData}
         />
       </Container>
     </ManageDataContainer>

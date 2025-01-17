@@ -7,6 +7,7 @@ import { UploadVoterListComponent } from "styles/pages/SuperAdmin/UploadVoterLis
 import HeaderButtons from "./HeaderButtons";
 import usePost from "hooks/usePost";
 import { UPLOAD_VOTER_EXCEL } from "constants/api";
+import { toast } from "react-toastify";
 
 const { TabPane } = Tabs;
 
@@ -15,22 +16,16 @@ const UploadVoterList = () => {
   const [uploadFile, setUploadFile] = useState();
   const [loading, setLoading] = useState(false);
   const { mutateAsync: UploadVotersExcel } = usePost();
-  const {mutateAsync:UploadMultiplVoterExcel}=usePost()
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const [multipleUpload, setMultipleUpload] = useState([
     "document-name.Excel",
     "image-name-goes-here.Excel",
   ]);
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setUploadFile(file); // Set the selected file
-  };
 
   const handleUploadeVoterList = async () => {
     if (uploadFile) {
-      console.log(uploadFile)
-      const upladeFileName=uploadFile
-      // Create a FormData object
+      console.log(uploadFile);
+      const upladeFileName = uploadFile;
       const formData = new FormData();
       formData.append("excelFile", uploadFile);
       formData.append("createdBy", loginUsers.id);
@@ -47,10 +42,14 @@ const UploadVoterList = () => {
         });
 
         if (response) {
-          console.log("File uploaded successfully", response);
+          toast.success("Files uploaded successfully!", {
+            position: "top-right",
+          });
         }
       } catch (err) {
-        console.error("Error uploading file:", err);
+        toast.error("Error uploading files. Please try again.", {
+          position: "top-right",
+        });
       } finally {
         setLoading(false);
       }
@@ -58,39 +57,6 @@ const UploadVoterList = () => {
       console.warn("No file selected for upload.");
     }
   };
-
-  const handleMultipleUploadFile = async() => {
-    if (uploadFile) {
-      console.log(uploadFile)
-      const upladeFileName=uploadFile
-      // Create a FormData object
-      const formData = new FormData();
-      formData.append("excelFile", uploadFile);
-      formData.append("createdBy", loginUsers.id);
-
-      try {
-        setLoading(true);
-
-        const response = await UploadVotersExcel({
-          url: UPLOAD_VOTER_EXCEL,
-          type: "details",
-          payload: formData,
-          token: true,
-          file: true,
-        });
-
-        if (response) {
-          console.log("File uploaded successfully", response);
-        }
-      } catch (err) {
-        console.error("Error uploading file:", err);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      console.warn("No file selected for upload.");
-    }
- }
 
   return (
     <UploadVoterListComponent>
@@ -102,7 +68,8 @@ const UploadVoterList = () => {
               <TabPane tab="Single Excel Upload" key="1">
                 <SingleExcelUploadForm
                   setSeletedAssembly={setSeletedAssembly}
-                  setUploadFile={setUploadFile}s
+                  setUploadFile={setUploadFile}
+                  s
                   onclick={handleUploadeVoterList}
                   isLoding={loading}
                 />
@@ -111,7 +78,6 @@ const UploadVoterList = () => {
                 <MultipleExcelUploadForm
                   setMultipleUpload={setMultipleUpload}
                   multipleUpload={multipleUpload}
-                    
                 />
               </TabPane>
             </Tabs>

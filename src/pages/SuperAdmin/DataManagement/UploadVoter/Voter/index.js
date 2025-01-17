@@ -113,6 +113,7 @@ const VoterList = () => {
                   buttonText={" Export Blank Excel"}
                   Icons={<ExcelIcons />}
                   columns={ExcelColum}
+                  excelName="VoterDemo"
                   // subText={" for Demo add Member list"}
                 />
               </div>

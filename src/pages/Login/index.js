@@ -47,41 +47,6 @@ const Login = () => {
     }, 3000);
   };
 
-  //     localStorage.setItem(
-  //       "token",
-  //       "ex.12332wmkmdnndwjhqiwejqejwasdjbsjdsdsnjdbsd.ewew.23.2njnedbsn"
-  //     );
-  
-  //     if (creds.useremail === "superadmin@gmail") {
-  //       localStorage.setItem("account_type", "super_admin_login");
-  //       localStorage.setItem("roleId", "1");
-  //       setCustmerDetails({ account_type: "super_admin_login" });
-  //     } else if (creds.useremail === "client@gmail.com") {
-  //       localStorage.setItem("account_type", "client_login");
-  //       localStorage.setItem("roleId", "2");
-  //       setCustmerDetails({ account_type: "client_login" });
-  //     } else if (creds.useremail === "distributor@gmail") { 
-  //       localStorage.setItem("account_type", "distributor_login");
-  //       localStorage.setItem("roleId", "3");
-
-
-  //     } else{
-  //       localStorage.setItem("account_type", "unknown_login");
-  //       localStorage.setItem("roleId", "0");
-  //       setCustmerDetails({ account_type: "unknown_login" });
-  //     }
-  
-  //     navigate("/");
-  
-  //     setLoading(true);
-  //     setTimeout(() => {
-  //       setLoading(false);
-  //       window.location.reload();
-  //     }, 3000);
-  //   } else {
-  //     console.error("Invalid credentials! Please enter valid email and password.");
-  //   }
-  // };
   
   const onFinishFailed = () => {};
 

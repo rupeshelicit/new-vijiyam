@@ -9,9 +9,11 @@ export const UPDATE_PASSWORD = "user/update-password";
 export const GET_VOTER_LIST = "voter-survey/list/";
 export const GET_KARYKARTA_AUTHORIZED_USER_LIST="/user/list/"  
 // superAdmin Api
-
+export const GET_ELECTION_LIST="/election/list"
 export const UPLOAD_VOTER_EXCEL = "voter-survey/upload-excel";
-export const GET_CLIENTS_LIS = "user/list/3";
+export const UPLOAD_KARYKARTA_LIST = "user/upload-excel"
+export const UPLOAD_ELECTION_EXCEL="/election/upload-excel"
+export const GET_CLIENTS_LIST = "user/list/";
 
 // Client Api
 
