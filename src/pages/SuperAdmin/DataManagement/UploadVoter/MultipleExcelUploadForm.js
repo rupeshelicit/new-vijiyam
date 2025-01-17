@@ -4,12 +4,14 @@ import { InboxOutlined, CloseOutlined } from "@ant-design/icons";
 import { useDropzone } from "react-dropzone";
 import usePost from "hooks/usePost";
 import { UPLOAD_VOTER_EXCEL } from "constants/api";
+import { toast } from "react-toastify";
 
 export default function ExcelUpload ()
 {
   const [ files, setFiles ] = useState( [] );
   const [ uploadingFile, setUploadingFile ] = useState( null );
-  const [ uploadedFile, setUploadedFile ] = useState( null );
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [isUploaded,setUploaded]=useState(false)
   const [ loading, setLoading ] = useState( false );
   const { mutateAsync: uploadExcelFile } = usePost();
   const loginUser = JSON.parse( localStorage.getItem( "userDetails" ) );
@@ -46,7 +48,7 @@ export default function ExcelUpload ()
   {
     const newFiles = acceptedFiles.map( ( file ) => ( {
       name: file.name,
-      raw: file, // Save the raw file object
+      raw: file, 
       progress: 0,
     } ) );
     setFiles( ( prev ) => [ ...prev, ...newFiles ] );
@@ -70,10 +72,10 @@ export default function ExcelUpload ()
   
     const formData = new FormData();
 
-    // Append each file to the FormData object
+ 
     files.forEach( ( file ) =>
     {
-      formData.append( "excelFile", file.raw ); // Use the raw file object
+      formData.append( "excelFile", file.raw ); 
     } );
 
     formData.append( "createdBy", loginUser.id );
@@ -88,7 +90,13 @@ export default function ExcelUpload ()
         token: true,
         file: true,
       } );
-      if ( response ) console.log( "Files uploaded successfully", response );
+      if (response) {
+        
+           toast.success("Files uploaded successfully!", {
+                    position: "top-right",
+                  });
+                  setFiles([]);
+      }
     } catch ( err )
     {
       console.error( "Error uploading files:", err );
@@ -131,7 +139,7 @@ export default function ExcelUpload ()
               </div>
             </div>
           </Form.Item>
-
+        
           { files.length > 0 && (
             <div className="uploaded-files-section">
               { files.map( ( file ) => (

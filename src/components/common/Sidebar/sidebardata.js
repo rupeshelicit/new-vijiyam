@@ -25,13 +25,13 @@ const SidebarData = [
   {
     id: 11,
     icons: <DataManagementIcon />,
-    title: "Data management",
+    title: "Data Management",
     disable: true,
     roleId: ["5"],
     children: [
       {
         id: 1101,
-        title: "Upload Voter list",
+        title: "Upload Voter List",
         icon: <UserIcon />,
         path: "/upload-voter-list",
         disable: true,
@@ -47,7 +47,7 @@ const SidebarData = [
       },
       {
         id: 1103,
-        title: "Upload Election List ",
+        title: "Upload Election List  ",
         icon: <UserIcon />,
         path: "/upload-election",
         disable: true,
@@ -121,7 +121,7 @@ const SidebarData = [
       },
       {
         id: 1403,
-        title: "Election liSt ",
+        title: "Election List ",
         icon: <ElectionIcon />,
         path: "/elections-list",
         disable: true,
@@ -170,7 +170,7 @@ const SidebarData = [
     children: [
       {
         id: 301,
-        title: "List view",
+        title: "List View",
         icon: <ListIcons />,
         path: "/list-view",
         disable: true,
@@ -290,7 +290,7 @@ const SidebarData = [
     children: [
       {
         id: 3201,
-        title: "Upload Voter list",
+        title: "Upload Voter List",
         icon: <UserIcon />,
         path: "/upload-voter-list",
         disable: true,

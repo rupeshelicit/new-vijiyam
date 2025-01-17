@@ -218,7 +218,7 @@ const AddElections = () => {
                     <Switch />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Wnpm ith Candidate Image
+                    with Candidate  Image
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">

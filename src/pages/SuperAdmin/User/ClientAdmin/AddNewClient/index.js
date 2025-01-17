@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Col,
@@ -10,12 +10,20 @@ import {
   Upload,
   Switch,
   DatePicker,
-} from "antd"; // Import Ant Design components
+} from "antd";
 import { Container } from "styles/components/common/Layout";
 import { ClientAdminComponent } from "styles/pages/SuperAdmin/user";
 import FormInput from "components/common/FormControl/FormInput";
 import DropdownSelect from "components/common/FormControl/DropdownSelect";
 import usePost from "hooks/usePost";
+import useGet from "hooks/useGet";
+import {
+  GET_ASSEMBLY_LIST,
+  GET_DISTRICT_LIST_BY_STATE,
+  GET_ELECTION_PARTY,
+  GET_STATE_LIST,
+} from "constants/api";
+import UploadFile from "components/common/FormControl/UploadFile";
 
 const { Option } = Select;
 const UploadIcon = () => (
@@ -42,31 +50,156 @@ const AddNewClient = () => {
 
   const [partySymbole, setPartySymbole] = useState();
   const [candidatesPhoto, setCandidatesPhoto] = useState();
+  const [states, setStates] = useState([]);
+  const [assambly, setAssambly] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [party, setParty] = useState([]);
+  const [password, setPassword] = useState();
+  const [confirmassword, setConfirmPassword] = useState();
+  const [selectState, setSelectState] = useState();
   const { mutateAsync: AddNewClients } = usePost();
+  const { mutateAsync: GetStateList } = useGet();
+  const { mutateAsync: GetAssemblyList } = useGet();
+  const { mutateAsync: GetDistrictList } = useGet();
+  const { mutateAsync: GetPartyList } = useGet();
+  const handleUpload = (info) => {
+    console.log(info, "-------------files");
+  };
 
-  const handleUpload = (info) => {};
+  useEffect(() => {
+    getStateList();
+    getElectionParty();
+    {
+      selectState && getAssemblyist();
+    }
+    {
+      selectState && getDistrict();
+    }
+  }, [selectState]);
 
   const onFinish = (creds) => {
-    setLoading(true);
+    // setLoading(true);
+    console.log(creds, "Client-Creads", partySymbole, candidatesPhoto);
+
     const payload = creds;
-    AddNewClients({
-      url: "url",
-      type: "details",
-      payload: payload,
-    })
-      .then((res) => {
-        if (res) {
-          console.log(res);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // await AddNewClients({
+    //   url: "url",
+    //   type: "details",
+    //   payload: payload,
+    // })
+    //   .then((res) => {
+    //     if (res) {
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
 
     setTimeout(() => {
       setLoading(false);
     }, 3000);
   };
+
+  const getStateList = async () => {
+    await GetStateList({
+      url: GET_STATE_LIST,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setStates(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getAssemblyist = async () => {
+    await GetAssemblyList({
+      url: GET_ASSEMBLY_LIST + selectState,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setAssambly(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getDistrict = async () => {
+    await GetDistrictList({
+      url: GET_DISTRICT_LIST_BY_STATE + selectState,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setDistrictList(res && res.districts);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getElectionParty = async () => {
+    await GetPartyList({
+      url: GET_ELECTION_PARTY,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setParty(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleSubmit = (creds) => {
+    const formData = new FormData();
+    console.log(creds,candidatesPhoto,partySymbole)
+  
+    if (creds && candidatesPhoto && partySymbole) {
+      formData.append("image", candidatesPhoto);
+      formData.append("partyIcon", partySymbole);
+      formData.append("name", creds?.fullName);
+      formData.append("fatherName", creds?.fatherName);
+      formData.append("partyId", creds.partyName);
+      formData.append("dateOfBirth", creds.dateOfBirth);
+      formData.append("gender", creds?.gender);
+      formData.append("districtId", creds.districtName);
+      formData.append("stateId", creds.stateName);
+      formData.append("vidhansabhaId", creds?.assemblyName);
+      formData.append("userId", creds?.userName);
+      formData.append("password", creds?.password);
+  
+      // Debugging: Check the contents of FormData
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ": ", pair[1]);
+      }
+    } else {
+      console.error("Missing required data");
+    }
+  
+    // Uncomment this block for an actual API call
+    // fetch("/api/upload", {
+    //   method: "POST",
+    //   body: formData,
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log("Response:", data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
+  };
+  
 
   return (
     <ClientAdminComponent>
@@ -81,7 +214,12 @@ const AddNewClient = () => {
         </Row>
 
         <Card>
-          <Form layout="vertical" onFinish={onFinish} className="mt-4">
+          <Form
+            layout="vertical"
+            onFinish={handleSubmit}
+            form={form}
+            className="mt-4"
+          >
             <h4
               className="text-[18px] font-semibold mb-[5px] text-[#54408C]"
               style={{ marginBottom: "10px" }}
@@ -129,33 +267,12 @@ const AddNewClient = () => {
               </Col>
               <Col span={8}>
                 <Form.Item
-                  name="gmail"
-                  label="Gmail"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Please enter the Gmail",
-                    }
-                  ]}
-                >
-                  <FormInput
-                    name="email"
-                    placeholder="Enter Gmail"
-                    required={ false }
-                  />
-                </Form.Item>
-                
-              </Col>
-
-              <Col span={8}>
-                {" "}
-                <Form.Item
                   name="dateOfBirth"
-                  label="Date Of Birth"
+                  label="DOB"
                   rules={[
                     {
                       required: false,
-                      message: "Please select a Date Of Birth",
+                      message: "Please select a Date of Birth ",
                     },
                   ]}
                 >
@@ -168,8 +285,27 @@ const AddNewClient = () => {
               </Col>
               <Col span={8}>
                 <Form.Item
+                  name="email"
+                  label="Email"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Please enter the Gmail",
+                    },
+                  ]}
+                >
+                  <FormInput
+                    name="email"
+                    placeholder="Enter Gmail"
+                    required={false}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col span={8}>
+                <Form.Item
                   label="Phone Number"
-                  name="phone"
+                  name="mobileNumbe"
                   rules={[
                     {
                       required: false,
@@ -181,10 +317,7 @@ const AddNewClient = () => {
                     },
                   ]}
                 >
-                  <FormInput
-                    placeholder="Enter Mobile Number"
-                    maxLength={10} // Ensures the user cannot input more than 10 digits
-                  />
+                  <FormInput  name =" mobileNumbe"placeholder="Enter Mobile Number" maxLength={10} />
                 </Form.Item>
               </Col>
 
@@ -199,7 +332,11 @@ const AddNewClient = () => {
                   <DropdownSelect
                     name={"gender"}
                     placeholder="Please select a Gender"
-                    options={["Female", "Other", "Male"]}
+                    options={[
+                      { id: "Male", name: "Male" },
+                      { id: "Female", name: "Female" },
+                      { id: "Other", name: "Other" },
+                    ]}
                     required={false}
                   />
                 </Form.Item>
@@ -230,7 +367,11 @@ const AddNewClient = () => {
                   <DropdownSelect
                     name={"electionType"}
                     placeholder="Select Election Typer"
-                    options={["VidhnaSabha", "LookSabha", "Other"]}
+                    options={[
+                      { id: "Vidhansabha", name: "Vidhansabha" },
+                      { id: "LookSabha", name: "LookSabha" },
+                      { id: "Nigam", name: "Nigam" },
+                    ]}
                     required={false}
                   />
                 </Form.Item>
@@ -249,9 +390,10 @@ const AddNewClient = () => {
                 >
                   <DropdownSelect
                     name={"stateName"}
-                    placeholder="Select State Nam"
-                    options={["Madhya Pradesh", "Gujrat", "Other"]}
+                    placeholder="Select State Name"
+                    options={states && states}
                     required={false}
+                    setSelectState={setSelectState}
                   />
                 </Form.Item>
               </Col>
@@ -267,25 +409,18 @@ const AddNewClient = () => {
                     },
                   ]}
                 >
-                  <Select
-                    showSearch
-                    placeholder="Select Assembly Name"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      (option?.children ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
+                  <DropdownSelect
+                    name={"assamblyName"}
+                    options={assambly && assambly}
+                    placeholder="Select Party Assambly"
+                    required={false}
+                    disabled={selectState ? false : true}
+                    defaultOption={
+                      !assambly.length
+                        ? "No Assambly found  Select Correct State "
+                        : "Select Assambly"
                     }
-                    filterSort={(optionA, optionB) =>
-                      (optionA?.children ?? "")
-                        .toLowerCase()
-                        .localeCompare((optionB?.children ?? "").toLowerCase())
-                    }
-                  >
-                    <Option value="Indore-1">Indore-1</Option>
-                    <Option value="Indore-2">Indore-2</Option>
-                    <Option value="Indore-3">Indore-3</Option>
-                  </Select>
+                  />
                 </Form.Item>
               </Col>
 
@@ -302,15 +437,17 @@ const AddNewClient = () => {
                 >
                   <DropdownSelect
                     name={"partyName"}
+                    options={party && party}
                     placeholder="Select Party Name"
-                    options={["BJP", "Congress", "Other"]}
                     required={false}
+                    disabled={false}
+                    defaultOption={"Select Party Name"}
                   />
                 </Form.Item>
               </Col>
               <Col span={8}>
                 <Form.Item
-                  name="district"
+                  name="districtName"
                   label="District"
                   rules={[
                     {
@@ -320,88 +457,52 @@ const AddNewClient = () => {
                   ]}
                 >
                   <DropdownSelect
-                    name={"district"}
-                    placeholder="Select Party Name"
-                    options={["Indore", "Ujjain", "Ujjain"]}
+                    name={"districtName"}
+                    options={districtList && districtList}
+                    placeholder="Select Party District"
                     required={false}
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col span={8}>
-                <Form.Item
-                  name="electionDate"
-                  label="Election Date"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Please select a election date",
-                    },
-                  ]}
-                >
-                  <DatePicker
-                    className="w-[100%]"
-                    name="electionDate"
-                    required={false}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="acharSanhitaDate"
-                  label="Achar Sanhita Date"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Please select a Achar Sanhita Date",
-                    },
-                  ]}
-                >
-                  <DatePicker
-                    className="w-[100%]"
-                    name="acharSanhitaDate"
-                    required={false}
+                    disabled={selectState ? false : true}
+                    defaultOption={
+                      !districtList.length
+                        ? "No District found  Select Correct State "
+                        : "Select District"
+                    }
                   />
                 </Form.Item>
               </Col>
             </Row>
             <Row
               gutter={[16, 16]}
-              className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
+              className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px] client-upload-input-filed"
             >
-              <Col span={8}>
+              <Col span={6}>
                 <Form.Item name="photos" className="mb-1 image-upload">
                   <label className="text-[16px] font-normal mb-[20px]">
                     Party Symbols
                   </label>
-                  <div className="flex justify-between gap-[50px]">
-                    <Upload
-                      className="max-w-[140px] h-[110px]"
-                      listType="picture-card"
-                      showUploadList={false}
-                      beforeUpload={handleUpload}
-                      onChange={setPartySymbole}
-                    >
-                      <UploadIcon />
-                    </Upload>
+                  <div className="  flex justify-between gap-[50px] mt-[15px] max-w-[140px] h-[110px] ">
+                    <UploadFile
+                      inputLable={"Upload Party Icon"}
+                      setFile={setPartySymbole}
+                      inputName="partyIcon"
+                    />
+                    {partySymbole && partySymbole.name}
                   </div>
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={6}>
                 <Form.Item name="photos" className="mb-1 image-upload">
                   <label className="text-[16px] font-normal mb-[20px]">
                     Candidates Photo
                   </label>
-                  <div className="flex justify-between gap-[50px]">
-                    <Upload
-                      className="max-w-[225px] h-[150px]"
-                      listType="picture-card"
-                      showUploadList={false}
-                      beforeUpload={handleUpload}
-                      onChange={setCandidatesPhoto}
-                    >
-                      <UploadIcon />
-                    </Upload>
+                  <div className="flex justify-between gap-[50px] mt-[15px] ">
+                    <UploadFile
+                      inputLable={"Upload Candidates Photo"}
+                      setFile={setCandidatesPhoto}
+                      inputName="candidatesPhoto"
+                    />
+
+                    {candidatesPhoto && candidatesPhoto.name}
                   </div>
                 </Form.Item>
               </Col>
@@ -430,7 +531,7 @@ const AddNewClient = () => {
                     <Switch />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Wnpm ith Candidate Image
+                    with Candidate Image
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
@@ -491,6 +592,7 @@ const AddNewClient = () => {
                 >
                   <FormInput
                     name="email"
+                    type="email"
                     placeholder="abc@gmail.com"
                     required={false}
                   />
@@ -508,6 +610,8 @@ const AddNewClient = () => {
                     name="password"
                     placeholder="Enter password"
                     required={false}
+                    type={"password"}
+                    onchange={(e) => setPassword(e.target.value)}
                   />
                 </Form.Item>
               </Col>
@@ -527,12 +631,20 @@ const AddNewClient = () => {
                     name="confirmassword"
                     placeholder="Confirm Password"
                     required={false}
+                    type={"password"}
+                    onchange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </Form.Item>
+                <p className="text-[16px] text-[red]">
+                  {confirmassword !== password && password.length >= 3
+                    ? "Passwords do not match, please check"
+                    : ""}
+                </p>
               </Col>
             </Row>
             <Form.Item>
               <Button
+                loading={loading}
                 type="primary"
                 htmlType="submit"
                 className="sigin-btn text-[16px] font-[500] h-[48px] bg-[#54408C] max-w-[200px] mt-[30px]"

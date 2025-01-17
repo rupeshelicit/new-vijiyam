@@ -11,6 +11,7 @@ const SwitchComponent = ({
     // console.error("Record is not defined or missing id:", record);
     return null;
   }
+  console.log(record,"recordsssssssssss")
 
   return (
     <Switch
@@ -19,7 +20,7 @@ const SwitchComponent = ({
         const updatedState = {
           ...switchStates,
           [record.isPermission]: {
-            isPermission: record.isPermission ? "on" : "off",
+            isPermission: record? "on" : "off",
             status: checked ? "on" : "off",
           },
         };
