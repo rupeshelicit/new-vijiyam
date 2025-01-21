@@ -2,6 +2,8 @@ import React from "react";
 import ButtonComponent from "components/common/FormControl/ButtonComponent";
 import ExcelIcons from "assets/svg/excelIcons";
 import { useNavigate } from "react-router-dom";
+import ExportToExcel from "components/common/ExportToExcel";
+import ExcelColum from "Data/DummyDataExcelColum";
 
 const HeaderButtons = () => {
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ const HeaderButtons = () => {
           text={"Voter List"}
           onClick={() => navigate("/voter-list")}
         />
-        <ButtonComponent text={"Blank Excel Export"} Icons={<ExcelIcons />} />
+        <ExportToExcel buttonText={"Blank Demo Export"} Icons={<ExcelIcons />} columns={ExcelColum} />
       </div>
     </div>
   );

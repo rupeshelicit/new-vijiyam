@@ -264,7 +264,6 @@ function DistributortList() {
       setPrevPage((prev) => prev + 1);
     }
   }, [currentPage]);
-  console.log(distributors, ".....................");
 
   return (
     <ClientListSection>

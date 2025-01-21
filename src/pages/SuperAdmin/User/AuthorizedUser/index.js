@@ -235,7 +235,6 @@ function AuthorizedUser() {
   ];
 
   const getAuthorizedUserList = async (page, limit) => {
-    const id = loginUsers.role;
     await AuthorizedUser({
       url: `${
         GET_AUTHORIZED_USER_LITS + authorizedUserID

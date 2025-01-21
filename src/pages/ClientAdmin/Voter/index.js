@@ -44,27 +44,23 @@ const VoterList = () => {
   };
 
   const getVoterList = async (page, limit) => {
-    const id = loginUsers && loginUsers?.id;
+    const id = loginUsers?.id;
     await GetVoterList({
-      url: `${GET_VOTER_LIST + id}?page=${page}&limit=${limit}`,
+      url: `${GET_VOTER_LIST + id}`,
       type: "details",
       token: true,
     })
       .then((res) => {
         if (res) {
-          console.log("------------->>>>>>>>>>0000", res?.items);
           let newRes = [...voterData];
           newRes = newRes.concat(res?.items);
-          console.log("---->>", newRes);
           setVoterData(newRes);
         }
       })
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-    console.log("-------->>>>", voterData);
-  }, [voterData]);
+  useEffect(() => {}, [voterData]);
 
   useMemo(() => {
     if (currentPage > prevPage) {
@@ -108,15 +104,16 @@ const VoterList = () => {
                   columns={columns}
                   Icons={<ExcelIcons />}
                   buttonText={"Export"}
-                  excelName="VoterList"
+                  disabled={voterData?.length<=0?true:false}
                 />
               </div>
 
               <div className="export-file">
                 <ExportToExcel
-                  buttonText={" Export Blank Excel"}
+                  buttonText={" Export Demo Excel"}
                   Icons={<ExcelIcons />}
                   columns={ExcelColum}
+                  excelName="VoterDemo"
                   // subText={" for Demo add Member list"}
                 />
               </div>

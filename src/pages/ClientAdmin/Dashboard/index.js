@@ -1,5 +1,5 @@
 import { Row, Col, Select, Button } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DashboardSection } from "styles/pages/ClientAdmin/Dashboard";
 import { Container } from "styles/components/common/Layout";
 import { DashboardCard } from "styles/pages/ClientAdmin/Dashboard";
@@ -11,6 +11,9 @@ import TableComponent from "components/common/Table";
 import SwitchComponet from "components/common/SwitchComponent";
 import Actions from "components/common/Action";
 import { useNavigate } from "react-router-dom";
+import useGet from "hooks/useGet";
+import { GET_DASHBOARD_SUREVY } from "constants/api";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -20,6 +23,9 @@ const Dashboard = () => {
   const day = String(date.getDate()).padStart(2, "0");
   const currentDate = `${year}-${month}-${day}`;
   const [accountStatus, setAccountStatus] = useState({});
+  const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
+  const { mutateAsync: GetSurvey } = useGet();
+  const [surveyDatas, setSurveyDatas] = useState();
   const options = [
     { value: "1", label: "Last 7 days" },
     { value: "2", label: "Last 15 days" },
@@ -28,23 +34,19 @@ const Dashboard = () => {
   const surveyDetails = [
     {
       heading: "Total Survey",
-      data: 605462,
+      data: surveyDatas?.TotalSurvey,
     },
     {
       heading: "Important Voter",
-      data: 500000,
+      data: surveyDatas?.ImportantVoter,
     },
     {
       heading: "Total Karyakarta",
-      data: 600,
+      data: surveyDatas?.ActiveAuthorize,
     },
     {
       heading: "Total Active User",
-      data: 400,
-    },
-    {
-      heading: "Total Survey  ",
-      data: 605462,
+      data: surveyDatas?.TotalAuthorizeUser,
     },
   ];
   const surveyData = [
@@ -149,6 +151,31 @@ const Dashboard = () => {
       mobileNumber: 9039321053,
     },
   ];
+
+  useEffect(() => {
+    handleGetSurvey();
+  }, []);
+
+  const handleGetSurvey = async () => {
+    const id = loginUsers.id;
+    await GetSurvey({
+      url: GET_DASHBOARD_SUREVY + id,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          // let newRes = [...voterData];
+          // newRes = newRes.concat(res?.items);
+          // setVoterData(newRes);
+          setSurveyDatas(res && res);
+        }
+      })  
+      .catch((error) =>
+         console.log(error)
+      );
+  };
+
+  console.log(surveyDatas, "sssssssssss");
 
   return (
     <>

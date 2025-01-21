@@ -198,31 +198,22 @@ const SidebarData = [
     iconComponent: true,
   },
   {
-    id: 1,
+    id: 2,
     icons: <UserIcon />,
-    title: "Voter",
-    path: "/voter-list",
-    disable: true,
-    roleId: ["3"],
-  },
-
-  {
-    id: 3,
-    icons: <UserIcon />,
-    title: "Manage Karyakarta",
+    title: "Manage Data",
     disable: true,
     roleId: ["3"],
     children: [
       {
-        id: 301,
-        title: "List View",
+        id: 201,
+        title: "Karyakarta List",
         icon: <ListIcons />,
         path: "/list-view",
         disable: true,
         roleId: ["3"],
       },
       {
-        id: 302,
+        id: 202,
         title: "Manage Data",
         icon: <ListIcons />,
         path: "/manage-data ",
@@ -231,6 +222,16 @@ const SidebarData = [
       },
     ],
   },
+  {
+    id: 3,
+    icons: <UserIcon />,
+    title: "Voter",
+    path: "/voter-list",
+    disable: true,
+    roleId: ["3"],
+  },
+
+ 
 
   {
     id: 4,
