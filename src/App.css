@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 body,
 p,
@@ -39,7 +39,11 @@ th {
   padding: 0px;
 }
 
-.login-shortcut-modal .login-type-btn .ant-radio-group .ant-radio-wrapper .ant-radio {
+.login-shortcut-modal
+  .login-type-btn
+  .ant-radio-group
+  .ant-radio-wrapper
+  .ant-radio {
   opacity: 0;
 }
 
@@ -49,7 +53,10 @@ th {
   opacity: 0.5;
 }
 
-.login-shortcut-modal .login-type-btn .ant-radio-group .ant-radio-wrapper-checked {
+.login-shortcut-modal
+  .login-type-btn
+  .ant-radio-group
+  .ant-radio-wrapper-checked {
   background-color: #fff;
   opacity: 1;
   color: #000;
@@ -120,7 +127,6 @@ th {
   height: 30px;
   cursor: pointer;
   overflow: hidden;
-
 }
 
 .profile-iamge {
@@ -146,7 +152,6 @@ th {
 }
 
 main.ant-layout-content {
-
   overflow: auto;
   margin: 10px 0 0;
   padding: 0px 16px;
@@ -164,7 +169,6 @@ main.ant-layout-content {
 }
 
 span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
-
   border-color: #55418d;
 }
 
@@ -203,11 +207,70 @@ span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
 ::-webkit-scrollbar-corner {
   background-color: #f1f1f1;
 }
- .ant-table-content table  th {
+.ant-table-content table th {
   text-align: left !important;
   white-space: nowrap;
 }
 .ant-table-content table tr td {
-    text-align: left !important;
+  text-align: left !important;
   white-space: nowrap;
+}
+
+/* success-modal-css */
+
+.success-modal .ant-modal-title {
+  font-size: 25px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  margin-top: 40px !important;
+  margin-bottom: 40px !important;
+}
+p {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 17px;
+}
+
+.success-modal .ant-btn-default {
+  display: none;
+}
+.success-modal .ant-btn-primary {
+  padding: 16px 32px;
+  border: 1px solid #13c39c;
+  background-color: white !important;
+  color: #038266;
+}
+.success-modal .ant-btn-primary:hover {
+  background: #038266 !important;
+}
+.success-modal .modal-icon {
+  background: #0da785;
+}
+.confimation-modal .modal-icon {
+  height: 80px;
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  top: -46px;
+  left: 42%;
+  right: 42%;
+  position: absolute;
+}
+.confimation-modal .modal-icon {
+  background-color: #fb4b4b;
+}
+.confimation-modal .ant-btn-default {
+  border: 1px solid #fb4b4b;
+  color: #fb4b4b;
+}
+.confimation-modal .ant-btn-default:hover {
+  background-color: #fb4b4b !important;
+  color: #fff !important;
+  border: 1px solid #fb4b4b !important;
+}
+.confimation-modal .ant-modal {
+  width: 100%;
+  max-width: 450px !important;
 }

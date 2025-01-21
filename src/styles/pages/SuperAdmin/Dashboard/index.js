@@ -14,8 +14,9 @@ export const ServeyCardsComponent = styled.div`
 export const MyCardsComponent = styled.div`
   .ant-card-body {
     padding: 25px 25px 25px 25px;
-    width: 350px;
-    height: 250px;
+    max-width: 350px;
+    width:100%;
+    height: 260px;
   }
   .cards .ant-card.ant-card-bordered {
     border-radius: 15px;
@@ -27,11 +28,16 @@ export const MyCardsComponent = styled.div`
     border-radius: 15px;
     box-shadow: 0px 2px 8px 0px #00000022;
   }
-    .payment-history .ant-card-body {
+  .payment-history .ant-card-body {
     padding: 25px 15px 15px 15px;
-    }
+  }
 
-    .card-second .card-number{
-        background: white;
-    }
+  .card-second .card-number {
+    background: white;
+  }
+
+  .card-number {
+    width: 100%;
+    max-width: 420px;
+  }
 `;

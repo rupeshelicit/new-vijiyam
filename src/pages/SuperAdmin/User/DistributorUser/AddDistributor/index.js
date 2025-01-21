@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Col,
@@ -10,56 +10,184 @@ import {
   Upload,
   Switch,
   DatePicker,
-} from "antd"; // Import Ant Design components
+} from "antd";
 import { Container } from "styles/components/common/Layout";
 import { ClientAdminComponent } from "styles/pages/SuperAdmin/user";
 import FormInput from "components/common/FormControl/FormInput";
 import DropdownSelect from "components/common/FormControl/DropdownSelect";
 import usePost from "hooks/usePost";
+import useGet from "hooks/useGet";
+import {
+  CREAT_CLIENT,
+  CREAT_DISTRIBUTOR,
+  GET_ASSEMBLY_LIST,
+  GET_DISTRICT_LIST_BY_STATE,
+  GET_ELECTION_PARTY,
+  GET_STATE_LIST,
+} from "constants/api";
+import UploadFile from "components/common/FormControl/UploadFile";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
-const UploadIcon = () => (
-  <svg
-    width="70"
-    height="50"
-    viewBox="0 0 70 50"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M48.306 9.45713C55.6002 3.93341 66.2299 10.3731 66.2299 17.1161C66.2299 21.4711 64.5621 23.1793 61.9791 24.9999C75.0065 31.9734 69.1105 47.3982 57.7453 49.9999H18.0512C-0.59142 49.9999 -7.48693 24.719 12.3629 18.594C8.64003 3.74236 37.7326 -9.66514 48.306 9.45713ZM30.3598 39.0761V30.1528H22.3805L34.8969 15.082L47.4132 30.1528H39.434V39.0761H30.3598Z"
-      fill="black"
-      fillOpacity="0.5"
-    />
-  </svg>
-);
 
 const AddNewDistributor = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
+
   const [partySymbole, setPartySymbole] = useState();
   const [candidatesPhoto, setCandidatesPhoto] = useState();
+  const [states, setStates] = useState([]);
+  const [assambly, setAssambly] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [party, setParty] = useState([]);
+  const [password, setPassword] = useState();
+  const [confirmassword, setConfirmPassword] = useState();
+  const [selectState, setSelectState] = useState();
+  const [slipSettings, setSlipSettings] = useState(false);
+  const [candidateImage, setCandidateImage] = useState(false);
+  const [isOnline, setiIsOnline] = useState(false);
+  const [status, setStatus] = useState(false);
+  const [isPermission, setIsPermission] = useState(false);
   const { mutateAsync: AddNewDistributors } = usePost();
+  const { mutateAsync: GetStateList } = useGet();
+  const { mutateAsync: GetAssemblyList } = useGet();
+  const { mutateAsync: GetDistrictList } = useGet();
+  const { mutateAsync: GetPartyList } = useGet();
 
-  const handleUpload = (info) => {};
+  const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
+  const usersRole = JSON.parse(localStorage.getItem("roleList"));
+  const distributor = usersRole.filter((item) => item.name === "distributor");
+  const distributorUserID = distributor[0]?.id;
+  useEffect(() => {
+    getStateList();
+    getElectionParty();
+    {
+      selectState && getAssemblyist();
+    }
+    {
+      selectState && getDistrict();
+    }
+  }, [selectState]);
 
-  const onFinish = (creds) => {
+  const getStateList = async () => {
+    await GetStateList({
+      url: GET_STATE_LIST,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setStates(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getRoleList = async () => {
+    await GetStateList({
+      url: GET_STATE_LIST,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setStates(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const getAssemblyist = async () => {
+    await GetAssemblyList({
+      url: GET_ASSEMBLY_LIST + selectState,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setAssambly(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getDistrict = async () => {
+    await GetDistrictList({
+      url: GET_DISTRICT_LIST_BY_STATE + selectState,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setDistrictList(res && res.districts);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getElectionParty = async () => {
+    await GetPartyList({
+      url: GET_ELECTION_PARTY,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setParty(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleSubmit = async (creds) => {
+    const formData = new FormData();
     setLoading(true);
-    const payload = creds;
-    AddNewDistributors({
-      url: "url",
+
+    formData.append("image", candidatesPhoto);
+    formData.append("partyIcon", partySymbole);
+    formData.append("name", creds?.fullName || "");
+    formData.append("fatherName", creds?.fatherName || "");
+    formData.append("partyId", creds?.partyName || "");
+    formData.append("dateOfBirth", creds?.dateOfBirth || "");
+    formData.append("gender", creds?.gender || "");
+    formData.append("email", creds?.email || "");
+    formData.append("mobileNumber", creds?.mobileNumber || "");
+    formData.append("districtId", creds?.districtName || "");
+    formData.append("stateId", creds?.stateName || "");
+    formData.append("vidhansabhaId", creds?.assemblyName || "");
+    formData.append("userId", loginUsers.id || "");
+    formData.append("password", creds?.password || "");
+    formData.append("role", distributorUserID || "");
+    formData.append("isCandidateImage", candidateImage || "");
+    formData.append("isSlipSetting", slipSettings || "");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    const payload = formData;
+
+    await AddNewDistributors({
+      url: CREAT_DISTRIBUTOR,
       type: "details",
       payload: payload,
     })
       .then((res) => {
         if (res) {
-          console.log(res);
+          toast.success("Success! You have successfully created a new client", {
+            position: "top-right",
+          });
+          form.resetFields();
         }
       })
       .catch((error) => {
-        console.log(error);
+        toast.error(`Error! ${error?.response?.data?.message}`, {
+          position: "top-right",
+        });
+        form.resetFields();
       });
 
     setTimeout(() => {
@@ -75,12 +203,17 @@ const AddNewDistributor = () => {
             className="text-[20px] font-semibold mb-[10px] mt-[20px]"
             style={{ marginBottom: "10px" }}
           >
-            Add New Distributor
+            Add Distributor
           </h3>
         </Row>
 
         <Card>
-          <Form layout="vertical" onFinish={onFinish} className="mt-4">
+          <Form
+            layout="vertical"
+            onFinish={handleSubmit}
+            form={form}
+            className="mt-4"
+          >
             <h4
               className="text-[18px] font-semibold mb-[5px] text-[#54408C]"
               style={{ marginBottom: "10px" }}
@@ -97,7 +230,7 @@ const AddNewDistributor = () => {
                   name="fullName"
                   label="Full Name"
                   rules={[
-                    { required: false, message: "Please enter the name" },
+                    { required: true, message: "Please Enter Full Name " },
                   ]}
                 >
                   <FormInput
@@ -114,69 +247,62 @@ const AddNewDistributor = () => {
                   label="Father Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please enter the Father Name",
+                      required: true,
+                      message: "Please Enter Father Name",
                     },
                   ]}
                 >
                   <FormInput
                     name="fatherName"
-                    placeholder="Father Name"
+                    placeholder="Enter Father Name"
                     required={false}
                   />
                 </Form.Item>
               </Col>
               <Col span={8}>
                 <Form.Item
-                  name="gmail"
-                  label="Gmail"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Please enter the Gmail",
-                    },
-                    {
-                      pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
-                      message:
-                        "Please enter a valid Gmail address (e.g., user@gmail.com)",
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder="Enter Gmail"
-                    maxLength={50}
-                    name="email"
-                    className="email"
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col span={8}>
-                {" "}
-                <Form.Item
                   name="dateOfBirth"
-                  label="Date Of Birth"
+                  label="DOB"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a Date Of Birth",
+                      required: true,
+                      message: "Please Select  Date of Birth ",
                     },
                   ]}
                 >
                   <DatePicker
                     className="w-[100%]"
-                    name="electionDate"
+                    name="dateOfBirth"
                     required={false}
                   />
                 </Form.Item>
               </Col>
               <Col span={8}>
                 <Form.Item
-                  label="Phone Number"
-                  name="phone"
+                  name="email"
+                  label="Email"
                   rules={[
                     {
-                      required: false,
+                      required: true,
+                      message: "Please Enter Email",
+                    },
+                  ]}
+                >
+                  <FormInput
+                    name="email"
+                    placeholder="Enter Gmail"
+                    required={false}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col span={8}>
+                <Form.Item
+                  label="Phone Number"
+                  name="mobileNumber"
+                  rules={[
+                    {
+                      required: true,
                       message: "Please Input Your Phone Number!",
                     },
                     {
@@ -186,8 +312,10 @@ const AddNewDistributor = () => {
                   ]}
                 >
                   <FormInput
+                    name="mobileNumber"
                     placeholder="Enter Mobile Number"
-                    maxLength={10} // Ensures the user cannot input more than 10 digits
+                    required={false}
+                    maxLength={10}
                   />
                 </Form.Item>
               </Col>
@@ -197,13 +325,17 @@ const AddNewDistributor = () => {
                   name="gender"
                   label="Gender"
                   rules={[
-                    { required: false, message: "Please select a Gender" },
+                    { required: true, message: "Please Select a Gender" },
                   ]}
                 >
                   <DropdownSelect
                     name={"gender"}
                     placeholder="Please select a Gender"
-                    options={["Female", "Other", "Male"]}
+                    options={[
+                      { id: "Male", name: "Male" },
+                      { id: "Female", name: "Female" },
+                      { id: "Other", name: "Other" },
+                    ]}
                     required={false}
                   />
                 </Form.Item>
@@ -226,7 +358,7 @@ const AddNewDistributor = () => {
                   label="Election Type"
                   rules={[
                     {
-                      required: false,
+                      required: true,
                       message: "Please select a Election Type",
                     },
                   ]}
@@ -234,7 +366,11 @@ const AddNewDistributor = () => {
                   <DropdownSelect
                     name={"electionType"}
                     placeholder="Select Election Typer"
-                    options={["VidhnaSabha", "LookSabha", "Other"]}
+                    options={[
+                      { id: "Vidhansabha", name: "Vidhansabha" },
+                      { id: "LookSabha", name: "LookSabha" },
+                      { id: "Nigam", name: "Nigam" },
+                    ]}
                     required={false}
                   />
                 </Form.Item>
@@ -246,16 +382,17 @@ const AddNewDistributor = () => {
                   label="State Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a State Name",
+                      required: true,
+                      message: "Please Select a State Name",
                     },
                   ]}
                 >
                   <DropdownSelect
                     name={"stateName"}
-                    placeholder="Select State Nam"
-                    options={["Madhya Pradesh", "Gujrat", "Other"]}
+                    placeholder="Select State Name"
+                    options={states && states}
                     required={false}
+                    setSelectState={setSelectState}
                   />
                 </Form.Item>
               </Col>
@@ -266,30 +403,23 @@ const AddNewDistributor = () => {
                   label="Assembly Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select an Assembly Name",
+                      required: true,
+                      message: "Please Select  Assembly Name",
                     },
                   ]}
                 >
-                  <Select
-                    showSearch
-                    placeholder="Select Assembly Name"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      (option?.children ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
+                  <DropdownSelect
+                    name={"assamblyName"}
+                    options={assambly && assambly}
+                    placeholder="Select Party Assambly"
+                    required={false}
+                    disabled={selectState ? false : true}
+                    defaultOption={
+                      !assambly.length
+                        ? "No Assambly found  Select Correct State "
+                        : "Select Assambly"
                     }
-                    filterSort={(optionA, optionB) =>
-                      (optionA?.children ?? "")
-                        .toLowerCase()
-                        .localeCompare((optionB?.children ?? "").toLowerCase())
-                    }
-                  >
-                    <Option value="Indore-1">Indore-1</Option>
-                    <Option value="Indore-2">Indore-2</Option>
-                    <Option value="Indore-3">Indore-3</Option>
-                  </Select>
+                  />
                 </Form.Item>
               </Col>
 
@@ -299,96 +429,75 @@ const AddNewDistributor = () => {
                   label="Party Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a Party Name",
+                      required: true,
+                      message: "Please Select a Party Name",
                     },
                   ]}
                 >
                   <DropdownSelect
                     name={"partyName"}
+                    options={party && party}
                     placeholder="Select Party Name"
-                    options={["BJP", "Congress", "Other"]}
                     required={false}
+                    disabled={false}
+                    defaultOption={"Select Party Name"}
                   />
                 </Form.Item>
               </Col>
               <Col span={8}>
                 <Form.Item
-                  name="district"
+                  name="districtName"
                   label="District"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a District",
+                      required: true,
+                      message: "Please Select a District",
                     },
                   ]}
                 >
                   <DropdownSelect
-                    name={"district"}
-                    placeholder="Select Party Name"
-                    options={["Indore", "Ujjain", "Ujjain"]}
+                    name={"districtName"}
+                    options={districtList && districtList}
+                    placeholder="Select Party District"
                     required={false}
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col span={8}>
-                <Form.Item
-                  name="electionDate"
-                  label="Election Date"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Please select a election date",
-                    },
-                  ]}
-                >
-                  <DatePicker
-                    className="w-[100%]"
-                    name="electionDate"
-                    required={false}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="acharSanhitaDate"
-                  label="Achar Sanhita Date"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Please select a Achar Sanhita Date",
-                    },
-                  ]}
-                >
-                  <DatePicker
-                    className="w-[100%]"
-                    name="acharSanhitaDate"
-                    required={false}
+                    disabled={selectState ? false : true}
+                    defaultOption={
+                      !districtList.length
+                        ? "No District found  Select Correct State "
+                        : "Select District"
+                    }
                   />
                 </Form.Item>
               </Col>
             </Row>
             <Row
               gutter={[16, 16]}
-              className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
+              className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px] client-upload-input-filed"
             >
-              <Col span={8}>
-                <Form.Item name="photos" className="mb-1 image-upload">
+              <Col span={6}>
+                <Form.Item
+                  name="photos"
+                  className="mb-1 image-upload"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Please Uoload Candidate Photo ",
+                    },
+                  ]}
+                >
                   <label className="text-[16px] font-normal mb-[20px]">
                     Candidates Photo
                   </label>
-                  <div className="flex justify-between gap-[50px]">
-                    <Upload
-                      className="max-w-[225px] h-[150px]"
-                      listType="picture-card"
-                      showUploadList={false}
-                      beforeUpload={handleUpload}
-                      onChange={setCandidatesPhoto}
-                    >
-                      <UploadIcon />
-                    </Upload>
+                  <div className="flex justify-between gap-[50px] mt-[15px] ">
+                    <UploadFile
+                      inputLable={"Upload Candidates Photo"}
+                      setFile={setCandidatesPhoto}
+                      inputName="candidatesPhoto"
+                    />
+
+                 
                   </div>
+                  {candidatesPhoto && candidatesPhoto.name}
                 </Form.Item>
               </Col>
             </Row>
@@ -405,7 +514,7 @@ const AddNewDistributor = () => {
               <Col span={8}>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setSlipSettings(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     Slip Settings{" "}
@@ -413,26 +522,36 @@ const AddNewDistributor = () => {
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch
+                      onChange={(checked) => setCandidateImage(checked)}
+                    />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    with Candidate  Image
+                    with Candidate Image
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setiIsOnline(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Slip Settings{" "}
+                    isOnline
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setStatus(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Slip Settings{" "}
+                    status
+                  </label>
+                </div>
+                <div className="flex gap-[50px] items-center mb-[10px]">
+                  <div className="settings ">
+                    <Switch onChange={(checked) => setIsPermission(checked)} />
+                  </div>
+                  <label className="text-[20px] font-semibold items-center">
+                    Permission
                   </label>
                 </div>
               </Col>
@@ -453,7 +572,9 @@ const AddNewDistributor = () => {
                 <Form.Item
                   name="userName"
                   label="User Name"
-                  rules={[{ required: false, message: "Please user name" }]}
+                  rules={[
+                    { required: true, message: "Please Enter User Name" },
+                  ]}
                 >
                   <FormInput
                     name="userName"
@@ -470,13 +591,14 @@ const AddNewDistributor = () => {
                   label="Email"
                   rules={[
                     {
-                      required: false,
-                      message: "Please enter the email",
+                      required: true,
+                      message: "Please Enter  email",
                     },
                   ]}
                 >
                   <FormInput
                     name="email"
+                    type="email"
                     placeholder="abc@gmail.com"
                     required={false}
                   />
@@ -486,14 +608,14 @@ const AddNewDistributor = () => {
                 <Form.Item
                   name="password"
                   label="Password"
-                  rules={[
-                    { required: false, message: "Please enter password" },
-                  ]}
+                  rules={[{ required: true, message: "Please Enter password" }]}
                 >
                   <FormInput
                     name="password"
                     placeholder="Enter password"
                     required={false}
+                    type={"password"}
+                    onchange={(e) => setPassword(e.target.value)}
                   />
                 </Form.Item>
               </Col>
@@ -513,17 +635,24 @@ const AddNewDistributor = () => {
                     name="confirmassword"
                     placeholder="Confirm Password"
                     required={false}
+                    type={"password"}
+                    onchange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </Form.Item>
+                <p className="text-[16px] text-[red]">
+                  {confirmassword !== password && password.length >= 3
+                    ? "Passwords do not match, please check"
+                    : ""}
+                </p>
               </Col>
             </Row>
             <Form.Item>
               <Button
+                loading={loading}
                 type="primary"
                 htmlType="submit"
                 className="sigin-btn text-[16px] font-[500] h-[48px] bg-[#54408C] max-w-[200px] mt-[30px]"
                 style={{ width: "100%" }}
-                // loading={loading}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.backgroundColor = "#432C6A")
                 }

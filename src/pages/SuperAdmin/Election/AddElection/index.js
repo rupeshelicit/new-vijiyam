@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Col,
@@ -15,31 +15,148 @@ import { Container } from "styles/components/common/Layout";
 import { ClientAdminComponent } from "styles/pages/SuperAdmin/user";
 import FormInput from "components/common/FormControl/FormInput";
 import DropdownSelect from "components/common/FormControl/DropdownSelect";
+import usePost from "hooks/usePost";
+import useGet from "hooks/useGet";
+import {
+  CREAT_CLIENT,
+  CREAT_DISTRIBUTOR,
+  CREAT_ELECTION,
+  GET_ASSEMBLY_LIST,
+  GET_DISTRICT_LIST_BY_STATE,
+  GET_ELECTION_PARTY,
+  GET_STATE_LIST,
+} from "constants/api";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
 
-const AddElections = () => {
-  const UploadIcon = () => (
-    <svg
-      width="70"
-      height="50"
-      viewBox="0 0 70 50"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M48.306 9.45713C55.6002 3.93341 66.2299 10.3731 66.2299 17.1161C66.2299 21.4711 64.5621 23.1793 61.9791 24.9999C75.0065 31.9734 69.1105 47.3982 57.7453 49.9999H18.0512C-0.59142 49.9999 -7.48693 24.719 12.3629 18.594C8.64003 3.74236 37.7326 -9.66514 48.306 9.45713ZM30.3598 39.0761V30.1528H22.3805L34.8969 15.082L47.4132 30.1528H39.434V39.0761H30.3598Z"
-        fill="black"
-        fillOpacity="0.5"
-      />
-    </svg>
-  );
-  const handleFinish = (values) => {
-    console.log("Form values:", values);
+const AddNewDistributor = () => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = React.useState(false);
+
+  const [states, setStates] = useState([]);
+  const [assambly, setAssambly] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [party, setParty] = useState([]);
+  const [selectState, setSelectState] = useState();
+  // const [slipSettings, setSlipSettings] = useState(false);
+  // const [candidateImage, setCandidateImage] = useState(false);
+  // const [isOnline, setiIsOnline] = useState(false);
+  // const [status, setStatus] = useState(false);
+  // const [isPermission, setIsPermission] = useState(false);
+  const { mutateAsync: AddNewElection } = usePost();
+  const { mutateAsync: GetStateList } = useGet();
+  const { mutateAsync: GetAssemblyList } = useGet();
+  const { mutateAsync: GetDistrictList } = useGet();
+  const { mutateAsync: GetPartyList } = useGet();
+
+  useEffect(() => {
+    getStateList();
+    getElectionParty();
+    {
+      selectState && getAssemblyist();
+    }
+    {
+      selectState && getDistrict();
+    }
+  }, [selectState]);
+
+  const getStateList = async () => {
+    await GetStateList({
+      url: GET_STATE_LIST,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setStates(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
-  const handleUpload = (info) => {};
+
+  const getAssemblyist = async () => {
+    await GetAssemblyList({
+      url: GET_ASSEMBLY_LIST + selectState,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setAssambly(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getDistrict = async () => {
+    await GetDistrictList({
+      url: GET_DISTRICT_LIST_BY_STATE + selectState,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setDistrictList(res && res.districts);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getElectionParty = async () => {
+    await GetPartyList({
+      url: GET_ELECTION_PARTY,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setParty(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleSubmit = async (creds) => {
+    setLoading(true);
+
+    const payload = {
+      name: creds?.eName,
+      electionType: creds?.electionType,
+      stateId: creds?.stateName,
+      districtId: creds?.districtName,
+      vidhansabhaId: creds?.assemblyName,
+      electionDate: creds?.electionDate,
+      acharSanhitaDate: creds?.acharSanhitaDate,
+    };
+    await AddNewElection({
+      url: CREAT_ELECTION,
+      type: "details",
+      payload: payload,
+      token:true
+    })
+      .then((res) => {
+        if (res) {
+          toast.success("Success! You have successfully created a new Election", {
+            position: "top-right",
+          });
+          form.resetFields();
+        }
+      })
+      .catch((error) => {
+        toast.error(`Error! ${error?.response?.data?.message}`, {
+          position: "top-right",
+        });
+      });
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  };
 
   return (
     <ClientAdminComponent>
@@ -49,12 +166,17 @@ const AddElections = () => {
             className="text-[20px] font-semibold mb-[10px] mt-[20px]"
             style={{ marginBottom: "10px" }}
           >
-            Add New Election
+            Add Election
           </h3>
         </Row>
 
         <Card>
-          <Form layout="vertical" onFinish={handleFinish} className="mt-4">
+          <Form
+            layout="vertical"
+            onFinish={handleSubmit}
+            form={form}
+            className="mt-4"
+          >
             <h4
               className="text-[18px] font-semibold mb-[5px] text-[#54408C] mt-[10px]"
               style={{ marginBottom: "10px" }}
@@ -66,12 +188,28 @@ const AddElections = () => {
               className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
             >
               <Col span={8}>
+                {" "}
+                <Form.Item
+                  name="eName"
+                  label="Election Name"
+                  rules={[
+                    { required: true, message: "Please Enter Election Name " },
+                  ]}
+                >
+                  <FormInput
+                    name="eName"
+                    placeholder="Election Name "
+                    required={false}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
                 <Form.Item
                   name="electionType"
                   label="Election Type"
                   rules={[
                     {
-                      required: false,
+                      required: true,
                       message: "Please select a Election Type",
                     },
                   ]}
@@ -79,7 +217,11 @@ const AddElections = () => {
                   <DropdownSelect
                     name={"electionType"}
                     placeholder="Select Election Typer"
-                    options={["VidhnaSabha", "LookSabha", "Other"]}
+                    options={[
+                      { id: "Vidhansabha", name: "Vidhansabha" },
+                      { id: "LookSabha", name: "LookSabha" },
+                      { id: "Nigam", name: "Nigam" },
+                    ]}
                     required={false}
                   />
                 </Form.Item>
@@ -91,16 +233,17 @@ const AddElections = () => {
                   label="State Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a State Name",
+                      required: true,
+                      message: "Please Select a State Name",
                     },
                   ]}
                 >
                   <DropdownSelect
                     name={"stateName"}
-                    placeholder="Select State Nam"
-                    options={["Madhya Pradesh", "Gujrat", "Other"]}
+                    placeholder="Select State Name"
+                    options={states && states}
                     required={false}
+                    setSelectState={setSelectState}
                   />
                 </Form.Item>
               </Col>
@@ -111,55 +254,48 @@ const AddElections = () => {
                   label="Assembly Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a Assembly Name",
+                      required: true,
+                      message: "Please Select  Assembly Name",
                     },
                   ]}
                 >
                   <DropdownSelect
-                    name={"assemblyName"}
-                    placeholder="Select Assembly Name"
-                    options={["Indore-1", "Indore-2", "Indore-3"]}
+                    name={"assamblyName"}
+                    options={assambly && assambly}
+                    placeholder="Select Party Assambly"
                     required={false}
+                    disabled={selectState ? false : true}
+                    defaultOption={
+                      !assambly.length
+                        ? "No Assambly found  Select Correct State "
+                        : "Select Assambly"
+                    }
                   />
                 </Form.Item>
               </Col>
 
               <Col span={8}>
                 <Form.Item
-                  name="partyName"
-                  label="Party Name"
-                  rules={[
-                    {
-                      required: false,
-                      message: "Please select a Party Name",
-                    },
-                  ]}
-                >
-                  <DropdownSelect
-                    name={"partyName"}
-                    placeholder="Select Party Name"
-                    options={["BJP", "Congress", "Other"]}
-                    required={false}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="district"
+                  name="districtName"
                   label="District"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a District",
+                      required: true,
+                      message: "Please Select a District",
                     },
                   ]}
                 >
                   <DropdownSelect
-                    name={"district"}
-                    placeholder="Select Party Name"
-                    options={["Indore", "Ujjain", "Ujjain"]}
+                    name={"districtName"}
+                    options={districtList && districtList}
+                    placeholder="Select Party District"
                     required={false}
+                    disabled={selectState ? false : true}
+                    defaultOption={
+                      !districtList.length
+                        ? "No District found  Select Correct State "
+                        : "Select District"
+                    }
                   />
                 </Form.Item>
               </Col>
@@ -175,7 +311,11 @@ const AddElections = () => {
                     },
                   ]}
                 >
-                  <DatePicker className="w-[100%]" name="electionDate" required={false} />
+                  <DatePicker
+                    className="w-[100%]"
+                    name="electionDate"
+                    required={false}
+                  />
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -189,12 +329,16 @@ const AddElections = () => {
                     },
                   ]}
                 >
-                  <DatePicker className="w-[100%]" name="acharSanhitaDate" required={false}  />
+                  <DatePicker
+                    className="w-[100%]"
+                    name="acharSanhitaDate"
+                    required={false}
+                  />
                 </Form.Item>
               </Col>
             </Row>
 
-            <h4
+            {/* <h4
               className="text-[18px] font-semibold mb-[5px] text-[#54408C] mt-[10px]"
               style={{ marginBottom: "10px" }}
             >
@@ -207,7 +351,7 @@ const AddElections = () => {
               <Col span={8}>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setSlipSettings(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     Slip Settings{" "}
@@ -215,38 +359,48 @@ const AddElections = () => {
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch
+                      onChange={(checked) => setCandidateImage(checked)}
+                    />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    with Candidate  Image
+                    with Candidate Image
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setiIsOnline(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Slip Settings{" "}
+                    isOnline
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setStatus(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Slip Settings{" "}
+                    status
+                  </label>
+                </div>
+                <div className="flex gap-[50px] items-center mb-[10px]">
+                  <div className="settings ">
+                    <Switch onChange={(checked) => setIsPermission(checked)} />
+                  </div>
+                  <label className="text-[20px] font-semibold items-center">
+                    Permission
                   </label>
                 </div>
               </Col>
-            </Row>
+            </Row> */}
 
             <Form.Item>
               <Button
+                loading={loading}
                 type="primary"
                 htmlType="submit"
                 className="sigin-btn text-[16px] font-[500] h-[48px] bg-[#54408C] max-w-[200px] mt-[30px]"
                 style={{ width: "100%" }}
-                // loading={loading}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.backgroundColor = "#432C6A")
                 }
@@ -264,4 +418,4 @@ const AddElections = () => {
   );
 };
 
-export default AddElections;
+export default AddNewDistributor;

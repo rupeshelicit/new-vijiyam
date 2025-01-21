@@ -1,5 +1,8 @@
 import { render } from "@testing-library/react";
 import Actions from "components/common/Action";
+import DeleteComponet from "components/common/Action/Delete";
+import EditComponent from "components/common/Action/Edit";
+import ViewComponent from "components/common/Action/View";
 
 export const columns = [
   {
@@ -193,22 +196,28 @@ export const columns = [
     dataIndex: "createdAt",
     key: "createdAt",
     align: "center",
-    render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+    render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
     sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
   },
   {
     title: "Update Date",
     dataIndex: "updatedAt",
     key: "updatedAt",
-    render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+    render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
     align: "center",
     sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
   },
   {
     title: "Action",
     dataIndex: "action",
-    key: "action", // Corrected key typo ("acion" to "action")
+    key: "action",
     align: "center",
-    render: (text, record) => <Actions record={record} text={text} />,
+    render: (text, record) => (
+      <div className="flex gap-[10px]">
+        {/* <EditComponent record={record} roleType={"voter"} /> */}
+        <DeleteComponet record={record} roleType={"voter"} />
+        <ViewComponent record={record} roleType={"voter"} />
+      </div>
+    ),
   },
 ];

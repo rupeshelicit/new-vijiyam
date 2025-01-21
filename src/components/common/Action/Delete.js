@@ -1,12 +1,20 @@
 import { DeleteOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import React from "react";
+import React, { useState } from "react";
+import DeleteModal from "./DeleteModal";
 
-const DeleteComponet = (record, onDelete) => {
+const DeleteComponent = ({ record, roleType }) => {
+  const [isconfirmationModal, setIsConfirmationModal] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
   const handleDelete = () => {
-    if (onDelete) {
-        onDelete(record);
+    setConfirmation(true);
+    if (roleType === "voter" && confirmation == true) {
+      handleVoterDelete();
     }
+  };
+
+  const handleVoterDelete = () => {
+    console.log(record);
   };
 
   return (
@@ -17,8 +25,15 @@ const DeleteComponet = (record, onDelete) => {
         size="small"
         danger
       />
+
+      <DeleteModal
+        isModalOpen={isconfirmationModal}
+        setIsModalOpen={setIsConfirmationModal}
+        name={roleType}
+        setConfirmation
+      />
     </div>
   );
 };
 
-export default DeleteComponet;
+export default DeleteComponent;

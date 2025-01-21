@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 
-const EditComponent = ({ record, onEdit }) => {
+const EditComponent = ({ record, roleType }) => {
   const handleEdit = () => {
     if (onEdit) {
       onEdit(record);
@@ -22,4 +22,3 @@ const EditComponent = ({ record, onEdit }) => {
 };
 
 export default EditComponent;
-

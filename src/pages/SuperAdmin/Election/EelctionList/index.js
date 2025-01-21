@@ -145,11 +145,10 @@ function ElectionsList() {
     })
       .then((res) => {
         if (res) {
-          // let newRes = [...ElecotionData];
-          // newRes = newRes.concat(res?.items);
-          // console.log(newRes, "newRowsssssssssss");
+          let newRes = [...ElecotionData];
+          newRes = newRes.concat(res?.items);
 
-          setElecotionData(res?.items);
+          setElecotionData(newRes);
         }
       })
       .catch((error) => console.log(error));

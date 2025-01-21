@@ -6,7 +6,8 @@ import { LoginPage } from "styles/pages/Login";
 import sideImg from "assets/images/side right.png";
 import Logo from "assets/svg/logo.svg";
 import usePost from "hooks/usePost";
-import { LOGIN } from "constants/api";
+import { GET_ROLE_LIST, LOGIN } from "constants/api";
+import useGet from "hooks/useGet";
 const Login = () => {
   const [userDetails, setUserDetails] = useState("");
   console.log(userDetails, setUserDetails);
@@ -15,7 +16,7 @@ const Login = () => {
   const { setCustmerDetails } = useMetaData();
   const [loading, setLoading] = useState(false);
   const { mutateAsync: UserLogin } = usePost();
-
+  const { mutateAsync: RoleList } = useGet();
   const onFinish = (creds) => {
     if (creds && creds?.useremail && creds?.password) {
       const payloads = { username: creds.useremail, password: creds.password };
@@ -26,15 +27,16 @@ const Login = () => {
       })
         .then((res) => {
           if (res) {
-            console.log(res,"responcedata")
+            console.log(res, "responcedata");
             localStorage.setItem("account_type", res.role);
-            const roleId = res.role;
+            const role = res.role;
             const token = res.token;
             setCustmerDetails({ account_type: res.role });
-            localStorage.setItem("roleId", roleId);
+            localStorage.setItem("roleId", role);
             localStorage.setItem("token", token);
             localStorage.setItem("userDetails", JSON.stringify(res));
             navigate("/");
+            getRoleList();
           }
         })
         .catch((err) => {
@@ -47,7 +49,21 @@ const Login = () => {
     }, 3000);
   };
 
-  
+  const getRoleList = async () => {
+    await RoleList({
+      url: GET_ROLE_LIST,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          localStorage.setItem("roleList", JSON.stringify(res));
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const onFinishFailed = () => {};
 
   return (

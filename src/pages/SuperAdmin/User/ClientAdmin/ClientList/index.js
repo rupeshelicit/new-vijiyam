@@ -15,6 +15,7 @@ import { Button } from "antd";
 import EditComponent from "components/common/Action/Edit";
 import DeleteComponet from "components/common/Action/Delete";
 import ViewComponent from "components/common/Action/View";
+import { render } from "@testing-library/react";
 
 function ClientList() {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ function ClientList() {
   const { mutateAsync: ClientList } = useGet();
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(0);
+  const usersRole = JSON.parse(localStorage.getItem("roleList"));
+  const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
+  const clientId = clientRole[0]?.id;
   const handleAddnewclient = () => {
     navigate("/add-new-client");
   };
@@ -63,7 +67,7 @@ function ClientList() {
       key: "status",
       align: "center",
       render: (text, record) =>
-        record.status === true ? (
+        record === true ? (
           <Button
             disabled={true}
             className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#54408C] text-[12px] font-medium bg-[#54408C66] border-[none]"
@@ -108,6 +112,7 @@ function ClientList() {
       dataIndex: "dateOfBirth",
       key: "dateOfBirth",
       align: "center",
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
     },
     {
@@ -131,21 +136,31 @@ function ClientList() {
       align: "center",
       sorter: (a, b) => a.gender.localeCompare(b.gender),
     },
-      {
+    {
       title: "State Name",
-      dataIndex: "stateId",
-      key: "stateId",
+      dataIndex: "state",
+      key: "state",
       align: "center",
-      sorter: (a, b) => a.stateId.localeCompare(b.stateId),
+      render: (record) => record?.name,
+      sorter: (a, b) => a.state.localeCompare(b.state),
     },
     {
       title: "District",
       dataIndex: "district",
       key: "district",
       align: "center",
+      render: (record) => record?.name,
       sorter: (a, b) => a.district.localeCompare(b.district),
     },
-  
+    {
+      title: "Party",
+      dataIndex: "party",
+      key: "party",
+      align: "center",
+      render: (record) => record?.name,
+      sorter: (a, b) => a.party.localeCompare(b.party),
+    },
+
     {
       title: "Age",
       dataIndex: "age",
@@ -163,20 +178,21 @@ function ClientList() {
     },
     {
       title: "Vidhansabha",
-      dataIndex: "vidhansabhaId",
-      key: "vidhansabhaId",
+      dataIndex: "vidhansabha",
+      key: "vidhansabha",
+      render: (record) => record?.name,
       align: "center",
-      sorter: (a, b) => a.vidhansabhaId.localeCompare(b.vidhansabhaId),
+      sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
     },
     {
       title: "Loksabha",
       dataIndex: "loksabhaId",
       key: "loksabhaId",
       align: "center",
+      render: (record) => record?.name,
       sorter: (a, b) => a.loksabhaId.localeCompare(b.loksabhaId),
     },
 
- 
     {
       title: "City",
       dataIndex: "city",
@@ -184,10 +200,7 @@ function ClientList() {
       align: "center",
       sorter: (a, b) => a.city.localeCompare(b.city),
     },
-    
-    
- 
-   
+
     {
       title: "Address",
       dataIndex: "address",
@@ -201,7 +214,7 @@ function ClientList() {
       dataIndex: "createdAt",
       key: "createdAt",
       align: "center",
-      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
     {
@@ -209,7 +222,7 @@ function ClientList() {
       dataIndex: "updatedAt",
       key: "updatedAt",
       align: "center",
-      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
     },
     {
@@ -227,98 +240,20 @@ function ClientList() {
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      serialNumber: "01",
-      activeClient: true,
-      userPermissions: "Active",
-      name: "Anil",
-      fatherName: "name",
-      gmail: "admin@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-    {
-      key: "2",
-      serialNumber: "02",
-      activeClient: false,
-      userPermissions: "Inactive",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "admin@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-    {
-      key: "3",
-      serialNumber: "03",
-      activeClient: false,
-      userPermissions: "Inactive",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "admin@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-    {
-      key: "4",
-      serialNumber: "04",
-      activeClient: true,
-      userPermissions: "Active",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "admin@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-    {
-      key: "5",
-      serialNumber: "05",
-      activeClient: true,
-      userPermissions: "Active",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "admin@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-    {
-      key: "6",
-      serialNumber: "06",
-      activeClient: false,
-      userPermissions: "Inactive",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "admin@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-    {
-      key: "7",
-      serialNumber: "07",
-      activeClient: true,
-      userPermissions: "Active",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "admin@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-  ];
+  const data = [];
 
   const getClietnList = async (page, limit) => {
     const id = loginUsers.role;
     await ClientList({
-      url: `${GET_CLIENTS_LIST+id}?page=${page}&limit=${limit}`,
+      url: `${GET_CLIENTS_LIST + clientId}?page=${page}&limit=${limit}`,
       type: "details",
       token: true,
     })
       .then((res) => {
         if (res) {
-          let newRes = [...voterData];
-          newRes = newRes.concat(res?.items);
-          setClientData(newRes);
+          // let newRes = [...voterData];
+          // newRes = newRes.concat(res?.items);
+          setClientData(res?.items);
         }
       })
       .catch((error) => console.log(error));
@@ -381,8 +316,8 @@ function ClientList() {
             <TableComponent
               rowSelection={rowSelection}
               columns={columns}
-              data={data}
-              setCurrentPage={10}
+              data={clientData}
+              setCurrentPage={setCurrentPage}
             />
             <div className="flex items-center mb-4">
               <input

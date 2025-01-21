@@ -33,7 +33,13 @@ import ClientListDistributor from "pages/Distributor/User/ClientAdmin/ClientList
 import AuthorizedUserDistributor from "pages/Distributor/User/AuthorizedUser";
 import DistributorSurvey from "pages/Distributor/Survey";
 import ElectionsListDistributor from "pages/Distributor/Election/EelctionList";
-import SuperAdminVoterList from "pages/SuperAdmin/DataManagement/UploadVoter/Voter/index"
+import SuperAdminVoterList from "pages/SuperAdmin/DataManagement/UploadVoter/Voter/index";
+import TrainingMaterial from "pages/SuperAdmin/Settings/TrainingMaterial";
+import TermsAndConditionsList from "pages/SuperAdmin/Settings/UploadedTerms&Conditions";
+import TermsAndConditions from "pages/SuperAdmin/Settings/Terms&Conditions";
+import UploadGuidelinesAndTerms from "pages/SuperAdmin/Settings/UploadedTerms&Conditions";
+import AuthorizedUserSuperAdmin from "pages/SuperAdmin/User/AuthorizedUser";
+import AddNewAuthorizedUsers from "pages/SuperAdmin/User/AuthorizedUser/AddNewUser";
 export const LoginRoute = {
   component: Login,
   path: "/",
@@ -149,6 +155,16 @@ export const AddNewClientRoute = {
   path: "/add-new-client",
   restricted: true,
 };
+export const AuthorizedUserRoute = {
+  component: AuthorizedUserSuperAdmin,
+  path: "/authorized-users",
+  restricted: true,
+};
+export const AddNewAuthorizedUserRoute = {
+  component: AddNewAuthorizedUsers,
+  path: "/add-new-authorized-users",
+  restricted: true,
+};
 export const ClientProfileRoute = {
   component: ClientProfile,
   path: "/client-profile",
@@ -187,7 +203,22 @@ export const SurveyRoute = {
   path: "/survey",
   restricted: true,
 };
+export const TrainingMaterialRoute = {
+  component: TrainingMaterial,
+  path: "/traning-material",
+  restricted: true,
+};
 
+export const TermsandConditionRoute = {
+  component: TermsAndConditions,
+  path: "/terms-conditions",
+  restricted: true,
+};
+export const UploadguidelinesRoute = {
+  component: UploadGuidelinesAndTerms,
+  path: "/upload-guidlines",
+  restricted: true,
+};
 // Distributor Routes
 export const DistributorsRoute = {
   component: DistributorDashboard,
@@ -211,7 +242,6 @@ export const UploadElectionListDistributorRoute = {
   path: "/upload-elections-list",
   restricted: true,
 };
-
 
 export const ClientListDistributorRoute = {
   component: ClientListDistributor,
@@ -238,7 +268,7 @@ export const ElectionsListDistributorRoute = {
 
 const IRouteS = {
   UN_AUTH_ROUTES: [LoginRoute, ForgotPasswordRoute, NewPasswordRoute],
-
+  //Client Admin
   3: [
     DashboardRoute,
     VoterListRoute,
@@ -252,6 +282,7 @@ const IRouteS = {
     DisplayProfileRoutes,
     MobileSlipsSettingsRoutes,
   ],
+  //Super Admin
   5: [
     SuperDashboardRoute,
     UploadVoterListRoute,
@@ -269,7 +300,12 @@ const IRouteS = {
     ElectionsListRoute,
     SurveyRoute,
     AddBulkElectionsRoute,
+    TrainingMaterialRoute,
+    TermsandConditionRoute,
+    UploadguidelinesRoute,
+    AuthorizedUserRoute,
   ],
+  // Distributor Admin
   4: [
     DistributorsRoute,
     UploadVoterListDistributorRoute,

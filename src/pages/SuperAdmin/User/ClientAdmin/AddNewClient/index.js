@@ -18,31 +18,16 @@ import DropdownSelect from "components/common/FormControl/DropdownSelect";
 import usePost from "hooks/usePost";
 import useGet from "hooks/useGet";
 import {
+  CREAT_CLIENT,
   GET_ASSEMBLY_LIST,
   GET_DISTRICT_LIST_BY_STATE,
   GET_ELECTION_PARTY,
   GET_STATE_LIST,
 } from "constants/api";
 import UploadFile from "components/common/FormControl/UploadFile";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
-const UploadIcon = () => (
-  <svg
-    width="70"
-    height="50"
-    viewBox="0 0 70 50"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M48.306 9.45713C55.6002 3.93341 66.2299 10.3731 66.2299 17.1161C66.2299 21.4711 64.5621 23.1793 61.9791 24.9999C75.0065 31.9734 69.1105 47.3982 57.7453 49.9999H18.0512C-0.59142 49.9999 -7.48693 24.719 12.3629 18.594C8.64003 3.74236 37.7326 -9.66514 48.306 9.45713ZM30.3598 39.0761V30.1528H22.3805L34.8969 15.082L47.4132 30.1528H39.434V39.0761H30.3598Z"
-      fill="black"
-      fillOpacity="0.5"
-    />
-  </svg>
-);
 
 const AddNewClient = () => {
   const [form] = Form.useForm();
@@ -57,14 +42,20 @@ const AddNewClient = () => {
   const [password, setPassword] = useState();
   const [confirmassword, setConfirmPassword] = useState();
   const [selectState, setSelectState] = useState();
+  const [slipSettings, setSlipSettings] = useState(false);
+  const [candidateImage, setCandidateImage] = useState(false);
+  const [isOnline, setiIsOnline] = useState(false);
+  const [status, setStatus] = useState(false);
+  const [isPermission, setIsPermission] = useState(false);
   const { mutateAsync: AddNewClients } = usePost();
   const { mutateAsync: GetStateList } = useGet();
   const { mutateAsync: GetAssemblyList } = useGet();
   const { mutateAsync: GetDistrictList } = useGet();
   const { mutateAsync: GetPartyList } = useGet();
-  const handleUpload = (info) => {
-    console.log(info, "-------------files");
-  };
+
+  const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
+  const usersRole = JSON.parse(localStorage.getItem("roleList"));
+  const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
 
   useEffect(() => {
     getStateList();
@@ -76,29 +67,6 @@ const AddNewClient = () => {
       selectState && getDistrict();
     }
   }, [selectState]);
-
-  const onFinish = (creds) => {
-    // setLoading(true);
-    console.log(creds, "Client-Creads", partySymbole, candidatesPhoto);
-
-    const payload = creds;
-    // await AddNewClients({
-    //   url: "url",
-    //   type: "details",
-    //   payload: payload,
-    // })
-    //   .then((res) => {
-    //     if (res) {
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-  };
 
   const getStateList = async () => {
     await GetStateList({
@@ -115,6 +83,20 @@ const AddNewClient = () => {
       });
   };
 
+  const getRoleList = async () => {
+    await GetStateList({
+      url: GET_STATE_LIST,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setStates(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const getAssemblyist = async () => {
     await GetAssemblyList({
       url: GET_ASSEMBLY_LIST + selectState,
@@ -160,46 +142,56 @@ const AddNewClient = () => {
       });
   };
 
-  const handleSubmit = (creds) => {
+  const handleSubmit = async (creds) => {
     const formData = new FormData();
-    console.log(creds,candidatesPhoto,partySymbole)
-  
-    if (creds && candidatesPhoto && partySymbole) {
-      formData.append("image", candidatesPhoto);
-      formData.append("partyIcon", partySymbole);
-      formData.append("name", creds?.fullName);
-      formData.append("fatherName", creds?.fatherName);
-      formData.append("partyId", creds.partyName);
-      formData.append("dateOfBirth", creds.dateOfBirth);
-      formData.append("gender", creds?.gender);
-      formData.append("districtId", creds.districtName);
-      formData.append("stateId", creds.stateName);
-      formData.append("vidhansabhaId", creds?.assemblyName);
-      formData.append("userId", creds?.userName);
-      formData.append("password", creds?.password);
-  
-      // Debugging: Check the contents of FormData
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ": ", pair[1]);
-      }
-    } else {
-      console.error("Missing required data");
+    setLoading(true);
+
+    formData.append("image", candidatesPhoto);
+    formData.append("partyIcon", partySymbole);
+    formData.append("name", creds?.fullName || "");
+    formData.append("fatherName", creds?.fatherName || "");
+    formData.append("partyId", creds?.partyName || "");
+    formData.append("dateOfBirth", creds?.dateOfBirth || "");
+    formData.append("gender", creds?.gender || "");
+    formData.append("email", creds?.email || "");
+    formData.append("mobileNumber", creds?.mobileNumber || "");
+    formData.append("districtId", creds?.districtName || "");
+    formData.append("stateId", creds?.stateName || "");
+    formData.append("vidhansabhaId", creds?.assemblyName || "");
+    formData.append("userId", loginUsers.id || "");
+    formData.append("password", creds?.password || "");
+    formData.append("role", clientRole[0]?.id || "");
+    formData.append("isCandidateImage", candidateImage || "");
+    formData.append("isSlipSetting", slipSettings || "");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
     }
-  
-    // Uncomment this block for an actual API call
-    // fetch("/api/upload", {
-    //   method: "POST",
-    //   body: formData,
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log("Response:", data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
+
+    const payload = formData;
+
+    await AddNewClients({
+      url: CREAT_CLIENT,
+      type: "details",
+      payload: payload,
+    })
+      .then((res) => {
+        if (res) {
+          toast.success("Success! You have successfully created a new client", {
+            position: "top-right",
+          });
+          form.resetFields();
+        }
+      })
+      .catch((error) => {
+        toast.error(`Error! ${error?.response?.data?.message}`, {
+          position: "top-right",
+        });
+      });
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
   };
-  
 
   return (
     <ClientAdminComponent>
@@ -236,7 +228,7 @@ const AddNewClient = () => {
                   name="fullName"
                   label="Full Name"
                   rules={[
-                    { required: false, message: "Please enter the name" },
+                    { required: true, message: "Please Enter Full Name " },
                   ]}
                 >
                   <FormInput
@@ -253,14 +245,14 @@ const AddNewClient = () => {
                   label="Father Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please enter the Father Name",
+                      required: true,
+                      message: "Please Enter Father Name",
                     },
                   ]}
                 >
                   <FormInput
                     name="fatherName"
-                    placeholder="Father Name"
+                    placeholder="Enter Father Name"
                     required={false}
                   />
                 </Form.Item>
@@ -271,14 +263,14 @@ const AddNewClient = () => {
                   label="DOB"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a Date of Birth ",
+                      required: true,
+                      message: "Please Select  Date of Birth ",
                     },
                   ]}
                 >
                   <DatePicker
                     className="w-[100%]"
-                    name="electionDate"
+                    name="dateOfBirth"
                     required={false}
                   />
                 </Form.Item>
@@ -289,8 +281,8 @@ const AddNewClient = () => {
                   label="Email"
                   rules={[
                     {
-                      required: false,
-                      message: "Please enter the Gmail",
+                      required: true,
+                      message: "Please Enter Email",
                     },
                   ]}
                 >
@@ -305,10 +297,10 @@ const AddNewClient = () => {
               <Col span={8}>
                 <Form.Item
                   label="Phone Number"
-                  name="mobileNumbe"
+                  name="mobileNumber"
                   rules={[
                     {
-                      required: false,
+                      required: true,
                       message: "Please Input Your Phone Number!",
                     },
                     {
@@ -317,7 +309,12 @@ const AddNewClient = () => {
                     },
                   ]}
                 >
-                  <FormInput  name =" mobileNumbe"placeholder="Enter Mobile Number" maxLength={10} />
+                  <FormInput
+                    name="mobileNumber"
+                    placeholder="Enter Mobile Number"
+                    required={false}
+                    maxLength={10}
+                  />
                 </Form.Item>
               </Col>
 
@@ -326,7 +323,7 @@ const AddNewClient = () => {
                   name="gender"
                   label="Gender"
                   rules={[
-                    { required: false, message: "Please select a Gender" },
+                    { required: true, message: "Please Select a Gender" },
                   ]}
                 >
                   <DropdownSelect
@@ -359,7 +356,7 @@ const AddNewClient = () => {
                   label="Election Type"
                   rules={[
                     {
-                      required: false,
+                      required: true,
                       message: "Please select a Election Type",
                     },
                   ]}
@@ -383,8 +380,8 @@ const AddNewClient = () => {
                   label="State Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a State Name",
+                      required: true,
+                      message: "Please Select a State Name",
                     },
                   ]}
                 >
@@ -404,8 +401,8 @@ const AddNewClient = () => {
                   label="Assembly Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select an Assembly Name",
+                      required: true,
+                      message: "Please Select  Assembly Name",
                     },
                   ]}
                 >
@@ -430,8 +427,8 @@ const AddNewClient = () => {
                   label="Party Name"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a Party Name",
+                      required: true,
+                      message: "Please Select a Party Name",
                     },
                   ]}
                 >
@@ -451,8 +448,8 @@ const AddNewClient = () => {
                   label="District"
                   rules={[
                     {
-                      required: false,
-                      message: "Please select a District",
+                      required: true,
+                      message: "Please Select a District",
                     },
                   ]}
                 >
@@ -476,7 +473,16 @@ const AddNewClient = () => {
               className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px] client-upload-input-filed"
             >
               <Col span={6}>
-                <Form.Item name="photos" className="mb-1 image-upload">
+                <Form.Item
+                  name="photos"
+                  className="mb-1 image-upload"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Please Uoload a Party Symbole",
+                    },
+                  ]}
+                >
                   <label className="text-[16px] font-normal mb-[20px]">
                     Party Symbols
                   </label>
@@ -491,7 +497,16 @@ const AddNewClient = () => {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item name="photos" className="mb-1 image-upload">
+                <Form.Item
+                  name="photos"
+                  className="mb-1 image-upload"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Please Uoload Candidate Photo ",
+                    },
+                  ]}
+                >
                   <label className="text-[16px] font-normal mb-[20px]">
                     Candidates Photo
                   </label>
@@ -502,8 +517,9 @@ const AddNewClient = () => {
                       inputName="candidatesPhoto"
                     />
 
-                    {candidatesPhoto && candidatesPhoto.name}
+               
                   </div>
+                  {candidatesPhoto && candidatesPhoto.name}
                 </Form.Item>
               </Col>
             </Row>
@@ -520,7 +536,7 @@ const AddNewClient = () => {
               <Col span={8}>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setSlipSettings(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     Slip Settings{" "}
@@ -528,7 +544,9 @@ const AddNewClient = () => {
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch
+                      onChange={(checked) => setCandidateImage(checked)}
+                    />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     with Candidate Image
@@ -536,18 +554,26 @@ const AddNewClient = () => {
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setiIsOnline(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Slip Settings{" "}
+                    isOnline
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch />
+                    <Switch onChange={(checked) => setStatus(checked)} />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Slip Settings{" "}
+                    status
+                  </label>
+                </div>
+                <div className="flex gap-[50px] items-center mb-[10px]">
+                  <div className="settings ">
+                    <Switch onChange={(checked) => setIsPermission(checked)} />
+                  </div>
+                  <label className="text-[20px] font-semibold items-center">
+                    Permission
                   </label>
                 </div>
               </Col>
@@ -568,7 +594,9 @@ const AddNewClient = () => {
                 <Form.Item
                   name="userName"
                   label="User Name"
-                  rules={[{ required: false, message: "Please user name" }]}
+                  rules={[
+                    { required: true, message: "Please Enter User Name" },
+                  ]}
                 >
                   <FormInput
                     name="userName"
@@ -585,8 +613,8 @@ const AddNewClient = () => {
                   label="Email"
                   rules={[
                     {
-                      required: false,
-                      message: "Please enter the email",
+                      required: true,
+                      message: "Please Enter  email",
                     },
                   ]}
                 >
@@ -602,9 +630,7 @@ const AddNewClient = () => {
                 <Form.Item
                   name="password"
                   label="Password"
-                  rules={[
-                    { required: false, message: "Please enter password" },
-                  ]}
+                  rules={[{ required: true, message: "Please Enter password" }]}
                 >
                   <FormInput
                     name="password"
