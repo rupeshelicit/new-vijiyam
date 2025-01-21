@@ -60,8 +60,7 @@ const VoterList = () => {
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-  }, [voterData]);
+  useEffect(() => {}, [voterData]);
 
   useMemo(() => {
     if (currentPage > prevPage) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Container } from "styles/components/common/Layout";
 import deleteIcon from "assets/svg/trans-icon.svg";
 
@@ -10,6 +10,11 @@ import SwitchComponent from "components/common/SwitchComponent";
 import { ClientListSection } from "styles/pages/SuperAdmin/user";
 import { useNavigate } from "react-router-dom";
 import useGet from "hooks/useGet";
+import { GET_DISTRIBUTOR_LITS } from "constants/api";
+import { Button } from "antd";
+import EditComponent from "components/common/Action/Edit";
+import DeleteComponet from "components/common/Action/Delete";
+import ViewComponent from "components/common/Action/View";
 
 function DistributortList() {
   const navigate = useNavigate();
@@ -17,155 +22,204 @@ function DistributortList() {
   const [userPermissions, setUserPermissions] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const [distributors, setDistributors] = useState([]);
   const { mutateAsync: GetDistributsData } = useGet();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [prevPage, setPrevPage] = useState(0);
+  const usersRole = JSON.parse(localStorage.getItem("roleList"));
+  const distributor = usersRole?.filter((item) => item.name === "distributor");
+  const distributorUserID = distributor[0]?.id;
   const columns = [
     {
       title: "S.NO",
       dataIndex: "serialNumber",
       key: "serialNumber",
       align: "center",
-      sorter: (a, b) => a.serialNumber - b.serialNumber,
+      render: (text, record, index) => {
+        return index + 1;
+      },
     },
     {
-      title: "Active Client",
-      dataIndex: "activeClient",
-      key: "activeClient",
+      title: "Active User",
+      dataIndex: "isPermission",
+      key: "isPermission",
       align: "center",
       render: (text, record) => (
         <SwitchComponent
-          record={record}
           switchStates={accountStatus}
           setSwitchStates={setAccountStatus}
-          text={text}
+          record={record}
         />
       ),
     },
+
     {
       title: "User Permissions",
-      dataIndex: "userPermissions",
-      key: "userPermissions",
+      dataIndex: "status",
+      key: "status",
       align: "center",
-      render: (text, record) => (
-        <SwitchComponent
-          record={record}
-          switchStates={userPermissions}
-          setSwitchStates={setUserPermissions}
-          text={text}
-        />
-      ),
+      render: (text, record) =>
+        record.status === true ? (
+          <Button
+            disabled={true}
+            className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#54408C] text-[12px] font-medium bg-[#54408C66] border-[none]"
+          >
+            <b className="h-[8px] w-[8px] bg-[#14BA6D] rounded-[50px]"></b>{" "}
+            Active
+          </Button>
+        ) : (
+          <Button
+            disabled={true}
+            className="font-medium text-[11px] bg-[#F2F4F7] border-[#F2F4F7] text-[#364254] rounded-[40px]"
+          >
+            <b className="h-[8px] w-[8px] bg-[#6C778B] rounded-[50px]"></b>{" "}
+            Inactive
+          </Button>
+        ),
+      width: 120,
+    },
+    {
+      title: "Voter Id",
+      dataIndex: "voterId",
+      key: "voterId",
+      align: "center",
+      sorter: (a, b) => a.voterId.localeCompare(b.voterId),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       align: "center",
-      sorter: (a, b) => a.name?.localeCompare(b.name ?? "") ?? 0,
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Father Name",
       dataIndex: "fatherName",
       key: "fatherName",
       align: "center",
+      sorter: (a, b) => a.fatherName.localeCompare(b.fatherName),
     },
     {
-      title: "Gmail",
-      dataIndex: "gmail",
-      key: "gmail",
+      title: "Date Of Birth",
+      dataIndex: "dateOfBirth",
+      key: "dateOfBirth",
       align: "center",
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
+      sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
     },
     {
-      title: "LokSabha",
-      dataIndex: "lokSabha",
-      key: "lokSabha",
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
       align: "center",
+      sorter: (a, b) => a.email.localeCompare(b.email),
+    },
+    {
+      title: "Mobile Number",
+      dataIndex: "mobileNumber",
+      key: "mobileNumber",
+      align: "center",
+      sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      align: "center",
+      sorter: (a, b) => a.gender.localeCompare(b.gender),
+    },
+    {
+      title: "State Name",
+      dataIndex: "state",
+      key: "state",
+      align: "center",
+      render: (record) => record?.name,
+      sorter: (a, b) => a.state.localeCompare(b.state),
     },
     {
       title: "District",
       dataIndex: "district",
       key: "district",
       align: "center",
+      render: (record) => record?.name,
+      sorter: (a, b) => a.district.localeCompare(b.district),
     },
-  ];
 
-  const data = [
     {
-      key: "1",
-      serialNumber: "01",
-      activeClient: true,
-      userPermissions: "Active",
-      name: "Anil",
-      fatherName: "name",
-      gmail: "distributor@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+      align: "center",
+      sorter: (a, b) => a.age.localeCompare(b.age),
+    },
+
+    {
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
+      align: "center",
+      sorter: (a, b) => a.designation.localeCompare(b.designation),
     },
     {
-      key: "2",
-      serialNumber: "02",
-      activeClient: false,
-      userPermissions: "Inactive",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "distributor@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
+      title: "Vidhansabha",
+      dataIndex: "vidhansabha",
+      key: "vidhansabha",
+      align: "center",
+      render: (record) => record?.name,
+      sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
     },
     {
-      key: "3",
-      serialNumber: "03",
-      activeClient: false,
-      userPermissions: "Inactive",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "distributor@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
+      title: "Loksabha",
+      dataIndex: "loksabhaId",
+      key: "loksabhaId",
+      align: "center",
+      sorter: (a, b) => a.loksabhaId.localeCompare(b.loksabhaId),
+    },
+
+    {
+      title: "City",
+      dataIndex: "city",
+      key: "city",
+      align: "center",
+      sorter: (a, b) => a.city.localeCompare(b.city),
+    },
+
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      align: "center",
+      sorter: (a, b) => a.address.localeCompare(b.address),
+    },
+
+    {
+      title: "Create Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      align: "center",
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
+      sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
     {
-      key: "4",
-      serialNumber: "04",
-      activeClient: true,
-      userPermissions: "Active",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "distributor@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
+      title: "Update Date",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      align: "center",
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
+      sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
     },
     {
-      key: "5",
-      serialNumber: "05",
-      activeClient: true,
-      userPermissions: "Active",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "distributor@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-    {
-      key: "6",
-      serialNumber: "06",
-      activeClient: false,
-      userPermissions: "Inactive",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "distributor@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
-    },
-    {
-      key: "7",
-      serialNumber: "07",
-      activeClient: true,
-      userPermissions: "Active",
-      name: "Voter1",
-      fatherName: "name",
-      gmail: "distributor@gmail.com",
-      lokSabha: "Indore-1",
-      district: "Indore",
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      render: (text, record) => (
+        <div className="flex gap-[10px]">
+          <EditComponent record={record} />
+          <DeleteComponet record={record} />
+          <ViewComponent record={record} />
+        </div>
+      ),
     },
   ];
 
@@ -181,18 +235,37 @@ function DistributortList() {
     onChange: onSelectChange,
   };
 
-  const getDistributors = () => {
-    GetDistributsData({
-      url: "url",
+  const getDistributorList = async (page, limit) => {
+    await GetDistributsData({
+      url: `${
+        GET_DISTRIBUTOR_LITS + distributorUserID
+      }?page=${page}&limit=${limit}`,
+      type: "details",
+      token: true,
     })
       .then((res) => {
         if (res) {
+          console.log(res?.items, "sdfsdfs");
+
+          // let newRes = [...ElecotionData];
+          // newRes = newRes.concat(res?.items);
+
+          // setElecotionData(newRes);
+          let newRes = [...distributors];
+          newRes = newRes.concat(res?.items);
+          setDistributors(newRes);
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.log(error));
   };
+  useMemo(() => {
+    if (currentPage > prevPage) {
+      getDistributorList(currentPage, 10);
+      setPrevPage((prev) => prev + 1);
+    }
+  }, [currentPage]);
+  console.log(distributors, ".....................");
+
   return (
     <ClientListSection>
       <Container>
@@ -234,7 +307,8 @@ function DistributortList() {
             <TableComponent
               rowSelection={rowSelection}
               columns={columns}
-              data={data}
+              data={distributors}
+              setCurrentPage={setCurrentPage}
             />
             <div className="flex items-center mb-4">
               <input

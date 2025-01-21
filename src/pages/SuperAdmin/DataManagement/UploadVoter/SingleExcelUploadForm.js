@@ -3,16 +3,22 @@ import { Form, Button } from "antd";
 import MultiSelectDropdown from "components/common/FormControl/MultiSelectDropdown";
 import UploadFile from "components/common/FormControl/UploadFile";
 
-const SingleExcelUploadForm = ({ setSeletedAssembly, setUploadFile ,onclick ,isLoding}) => {
-  
+const SingleExcelUploadForm = ({
+  setSeletedAssembly,
+  setUploadFile,
+  onclick,
+  isLoding,
+}) => {
   return (
     <div className="single-excel-upload-content mt-[30px]">
       <h3 className="head text-[20px] font-semibold text-[#54408c]">
         Upload Voter List
       </h3>
       <Form onClick={onclick}>
-        <div className="content pt-[20px] bg-[#EEEEEE63] p-[15px] rounded-[8px]
-">
+        <div
+          className="content pt-[20px] bg-[#EEEEEE63] p-[15px] rounded-[8px]
+"
+        >
           <Form.Item className="max-w-[850px]">
             <MultiSelectDropdown
               title={"Assembly Name"}

@@ -17,7 +17,7 @@ import { GET_VOTER_LIST } from "constants/api";
 import ExcelColum from "Data/DummyDataExcelColum";
 
 const VoterList = () => {
-  console.log("----> voter component")
+  console.log("----> voter component");
   const [activeButton, setActiveButton] = useState("addNewVoter");
   const [multiUserDelete, setMultiUserDelete] = useState(false);
   const [addNewVoters, setAddNewVoters] = useState(false);
@@ -34,7 +34,7 @@ const VoterList = () => {
     setOpeExportDrawer(true);
   };
   const handleAddnewVoter = () => {
-    setAddNewVoters(true)
+    setAddNewVoters(true);
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -42,9 +42,9 @@ const VoterList = () => {
       console.log("Selected Rows:", selectedRows);
     },
   };
-  
+
   const getVoterList = async (page, limit) => {
-    const id = loginUsers.id;
+    const id = loginUsers && loginUsers?.id;
     await GetVoterList({
       url: `${GET_VOTER_LIST + id}?page=${page}&limit=${limit}`,
       type: "details",
@@ -52,26 +52,24 @@ const VoterList = () => {
     })
       .then((res) => {
         if (res) {
-          console.log("------------->>>>>>>>>>0000", res?.items)
-          let newRes = [...voterData]
+          console.log("------------->>>>>>>>>>0000", res?.items);
+          let newRes = [...voterData];
           newRes = newRes.concat(res?.items);
-          console.log("---->>", newRes)
+          console.log("---->>", newRes);
           setVoterData(newRes);
         }
-      
       })
       .catch((error) => console.log(error));
   };
 
   useEffect(() => {
-    console.log('-------->>>>', voterData)
-  }, [voterData])
-  
+    console.log("-------->>>>", voterData);
+  }, [voterData]);
 
   useMemo(() => {
     if (currentPage > prevPage) {
       getVoterList(currentPage, 10);
-      setPrevPage(prev => prev + 1);
+      setPrevPage((prev) => prev + 1);
     }
   }, [currentPage]);
   return (
@@ -118,7 +116,7 @@ const VoterList = () => {
                 <ExportToExcel
                   buttonText={" Export Blank Excel"}
                   Icons={<ExcelIcons />}
-                   columns={ExcelColum}
+                  columns={ExcelColum}
                   // subText={" for Demo add Member list"}
                 />
               </div>
@@ -169,6 +167,6 @@ const VoterList = () => {
       />
     </VoterListSection>
   );
-}
+};
 
 export default VoterList;

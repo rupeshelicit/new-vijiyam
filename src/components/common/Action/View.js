@@ -2,12 +2,8 @@ import { SaveOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import React from "react";
 
-const ViewComponent = (onUpdte) => {
-  const handleUpdate = () => {
-    if (onUpdte) {
-      onEdit(record);
-    }
-  };
+const ViewComponent = (record, roleType) => {
+  const handleUpdate = () => {};
 
   return (
     <div>

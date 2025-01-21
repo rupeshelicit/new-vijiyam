@@ -107,7 +107,7 @@ const AddNewKaryaKarta = ({ setIsModalOpen, isModalOpen }) => {
 
   return (
     <StyledModal
-      title="Upload Voter List"
+      title="Upload KaryaKarta List"
       open={isModalOpen}
       onCancel={closeModal}
       footer={null}

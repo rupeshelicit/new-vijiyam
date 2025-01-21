@@ -49,7 +49,7 @@ const CardDetails = ({
         <p className="text-[15px] font-normal">{validThru}</p>
       </div>
     </div>
-    <div className="card-number flex justify-between absolute px-[20px] rounded-br-[10px] py-[15px] bg-[#1677ff66] bottom-[0] w-[351px] left-[0] right-[0] rounded-bl-[10px]">
+    <div className="card-number flex justify-between absolute px-[20px] rounded-br-[10px] w-[100%] max-w-[420px] py-[15px] bg-[#1677ff66] bottom-[0]  left-[0] right-[0] rounded-bl-[10px]">
       <p className="text-[22px] font-semibold">{cardNumber}</p>
       <div className="icon">{icon}</div>
     </div>
@@ -72,7 +72,7 @@ const TransactionHistory = ({ icon, title, date, amount, bgColor }) => (
         className="text-[20px] font-normal"
         style={amount < 1000 ? { color: "red" } : { color: "green" }}
       >
-       ₹{amount}
+        ₹{amount}
       </p>
     </div>
   </div>

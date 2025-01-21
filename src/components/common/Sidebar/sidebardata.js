@@ -11,8 +11,6 @@ import SendMessageIcon from "assets/svg/sendMessageIcon";
 import DataManagementIcon from "assets/svg/dataManagementIcon";
 import ElectionIcon from "assets/svg/ElectionIcon";
 const SidebarData = [
-  
-  
   // super-admin-routes
   {
     id: 10,
@@ -68,7 +66,7 @@ const SidebarData = [
         icon: <UserIcon />,
         path: "/distributor",
         disable: true,
-        roleId: [ "5" ],
+        roleId: ["5"],
       },
       {
         id: 1201,
@@ -82,11 +80,20 @@ const SidebarData = [
         id: 1202,
         title: "Authorized User",
         icon: <UserIcon />,
-        // path: "text-message",
+        path: "/authorized-users",
         disable: true,
         roleId: ["5"],
-      }
-    
+        // children: [
+        //   {
+        //     id: 1203,
+        //     icons: <UserIcon />,
+        //     title: "Add Authourized User",
+        //     path: "/add-new-authorized-users",
+        //     disable: true,
+        //     roleId: ["5"],
+        //   },
+        // ],
+      },
     ],
   },
   {
@@ -139,9 +146,47 @@ const SidebarData = [
 
     roleId: ["5"],
   },
-
-
-  
+  {
+    id: 16,
+    icons: <SettingsIcon />,
+    title: "Settings",
+    disable: true,
+    roleId: ["5"],
+    children: [
+      {
+        id: 1601,
+        title: "Training Material",
+        icon: <SettingsIcon />,
+        path: "/traning-material",
+        disable: true,
+        roleId: ["5"],
+      },
+      {
+        id: 1602,
+        title: "Terms and Condition",
+        icon: <SettingsIcon />,
+        path: "/terms-conditions",
+        disable: true,
+        roleId: ["5"],
+      },
+      {
+        id: 1603,
+        title: "Upload guidelines",
+        icon: <SettingsIcon />,
+        path: "/upload-guidlines",
+        disable: true,
+        roleId: ["5"],
+      },
+      {
+        id: 1604,
+        title: "Other",
+        icon: <SettingsIcon />,
+        path: "/upload-guidlines",
+        disable: true,
+        roleId: ["5"],
+      },
+    ],
+  },
   //Client admin
   {
     id: 1,
@@ -241,7 +286,7 @@ const SidebarData = [
         icon: <SendMessageIcon />,
         path: "/text-message",
         disable: true,
-        roleId: [ "3"],
+        roleId: ["3"],
       },
     ],
   },
@@ -297,7 +342,7 @@ const SidebarData = [
         roleId: ["4"],
       },
       {
-        id:3202,
+        id: 3202,
         title: "Upload KaryaKarta",
         icon: <UserIcon />,
         path: "/upload-karykarta-list",
@@ -314,7 +359,6 @@ const SidebarData = [
       },
     ],
   },
-
 
   {
     id: 33,
@@ -339,7 +383,6 @@ const SidebarData = [
         disable: true,
         roleId: ["4"],
       },
-    
     ],
   },
   {
@@ -350,6 +393,7 @@ const SidebarData = [
     disable: true,
     roleId: ["4"],
   },
+
   {
     id: 35,
     title: "Election",
