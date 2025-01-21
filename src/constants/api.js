@@ -25,7 +25,14 @@ export const CREAT_CLIENT = "/user";
 export const CREAT_DISTRIBUTOR = "/user";
 export const CREAT_ELECTION = "/election";
 export const ADD_NEW_TERMS_CONDITION = "/add-term-condition";
-export const DELETE_CLIENT = "/user/delete-client-admin";
+export const DELETE_CLIENT = "/user/";
+
 // Client Api
+export const GET_DASHBOARD_SUREVY = "/voter-survey/dashboard/";
+export const GET_VIDHANSABHA_LIST_ASSIGN_SURVEY =
+  "/voter-survey/vidhansabha-list/";
+export const GET_BOOATH_LIST_ASSIGN_SURVEY = "/voter-survey/vidhansabha-list/";
+export const ASSIGN_SURVEY = "/survey-assign";
+export const SILIP_SETTINGS = "/slip-setting";
 
 // Distributor Api

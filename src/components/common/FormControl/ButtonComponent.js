@@ -1,6 +1,6 @@
 import React from "react";
 
-const ButtonComponent = ({ text, subText, onClick, Icons }) => {
+const ButtonComponent = ({ text, subText, onClick, Icons ,disabled }) => {
   const handleButtonClick = (e) => {
     const buttons = document.querySelectorAll(".export-file button");
     buttons.forEach((button) => button.classList.remove("active"));
@@ -14,6 +14,7 @@ const ButtonComponent = ({ text, subText, onClick, Icons }) => {
     <div className="custom-button">
       <div className="export-file">
         <button
+          disabled={disabled}
           className="flex gap-[5px] items-center border-[1px] border-[#D0D5DD] px-[15px] py-[10px] rounded-[4px]"
           onClick={handleButtonClick}
         >

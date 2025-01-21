@@ -1,49 +1,77 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Container } from "styles/components/common/Layout";
 import { ManageDataContainer } from "styles/pages/ClientAdmin/ManageKaryakarta";
 import VoterFilter from "components/common/FiltersComponent";
-import ExcelIcons from "assets/svg/excelIcons";
-import SurveyAssign from "assets/svg/surveyAssign";
-import TableComponent from "components/common/Table";
-import SwitchComponent from "components/common/SwitchComponent";
 import PlusIcons from "assets/svg/plusIcons";
+import SwitchComponent from "components/common/SwitchComponent";
+import TableComponent from "components/common/Table";
 import { Button } from "antd";
 import ButtonComponent from "components/common/FormControl/ButtonComponent";
-import AddNewModal from "components/common/UploadExcelSheet";
 import ExportTable from "components/common/ExportDemoTablesDrawer";
+import deleteIcon from "assets/svg/trans-icon.svg";
+import useGet from "hooks/useGet";
+import { GET_KARYKARTA_AUTHORIZED_USER_LIST } from "constants/api";
+import EditComponent from "components/common/Action/Edit";
+import DeleteComponet from "components/common/Action/Delete";
+import ViewComponent from "components/common/Action/View";
 import ExportToExcel from "components/common/ExportToExcel";
-
-const ListView = () => {
+// import AddNewKaryaKarta from "./AddNewKaryaKarta";
+import ExcelIcons from "assets/svg/excelIcons";
+import AddNewKaryaKarta from "../AddNewKarykarta";
+import { toast } from "react-toastify";
+const ListViewEditComponent = () => {
   const [accountStatus, setAccountStatus] = useState({});
   const [addNew, setAddNew] = useState(false);
   const [openExportDrawer, setOpeExportDrawer] = useState(false);
-  const [assignSurvey, setAssignSurvey] = useState(false);
+  const [kayrkartaData, setKayrkartaData] = useState([]);
+
+  const { mutateAsync: GetKarykarta } = useGet();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [prevPage, setPrevPage] = useState(0);
+  const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
+  const usersRole = JSON.parse(localStorage.getItem("roleList"));
+  const authorized = usersRole?.filter((item) => item.name === "authorized");
+  const authorizedUserID = authorized[0]?.id;
+  const handleSwitchChange = (checked, recordKey) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.key === recordKey ? { ...item, activeClient: checked } : item
+      )
+    );
+  };
+
+  console.log(accountStatus, "");
   const columns = [
     {
-      title: "Active User",
-      dataIndex: "activeUser",
-      key: "activeUser",
+      title: "S.NO",
+      dataIndex: "serialNumber",
+      key: "serialNumber",
       align: "center",
-      sorter: true,
-      render: (text, record) => (
-        <SwitchComponent
-          record={record}
-          switchStates={accountStatus}
-          setSwitchStates={setAccountStatus}
-          text={text}
-          disabled={true}
-        />
-      ),
-      width: 50,
+      render: (text, record, index) => {
+        return index + 1;
+      },
     },
     {
-      title: "Online User",
-      dataIndex: "onlineUser",
-      key: "onlineUser",
+      title: "Active User",
+      dataIndex: "isPermission",
+      key: "isPermission",
       align: "center",
-      sorter: (a, b) => a.onlineUser?.localeCompare(b.onlineUser ?? "") ?? 0,
+      render: (text, record) => (
+        <SwitchComponent
+          switchStates={accountStatus}
+          setSwitchStates={setAccountStatus}
+          record={record}
+        />
+      ),
+    },
+
+    {
+      title: "User Permissions",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
       render: (text, record) =>
-        record.onlineUser === "Active" ? (
+        record.status === true ? (
           <Button
             disabled={true}
             className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#54408C] text-[12px] font-medium bg-[#54408C66] border-[none]"
@@ -56,167 +84,322 @@ const ListView = () => {
             disabled={true}
             className="font-medium text-[11px] bg-[#F2F4F7] border-[#F2F4F7] text-[#364254] rounded-[40px]"
           >
-            <b className="h-[8px] w-[8px] bg-[#6C778B] rounded-[50px]"></b>
-            Inactive{" "}
+            <b className="h-[8px] w-[8px] bg-[#6C778B] rounded-[50px]"></b>{" "}
+            Inactive
           </Button>
         ),
+      width: 120,
+    },
+    {
+      title: "Voter Id",
+      dataIndex: "voterId",
+      key: "voterId",
+      align: "center",
+      sorter: (a, b) => a.voterId.localeCompare(b.voterId),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       align: "center",
-      sorter: (a, b) => a.name?.localeCompare(b.name ?? "") ?? 0,
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: "Booth/Part",
-      dataIndex: "boothPart",
-      key: "boothPart",
+      title: "Father Name",
+      dataIndex: "fatherName",
+      key: "fatherName",
       align: "center",
-      sorter: (a, b) => a.boothPart?.localeCompare(b.boothPart ?? "") ?? 0,
+      sorter: (a, b) => a.fatherName.localeCompare(b.fatherName),
+    },
+    {
+      title: "Date Of Birth",
+      dataIndex: "dateOfBirth",
+      key: "dateOfBirth",
+      align: "center",
+      sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      align: "center",
+      sorter: (a, b) => a.email.localeCompare(b.email),
+    },
+    {
+      title: "Mobile Number",
+      dataIndex: "mobileNumber",
+      key: "mobileNumber",
+      align: "center",
+      sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      align: "center",
+      sorter: (a, b) => a.gender.localeCompare(b.gender),
+    },
+    {
+      title: "Caste",
+      dataIndex: "casteId",
+      key: "casteId",
+      align: "center",
+      sorter: (a, b) => a.casteId.localeCompare(b.casteId),
+    },
+    {
+      title: "State Name",
+      dataIndex: "stateId",
+      key: "stateId",
+      align: "center",
+      sorter: (a, b) => a.stateId.localeCompare(b.stateId),
+    },
+    {
+      title: "District",
+      dataIndex: "districtId",
+      key: "districtId",
+      align: "center",
+      sorter: (a, b) => a.districtId.localeCompare(b.districtId),
+    },
+    {
+      title: "Nigam Ward Number",
+      dataIndex: "nigamWardNumber",
+      key: "nigamWardNumber",
+      align: "center",
+      sorter: (a, b) => a.nigamWardNumber.localeCompare(b.nigamWardNumber),
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+      align: "center",
+      sorter: (a, b) => a.age.localeCompare(b.age),
+    },
+    {
+      title: "Nigam ward",
+      dataIndex: "section",
+      key: "section",
+      align: "center",
+      sorter: (a, b) => a.section.localeCompare(b.section),
+    },
+    {
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
+      align: "center",
+      sorter: (a, b) => a.designation.localeCompare(b.designation),
+    },
+    {
+      title: "Vidhansabha",
+      dataIndex: "vidhansabhaId",
+      key: "vidhansabhaId",
+      align: "center",
+      sorter: (a, b) => a.vidhansabhaId.localeCompare(b.vidhansabhaId),
+    },
+    {
+      title: "Loksabha",
+      dataIndex: "loksabhaId",
+      key: "loksabhaId",
+      align: "center",
+      sorter: (a, b) => a.loksabhaId.localeCompare(b.loksabhaId),
+    },
+
+    {
+      title: "House No",
+      dataIndex: "houseNo",
+      key: "houseNo",
+      align: "center",
+      sorter: (a, b) => parseInt(a.houseNo) - parseInt(b.houseNo),
+    },
+    {
+      title: "City",
+      dataIndex: "city",
+      key: "city",
+      align: "center",
+      sorter: (a, b) => a.city.localeCompare(b.city),
     },
     {
       title: "Vidhansabha",
       dataIndex: "vidhansabha",
       key: "vidhansabha",
       align: "center",
-      sorter: (a, b) => a.vidhansabha?.localeCompare(b.vidhansabha ?? "") ?? 0,
+      sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
     },
-
+    {
+      title: "LokSabha",
+      dataIndex: "loksabha",
+      key: "loksabha",
+      align: "center",
+      sorter: (a, b) => a.loksabha.localeCompare(b.loksabha),
+    },
     {
       title: "Mobile Number",
       dataIndex: "mobileNumber",
       key: "mobileNumber",
       align: "center",
-      sorter: (a, b) =>
-        a.mobileNumber?.localeCompare(b.mobileNumber ?? "") ?? 0,
+      sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
+    },
+    {
+      title: "District",
+      dataIndex: "district",
+      key: "district",
+      align: "center",
+      sorter: (a, b) => a.district.localeCompare(b.district),
+    },
+    {
+      title: "Address",
+      dataIndex: "newAddress",
+      key: "newAddress",
+      align: "center",
+      sorter: (a, b) => a.newAddress.localeCompare(b.newAddress),
+    },
+
+    {
+      title: "Create Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      align: "center",
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
+      sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+    },
+    {
+      title: "Update Date",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      align: "center",
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
+      sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      render: (text, record) => (
+        <div className="flex gap-[10px]">
+          <EditComponent />
+          <DeleteComponet />
+          <ViewComponent />
+        </div>
+      ),
     },
   ];
 
-  // Sample Data
-  const data = [
+  const Democolumns = [
     {
-      key: "1",
-      onlineUser: "Active",
-      name: "Alice",
-      boothPart: "indore121",
-      vidhansabha: "indore-7",
-      assignSurveyArea: "Survey Assign",
-      mobileNumber: "9036837628",
+      title: "name",
+      dataIndex: "name",
+      key: "name",
+      align: "center",
     },
     {
-      key: "2",
-      onlineUser: "Inactive",
-      name: "Anil",
-      boothPart: "indore122",
-      vidhansabha: "indore-7",
-      assignSurveyArea: "Survey Assign",
-      mobileNumber: "9036837628",
-    },
-    {
-      key: "3",
-      onlineUser: "Active",
-      name: "Rupesh",
-      boothPart: "indore123",
-      vidhansabha: "indore-7",
-      assignSurveyArea: "Survey Assign",
-      mobileNumber: "9036837628",
-    },
-    {
-      key: "4",
-      onlineUser: "Inactive",
-      name: "John",
-      boothPart: "indore124",
-      vidhansabha: "indore-7",
-      assignSurveyArea: "Survey Assign",
-      mobileNumber: "9036837628",
-    },
-    {
-      key: "5",
-      onlineUser: "Active",
-      name: "Rupesh",
-      boothPart: "indore124",
-      vidhansabha: "indore-7",
-      assignSurveyArea: "Survey Assign",
-      mobileNumber: "9036837628",
-    },
-    {
-      key: "6",
-      onlineUser: "Inactive",
-      name: "Anil",
-      boothPart: "indore124",
-      vidhansabha: "indore-7",
-      assignSurveyArea: "Survey Assign",
-      mobileNumber: "9036837628",
+      title: "Mobile Number",
+      dataIndex: "mobileNumber",
+      key: "mobileNumber",
+      align: "center",
     },
   ];
 
-  const handleButtonClick = (buttonName) => {
-    setActiveButton(buttonName); // Update Active button state
+  useEffect(() => {
+    GetKarykartaList();
+  }, []);
+
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log("Selected Row Keys:", selectedRowKeys);
+      console.log("Selected Rows:", selectedRows);
+    },
   };
-
   const handleAddNewKaryakarta = () => {
     setAddNew(true);
   };
+
   const handleExportDemoTable = () => {
     setOpeExportDrawer(true);
   };
-  const handlAssignSurvey = () => {
-    setAssignSurvey(true);
+
+  const GetKarykartaList = async (page, limit) => {
+    await GetKarykarta({
+      url: `${
+        GET_KARYKARTA_AUTHORIZED_USER_LIST + authorizedUserID
+      }?page=${page}&limit=${limit}`,
+      type: "details",
+      token: true,
+    })
+      .then((res) => {
+        if (res) {
+          let newRes = [...kayrkartaData];
+          newRes = newRes.concat(res?.items);
+          setKayrkartaData(newRes);
+        }
+      })
+      .catch((error) =>
+        console.log(error)
+      );
   };
+  useMemo(() => {
+    if (currentPage > prevPage) {
+      GetKarykartaList(currentPage, 10);
+      setPrevPage((prev) => prev + 1);
+    }
+  }, [currentPage]);
   return (
     <ManageDataContainer>
       <Container>
-        <Container>
-          <h3 className="text-[22px] font-semibold py-[20px]">
-            Authorized user list
-          </h3>
-          <div>
-            <div className="votter-list-fillter">
-              <VoterFilter />
+        <h3 className="text-[22px] font-semibold py-[20px]">Karyakarta List</h3>
+        <div>
+          <div className="votter-list-fillter">
+            <VoterFilter />
+          </div>
+          <div className="manage-authorized-user-dashboard flex justify-between items-center px-[22px] py-[20px] flex-wrap bg-[#FFFFFF] border-[1px] border-[#EAECF0] rounded-[4px]">
+            <div>
+              <h3 className="text-[17px] font-bold mb-[10px]">
+                Karyakarta List
+              </h3>
+              <p className="text-[13px] font-medium text-[#667085]">
+                Search list
+              </p>
             </div>
-            <div className="manage-authorized-user-dashboard flex justify-between items-center px-[22px] py-[20px] flex-wrap bg-[#FFFFFF] border-[1px] border-[#EAECF0] rounded-[4px]">
-              <div>
-                <h3 className="text-[17px] font-bold mb-[10px]">
-                  Authorized User List
-                </h3>
-                <p className="text-[13px] font-medium text-[#667085]">
-                  Search list
-                </p>
+            <div className="voter-search-list-buttons flex gap-[20px]">
+              <div
+                className="delete-button flex items-center
+"
+              >
+                <button className="flex gap-[5px] items-center">
+                  <img src={deleteIcon} alt="Delete Icon" />
+                  <span className="text-[13px] font-medium text-[#344054]">
+                    Delete
+                  </span>
+                </button>
               </div>
-              <div className="voter-search-list-buttons flex gap-[20px]">
-                {/* Export Button */}
+              <div className="demo-excel-voter">
                 <div className="export-file">
                   <ExportToExcel
-                    // data={data}
-                    columns={columns}
+                    buttonText={" Export Demo Excel"}
                     Icons={<ExcelIcons />}
-                    buttonText={" Export Blank Excel"}
-                    // subText={"    for Demo add Member list"}
-                    excelName="KarykartaList"
-                  />
-                </div>
-                <div className="export-file">
-                  <ButtonComponent
-                    Icons={<ExcelIcons />}
-                    onClick={handleExportDemoTable}
-                    text={"Export"}
-                  />
-                </div>
-
-                <div className="add-new-voter">
-                  <ButtonComponent
-                    Icons={<PlusIcons />}
-                    text={"Add new Karyakarta"}
-                    onClick={handleAddNewKaryakarta}
+                    columns={Democolumns}
+                    excelName="KarykartaDemo"
+                    // subText={" for Demo add Member list"}
                   />
                 </div>
               </div>
-              <TableComponent data={data} columns={columns} />
+              <div className="add-new-voter">
+                <ButtonComponent
+                  Icons={<PlusIcons />}
+                  text={"Add new Karyakarta"}
+                  onClick={handleAddNewKaryakarta}
+                />
+              </div>
             </div>
+
+            <TableComponent
+              rowSelection={rowSelection}
+              columns={columns}
+              data={kayrkartaData}
+              setCurrentPage={setCurrentPage}
+            />
           </div>
-        </Container>
-        <AddNewModal
+        </div>
+        <AddNewKaryaKarta
           title={"Upload Mobile No. List"}
           inputLable={"Mobile No.excel sheet upload"}
           setIsModalOpen={setAddNew}
@@ -227,11 +410,11 @@ const ListView = () => {
           setOpen={setOpeExportDrawer}
           title={"Export Table For Demo"}
           columns={columns}
-          data={data}
+          data={kayrkartaData && kayrkartaData}
         />
       </Container>
     </ManageDataContainer>
   );
 };
 
-export default ListView;
+export default ListViewEditComponent;

@@ -6,15 +6,16 @@ import DeleteModal from "./DeleteModal";
 const DeleteComponent = ({ record, roleType }) => {
   const [isconfirmationModal, setIsConfirmationModal] = useState(false);
   const [confirmation, setConfirmation] = useState(false);
+
   const handleDelete = () => {
-    setConfirmation(true);
+    setIsConfirmationModal(true);
     if (roleType === "voter" && confirmation == true) {
       handleVoterDelete();
     }
   };
 
   const handleVoterDelete = () => {
-    console.log(record);
+    
   };
 
   return (
@@ -30,7 +31,7 @@ const DeleteComponent = ({ record, roleType }) => {
         isModalOpen={isconfirmationModal}
         setIsModalOpen={setIsConfirmationModal}
         name={roleType}
-        setConfirmation
+        setConfirmation={setConfirmation}
       />
     </div>
   );
