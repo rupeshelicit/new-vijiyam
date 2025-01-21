@@ -53,7 +53,7 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const AddNewKaryKarta = ({ setIsModalOpen, isModalOpen }) => {
+const AddNewKaryaKarta = ({ setIsModalOpen, isModalOpen }) => {
   const [excelSheet, setExcelSheet] = useState();
   const [loading, setLoading] = useState(false);
   const { mutateAsync: UploadKaryakarta } = usePost();
@@ -142,4 +142,4 @@ const AddNewKaryKarta = ({ setIsModalOpen, isModalOpen }) => {
   );
 };
 
-export default AddNewKaryKarta;
+export default AddNewKaryaKarta;

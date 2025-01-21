@@ -40,11 +40,11 @@ function ElectionsList() {
     },
     {
       title: "Election Type",
-      dataIndex: "districtId",
-      key: "districtId",
+      dataIndex: "electionType",
+      key: "electionType",
       align: "center",
-      render: (text, record) => record?.district,
-      sorter: (a, b) => a.districtId.localeCompare(b.districtId),
+      render: (text, record) => record?.electionType,
+      sorter: (a, b) => a.electionType.localeCompare(b.electionType),
     },
     {
       title: "State Name",
@@ -81,6 +81,7 @@ function ElectionsList() {
       dataIndex: "acharSanhitaDate",
       key: "acharSanhitaDate",
       align: "center",
+      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
       sorter: (a, b) => a.acharSanhitaDate.localeCompare(b.acharSanhitaDate),
     },
     {
@@ -88,6 +89,7 @@ function ElectionsList() {
       dataIndex: "electionDate",
       key: "electionDate",
       align: "center",
+      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
       sorter: (a, b) => a.electionDate.localeCompare(b.electionDate),
     },
     {
@@ -95,6 +97,7 @@ function ElectionsList() {
       dataIndex: "createdAt",
       key: "createdAt",
       align: "center",
+      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
     {
@@ -102,6 +105,7 @@ function ElectionsList() {
       dataIndex: "updatedAt",
       key: "updatedAt",
       align: "center",
+      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
       sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
     },
     {
@@ -141,12 +145,11 @@ function ElectionsList() {
     })
       .then((res) => {
         if (res) {
-          let newRes = [...ElecotionData];
-          newRes = newRes.concat(res?.items);
+          // let newRes = [...ElecotionData];
+          // newRes = newRes.concat(res?.items);
           // console.log(newRes, "newRowsssssssssss");
 
-          setElecotionData(res);
-          console.log(res, "newRowsssssssssss");
+          setElecotionData(res?.items);
         }
       })
       .catch((error) => console.log(error));
@@ -207,7 +210,7 @@ function ElectionsList() {
               rowSelection={rowSelection}
               columns={columns}
               data={ElecotionData}
-              setCurrentPage={SwitchComponent}
+              setCurrentPage={setCurrentPage}
             />
             <div className="flex items-center mb-4">
               <input

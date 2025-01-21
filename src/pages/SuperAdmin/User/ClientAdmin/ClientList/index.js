@@ -11,11 +11,15 @@ import { ClientListSection } from "styles/pages/SuperAdmin/user";
 import { useNavigate } from "react-router-dom";
 import useGet from "hooks/useGet";
 import { GET_CLIENTS_LIST } from "constants/api";
+import { Button } from "antd";
+import EditComponent from "components/common/Action/Edit";
+import DeleteComponet from "components/common/Action/Delete";
+import ViewComponent from "components/common/Action/View";
 
 function ClientList() {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState("addNewclient");
-  const [accountStatus, setAccountStatus] = useState(false);
+  const [accountStatus, setAccountStatus] = useState();
   const [userPermissions, setUserPermissions] = useState(false);
   const [openExportDrawer, setOpeExportDrawer] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -35,66 +39,191 @@ function ClientList() {
       dataIndex: "serialNumber",
       key: "serialNumber",
       align: "center",
-      sorter: (a, b) => a.serialNumber - b.serialNumber,
+      render: (text, record, index) => {
+        return index + 1;
+      },
     },
     {
-      title: "Active Client",
-      dataIndex: "activeClient",
-      key: "activeClient",
+      title: "Active User",
+      dataIndex: "isPermission",
+      key: "isPermission",
       align: "center",
       render: (text, record) => (
         <SwitchComponent
-          record={record}
           switchStates={accountStatus}
           setSwitchStates={setAccountStatus}
-          text={text}
+          record={record}
         />
       ),
     },
+
     {
       title: "User Permissions",
-      dataIndex: "userPermissions",
-      key: "userPermissions",
+      dataIndex: "status",
+      key: "status",
       align: "center",
-      render: (text, record) => (
-        <SwitchComponent
-          record={record}
-          switchStates={userPermissions}
-          setSwitchStates={setUserPermissions}
-          text={text}
-        />
-      ),
+      render: (text, record) =>
+        record.status === true ? (
+          <Button
+            disabled={true}
+            className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#54408C] text-[12px] font-medium bg-[#54408C66] border-[none]"
+          >
+            <b className="h-[8px] w-[8px] bg-[#14BA6D] rounded-[50px]"></b>{" "}
+            Active
+          </Button>
+        ) : (
+          <Button
+            disabled={true}
+            className="font-medium text-[11px] bg-[#F2F4F7] border-[#F2F4F7] text-[#364254] rounded-[40px]"
+          >
+            <b className="h-[8px] w-[8px] bg-[#6C778B] rounded-[50px]"></b>{" "}
+            Inactive
+          </Button>
+        ),
+      width: 120,
+    },
+    {
+      title: "Voter Id",
+      dataIndex: "voterId",
+      key: "voterId",
+      align: "center",
+      sorter: (a, b) => a.voterId.localeCompare(b.voterId),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       align: "center",
-      sorter: (a, b) => a.name?.localeCompare(b.name ?? "") ?? 0,
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Father Name",
       dataIndex: "fatherName",
       key: "fatherName",
       align: "center",
+      sorter: (a, b) => a.fatherName.localeCompare(b.fatherName),
     },
     {
-      title: "Gmail",
-      dataIndex: "gmail",
-      key: "gmail",
+      title: "Date Of Birth",
+      dataIndex: "dateOfBirth",
+      key: "dateOfBirth",
       align: "center",
+      sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
     },
     {
-      title: "LokSabha",
-      dataIndex: "lokSabha",
-      key: "lokSabha",
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
       align: "center",
+      sorter: (a, b) => a.email.localeCompare(b.email),
+    },
+    {
+      title: "Mobile Number",
+      dataIndex: "mobileNumber",
+      key: "mobileNumber",
+      align: "center",
+      sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      align: "center",
+      sorter: (a, b) => a.gender.localeCompare(b.gender),
+    },
+      {
+      title: "State Name",
+      dataIndex: "stateId",
+      key: "stateId",
+      align: "center",
+      sorter: (a, b) => a.stateId.localeCompare(b.stateId),
     },
     {
       title: "District",
       dataIndex: "district",
       key: "district",
       align: "center",
+      sorter: (a, b) => a.district.localeCompare(b.district),
+    },
+  
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+      align: "center",
+      sorter: (a, b) => a.age.localeCompare(b.age),
+    },
+
+    {
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
+      align: "center",
+      sorter: (a, b) => a.designation.localeCompare(b.designation),
+    },
+    {
+      title: "Vidhansabha",
+      dataIndex: "vidhansabhaId",
+      key: "vidhansabhaId",
+      align: "center",
+      sorter: (a, b) => a.vidhansabhaId.localeCompare(b.vidhansabhaId),
+    },
+    {
+      title: "Loksabha",
+      dataIndex: "loksabhaId",
+      key: "loksabhaId",
+      align: "center",
+      sorter: (a, b) => a.loksabhaId.localeCompare(b.loksabhaId),
+    },
+
+ 
+    {
+      title: "City",
+      dataIndex: "city",
+      key: "city",
+      align: "center",
+      sorter: (a, b) => a.city.localeCompare(b.city),
+    },
+    
+    
+ 
+   
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      align: "center",
+      sorter: (a, b) => a.address.localeCompare(b.address),
+    },
+
+    {
+      title: "Create Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      align: "center",
+      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+    },
+    {
+      title: "Update Date",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      align: "center",
+      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      render: (text, record) => (
+        <div className="flex gap-[10px]">
+          <EditComponent record={record} />
+          <DeleteComponet record={record} />
+          <ViewComponent record={record} />
+        </div>
+      ),
     },
   ];
 

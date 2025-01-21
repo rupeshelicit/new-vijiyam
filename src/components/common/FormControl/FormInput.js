@@ -1,9 +1,11 @@
 import React from "react";
 import { Form, Input } from "antd";
 import { FormInputFeild } from "styles/components/common/FormControl";
+import { type } from "@testing-library/user-event/dist/type";
 
 const FormInput = ({
   name,
+  type,
   label,
   rules = [],
   value,
@@ -26,6 +28,7 @@ const FormInput = ({
         ]}
       >
         <Input
+          type={type}
           placeholder={placeholder}
           value={value}
           defaultValue={defaultValue}

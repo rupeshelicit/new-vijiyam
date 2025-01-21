@@ -1,7 +1,8 @@
 import React from "react";
-import { MehOutlined, SmileOutlined } from "@ant-design/icons";
+import { SmileOutlined } from "@ant-design/icons";
 import { Select, Space } from "antd";
 import { MultiSelectDropdownContainer } from "styles/components/common/FormControl";
+
 const smileIcon = <SmileOutlined />;
 
 const MultiSelectDropdown = ({
@@ -31,6 +32,11 @@ const MultiSelectDropdown = ({
           onChange={handleChange}
           options={options.map((item) => ({ label: item, value: item }))}
           placeholder="Select options"
+          showSearch
+          optionFilterProp="label" 
+          filterOption={(input, option) =>
+            option.label.toLowerCase().includes(input.toLowerCase())
+          } 
         />
       </Space>
     </MultiSelectDropdownContainer>

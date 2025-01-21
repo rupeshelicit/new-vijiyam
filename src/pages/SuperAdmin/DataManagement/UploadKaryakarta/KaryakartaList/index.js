@@ -7,7 +7,6 @@ import SwitchComponent from "components/common/SwitchComponent";
 import TableComponent from "components/common/Table";
 import { Button } from "antd";
 import ButtonComponent from "components/common/FormControl/ButtonComponent";
-import AddNewModal from "components/common/UploadExcelSheet";
 import ExportTable from "components/common/ExportDemoTablesDrawer";
 import deleteIcon from "assets/svg/trans-icon.svg";
 import useGet from "hooks/useGet";
@@ -16,8 +15,8 @@ import EditComponent from "components/common/Action/Edit";
 import DeleteComponet from "components/common/Action/Delete";
 import ViewComponent from "components/common/Action/View";
 import ExportToExcel from "components/common/ExportToExcel";
+import AddNewKaryaKarta from "../AddNewKarykartaModal";
 import ExcelIcons from "assets/svg/excelIcons";
-import AddNewKaryKarta from "../AddNewKarykartaModal";
 const KaryaKartaList = () => {
   const [accountStatus, setAccountStatus] = useState({});
   const [addNew, setAddNew] = useState(false);
@@ -254,6 +253,7 @@ const KaryaKartaList = () => {
       dataIndex: "createdAt",
       key: "createdAt",
       align: "center",
+      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
     {
@@ -261,6 +261,7 @@ const KaryaKartaList = () => {
       dataIndex: "updatedAt",
       key: "updatedAt",
       align: "center",
+      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
       sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
     },
     {
@@ -392,7 +393,7 @@ const KaryaKartaList = () => {
             />
           </div>
         </div>
-        <AddNewKaryKarta
+        <AddNewKaryaKarta
           title={"Upload Mobile No. List"}
           inputLable={"Mobile No.excel sheet upload"}
           setIsModalOpen={setAddNew}

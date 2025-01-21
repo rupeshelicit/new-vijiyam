@@ -38,6 +38,10 @@ export const ClientAdminComponent = styled.div`
     border-color: #55418d;
     background-color: #ffffff;
   }
+  .client-upload-input-filed label {
+    max-width: 232px !important;
+    height: 150px !important;
+  }
 `;
 export const ClientListSection = styled.div`
   .client-search-list-buttons button.active span {

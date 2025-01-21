@@ -6,7 +6,7 @@ const UploadFile = ({ inputLable, setFile, recommend, inputName }) => {
     <UploadFileComponent>
       <label
         htmlFor="uploadFile1"
-        className="bg-white text-black font-semibold w-full max-w-[355px] text-base rounded text-[20px] text-[black] font-semibold h-52 flex flex-col items-center justify-center cursor-pointer border-2  border-black border-dashed mx-auto font-[sans-serif]"
+        className="bg-white text-black font-semibold w-full max-w-[355px] w-[100%] text-base rounded text-[20px] text-[black] font-semibold h-52 flex flex-col items-center justify-center cursor-pointer border-2  border-black border-dashed mx-auto font-[sans-serif]"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
