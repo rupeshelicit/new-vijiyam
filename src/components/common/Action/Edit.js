@@ -4,9 +4,9 @@ import { EditOutlined } from "@ant-design/icons";
 
 const EditComponent = ({ record, roleType }) => {
   const handleEdit = () => {
-    if (onEdit) {
-      onEdit(record);
-    }
+    // if (onEdit) {
+    //   onEdit(record);
+    // }
   };
 
   return (

@@ -27,13 +27,7 @@ const KaryaKartaList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(0);
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
-  const handleSwitchChange = (checked, recordKey) => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.key === recordKey ? { ...item, activeClient: checked } : item
-      )
-    );
-  };
+
 
   console.log(accountStatus, "");
   const columns = [
