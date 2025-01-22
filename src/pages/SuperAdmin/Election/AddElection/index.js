@@ -262,7 +262,7 @@ const AddNewDistributor = () => {
                   <DropdownSelect
                     name={"assamblyName"}
                     options={assambly && assambly}
-                    placeholder="Select Party Assambly"
+                    placeholder="Select Assambly"
                     required={false}
                     disabled={selectState ? false : true}
                     defaultOption={
@@ -288,7 +288,7 @@ const AddNewDistributor = () => {
                   <DropdownSelect
                     name={"districtName"}
                     options={districtList && districtList}
-                    placeholder="Select Party District"
+                    placeholder="Select District"
                     required={false}
                     disabled={selectState ? false : true}
                     defaultOption={

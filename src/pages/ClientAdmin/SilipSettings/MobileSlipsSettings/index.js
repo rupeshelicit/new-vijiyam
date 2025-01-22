@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container } from "styles/components/common/Layout";
 import { MobileSlipsSettingsContainer } from "styles/pages/ClientAdmin/SlipSettings";
@@ -8,12 +8,15 @@ import FormInput from "components/common/FormControl/FormInput";
 import UploadFile from "components/common/FormControl/UploadFile";
 import profileImage from "assets/images/profileImage.png";
 import BJPIcon from "assets/svg/bjpPartyIcon.svg";
+import useGet from "hooks/useGet";
+import { GET_ELECTION_PARTY } from "constants/api";
 const MobileSlipsSettings = () => {
   const nevigate = useNavigate();
   const [uploadSymbol, setUploadSymbol] = useState();
   const [candidateImage, setCandidateImage] = useState();
   const [loading, setLoading] = useState(false);
-  console.log(candidateImage, "candidateImage");
+  const { mutateAsync: GetPartyList } = useGet();
+  const [party, setParty] = useState([]);
   const onFinish = (creds) => {
     console.log("Slip Settings:", { ...creds, uploadSymbol, candidateImage });
     setLoading(true);
@@ -24,6 +27,25 @@ const MobileSlipsSettings = () => {
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+  };
+
+  useEffect(() => {
+    getElectionParty();
+  }, []);
+
+  const getElectionParty = async () => {
+    await GetPartyList({
+      url: GET_ELECTION_PARTY,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setParty(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <MobileSlipsSettingsContainer>
@@ -66,6 +88,7 @@ const MobileSlipsSettings = () => {
 
                 <Form.Item label="Party Name">
                   <FormInput placeholder="" name="partyName" />
+                  
                 </Form.Item>
                 <Form.Item>
                   <div>

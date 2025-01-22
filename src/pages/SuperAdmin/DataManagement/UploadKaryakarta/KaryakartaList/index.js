@@ -247,7 +247,7 @@ const KaryaKartaList = () => {
       dataIndex: "createdAt",
       key: "createdAt",
       align: "center",
-      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
     {
@@ -255,7 +255,7 @@ const KaryaKartaList = () => {
       dataIndex: "updatedAt",
       key: "updatedAt",
       align: "center",
-      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
     },
     {
@@ -265,9 +265,9 @@ const KaryaKartaList = () => {
       align: "center",
       render: (text, record) => (
         <div className="flex gap-[10px]">
-          <EditComponent />
-          <DeleteComponet />
-          <ViewComponent />
+          <EditComponent record={record} roleType={"karykarta"} />
+          <DeleteComponet record={record} roleType={"karykarta"} />
+          <ViewComponent record={record} roleType={"karykarta"} />
         </div>
       ),
     },
@@ -333,7 +333,7 @@ const KaryaKartaList = () => {
   return (
     <ManageDataContainer>
       <Container>
-        <h3 className="text-[22px] font-semibold py-[20px]">Karyakarta list</h3>
+        <h3 className="text-[22px] font-semibold py-[20px]">Karyakarta List</h3>
         <div>
           <div className="votter-list-fillter">
             <VoterFilter />
@@ -341,7 +341,7 @@ const KaryaKartaList = () => {
           <div className="manage-authorized-user-dashboard flex justify-between items-center px-[22px] py-[20px] flex-wrap bg-[#FFFFFF] border-[1px] border-[#EAECF0] rounded-[4px]">
             <div>
               <h3 className="text-[17px] font-bold mb-[10px]">
-                Karyakarta list
+                Karyakarta List
               </h3>
               <p className="text-[13px] font-medium text-[#667085]">
                 Search list
@@ -362,7 +362,7 @@ const KaryaKartaList = () => {
               <div className="demo-excel-voter">
                 <div className="export-file">
                   <ExportToExcel
-                    buttonText={" Export Blank Excel"}
+                    buttonText={" Export Demo Excel"}
                     Icons={<ExcelIcons />}
                     columns={Democolumns}
                     excelName="KarykartaDemo"
@@ -392,7 +392,7 @@ const KaryaKartaList = () => {
           inputLable={"Mobile No.excel sheet upload"}
           setIsModalOpen={setAddNew}
           isModalOpen={addNew}
-                  />
+        />
         <ExportTable
           open={openExportDrawer}
           setOpen={setOpeExportDrawer}
