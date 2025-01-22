@@ -24,8 +24,10 @@ export const GET_TERMS_CONDITIONS_LIST = "/term-condition/list";
 export const CREAT_CLIENT = "/user";
 export const CREAT_DISTRIBUTOR = "/user";
 export const CREAT_ELECTION = "/election";
-export const ADD_NEW_TERMS_CONDITION = "/add-term-condition";
+export const ADD_NEW_TERMS_CONDITION = "/term-condition";
 export const DELETE_CLIENT = "/user/";
+export const UPLOAD_VIDHANSABHA_BY_EXCEL = "/vidhansabha/upload-excel";
+export const DOWNLOAD_ELECTION_EXCEL = "/election/download-excel";
 
 // Client Api
 export const GET_DASHBOARD_SUREVY = "/voter-survey/dashboard/";
