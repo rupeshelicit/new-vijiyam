@@ -21,13 +21,13 @@ function DistributortList() {
   const [accountStatus, setAccountStatus] = useState(false);
   const [userPermissions, setUserPermissions] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const distributor = usersRole?.filter((item) => item.name === "distributor");
   const [selectedRows, setSelectedRows] = useState([]);
   const [distributors, setDistributors] = useState([]);
   const { mutateAsync: GetDistributsData } = useGet();
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(0);
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
-  const distributor = usersRole?.filter((item) => item.name === "distributor");
   const distributorUserID = distributor[0]?.id;
   const columns = [
     {

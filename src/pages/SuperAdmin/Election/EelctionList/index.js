@@ -10,20 +10,24 @@ import SwitchComponent from "components/common/SwitchComponent";
 import { ClientListSection } from "styles/pages/SuperAdmin/user";
 import { useNavigate } from "react-router-dom";
 import useGet from "hooks/useGet";
-import { GET_ELECTION_LIST } from "constants/api";
+import { DOWNLOAD_ELECTION_EXCEL, GET_ELECTION_LIST } from "constants/api";
 import { Button } from "antd";
 import EditComponent from "components/common/Action/Edit";
 import DeleteComponet from "components/common/Action/Delete";
 import ViewComponent from "components/common/Action/View";
 import ExportToExcel from "components/common/ExportToExcel";
 import ExcelIcons from "assets/svg/excelIcons";
+import ElectionExcelColum from "Data/Election";
 
 function ElectionsList() {
   const navigate = useNavigate();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [ElecotionData, setElecotionData] = useState([]);
+  const [elecotionExcelData, setElecotionExcelData] = useState([]);
+
   const { mutateAsync: GetElectionsList } = useGet();
+  const { mutateAsync: GetExcelData } = useGet();
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(0);
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
@@ -52,10 +56,6 @@ function ElectionsList() {
       key: "stateId",
       align: "center",
       render: (text, record) => record?.state?.name,
-      // {
-      //   console.log(record?.state?.name, "ddddddddddddddd");
-      // },
-
       sorter: (a, b) => a.stateId.localeCompare(b.stateId),
     },
 
@@ -81,7 +81,7 @@ function ElectionsList() {
       dataIndex: "acharSanhitaDate",
       key: "acharSanhitaDate",
       align: "center",
-      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.acharSanhitaDate.localeCompare(b.acharSanhitaDate),
     },
     {
@@ -89,7 +89,7 @@ function ElectionsList() {
       dataIndex: "electionDate",
       key: "electionDate",
       align: "center",
-      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.electionDate.localeCompare(b.electionDate),
     },
     {
@@ -97,7 +97,7 @@ function ElectionsList() {
       dataIndex: "createdAt",
       key: "createdAt",
       align: "center",
-      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
     {
@@ -105,7 +105,7 @@ function ElectionsList() {
       dataIndex: "updatedAt",
       key: "updatedAt",
       align: "center",
-      render: (record) =>new Date(record?record:'NA').toLocaleDateString(),
+      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
       sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
     },
     {
@@ -122,6 +122,10 @@ function ElectionsList() {
       ),
     },
   ];
+
+  useEffect(() => {
+    getElectionExcelList();
+  }, []);
 
   const onSelectChange = (newSelectedRowKeys, newSelectedRows) => {
     console.log("Selected Row Keys:", newSelectedRowKeys);
@@ -154,6 +158,20 @@ function ElectionsList() {
       .catch((error) => console.log(error));
   };
 
+  const getElectionExcelList = async () => {
+    await GetExcelData({
+      url: DOWNLOAD_ELECTION_EXCEL,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setElecotionExcelData(res);
+          console.log(res)
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+console.log(elecotionExcelData,'ddddddddddddddddddddddd')
   useMemo(() => {
     if (currentPage > prevPage) {
       getElectionList(currentPage, 10);
@@ -198,8 +216,8 @@ function ElectionsList() {
                 <ExportToExcel
                   buttonText={"Export Election List"}
                   Icons={<ExcelIcons />}
-                  data={ElecotionData}
-                  columns={columns}
+                  data={elecotionExcelData}
+                  columns={ElectionExcelColum}
                   excelName="ElectionList"
                 />
               </div>
