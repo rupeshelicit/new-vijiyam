@@ -32,13 +32,13 @@ const ListViewEditComponent = () => {
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
   const authorized = usersRole?.filter((item) => item.name === "authorized");
   const authorizedUserID = authorized[0]?.id;
-  // const handleSwitchChange = (checked, recordKey) => {
-  //   setData((prevData) =>
-  //     prevData.map((item) =>
-  //       item.key === recordKey ? { ...item, activeClient: checked } : item
-  //     )
-  //   );
-  // };
+  const handleSwitchChange = (checked, recordKey) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.key === recordKey ? { ...item, activeClient: checked } : item
+      )
+    );
+  };
 
   console.log(accountStatus, "");
   const columns = [

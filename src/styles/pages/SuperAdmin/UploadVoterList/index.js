@@ -35,9 +35,9 @@ export const UploadVoterListComponent = styled.div`
   .upload-file div {
     width: 30%;
   }
-    div#rc-tabs-1-panel-2 .upload-file div{
+  div#rc-tabs-1-panel-2 .upload-file div {
     width: 100% !importent;
-    }
+  }
   .upload-file label span {
     color: #676767;
   }

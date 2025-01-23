@@ -27,6 +27,7 @@ const UploadLabel = styled.label`
   cursor: pointer;
   margin: 0 auto;
   font-family: sans-serif;
+  margin-bottom: 30px;
 
   input {
     display: none;

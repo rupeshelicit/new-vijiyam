@@ -3,7 +3,6 @@ export const LOGIN = "auth/login";
 export const FORGOT_PASSWORD = "user/forget-password";
 export const VERIFY_OTP = "user/verify-otp";
 export const UPDATE_PASSWORD = "user/update-password";
-export const ProfileDetails = "user/id/";
 
 //Common Api
 export const GET_ROLE_LIST = "/roles/list";
@@ -25,10 +24,17 @@ export const GET_TERMS_CONDITIONS_LIST = "/term-condition/list";
 export const CREAT_CLIENT = "/user";
 export const CREAT_DISTRIBUTOR = "/user";
 export const CREAT_ELECTION = "/election";
-export const ADD_NEW_TERMS_CONDITION = "/term-condition";
+export const ADD_NEW_TERMS_CONDITION = "/add-term-condition";
 export const DELETE_CLIENT = "/user/";
-export const UPLOAD_VIDHANSABHA_BY_EXCEL = "/vidhansabha/upload-excel";
-export const DOWNLOAD_ELECTION_EXCEL = "/election/download-excel";
+export const DELETE_ELECTION = "/election/";
+export const DELETE_KARYAKARTA = "/user/";
+export const DELETE_DISTRIBUTOR = "/user/";
+export const DELETE_VOTER = "/voter-survey/";
+export const UPDATE_ELECTION_DETAILS = "/election";
+export const UPDATE_CLIENT_DETAILS = "/user";
+export const UPDATE_DISTRIBUTOR_DETAILS = "/user";
+export const UPDATE_KARYAKARTA_DETAILS = "/user";
+export const UPDATE_VOTER_DETAILS = "/voter-survey";
 
 // Client Api
 export const GET_DASHBOARD_SUREVY = "/voter-survey/dashboard/";

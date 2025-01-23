@@ -232,9 +232,9 @@ function ClientList() {
       align: "center",
       render: (text, record) => (
         <div className="flex gap-[10px]">
-          <EditComponent record={record} />
-          <DeleteComponet record={record} />
-          <ViewComponent record={record} />
+          <EditComponent record={record} roleType={"client"} />
+          <DeleteComponet record={record} roleType={"client"} />
+          <ViewComponent record={record} roleType={"client"} />
         </div>
       ),
     },

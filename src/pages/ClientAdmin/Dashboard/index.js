@@ -161,8 +161,6 @@ const Dashboard = () => {
     await GetSurvey({
       url: GET_DASHBOARD_SUREVY + id,
       type: "details",
-      token:true,
-
     })
       .then((res) => {
         if (res) {

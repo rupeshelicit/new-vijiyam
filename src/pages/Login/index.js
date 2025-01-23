@@ -8,7 +8,6 @@ import Logo from "assets/svg/logo.svg";
 import usePost from "hooks/usePost";
 import { GET_ROLE_LIST, LOGIN } from "constants/api";
 import useGet from "hooks/useGet";
-import { toast } from "react-toastify";
 const Login = () => {
   const [userDetails, setUserDetails] = useState("");
   console.log(userDetails, setUserDetails);
@@ -28,21 +27,16 @@ const Login = () => {
       })
         .then((res) => {
           if (res) {
-            if (res?.role === 2 || res.role === 1) {
-              toast.error(`Error! Invalid user}`, {
-                position: "top-right",
-              });
-            } else {
-              localStorage.setItem("account_type", res.role);
-              const role = res.role;
-              const token = res.token;
-              setCustmerDetails({ account_type: res.role });
-              localStorage.setItem("roleId", role);
-              localStorage.setItem("token", token);
-              localStorage.setItem("userDetails", JSON.stringify(res));
-              navigate("/");
-              getRoleList();
-            }
+            console.log(res, "responcedata");
+            localStorage.setItem("account_type", res.role);
+            const role = res.role;
+            const token = res.token;
+            setCustmerDetails({ account_type: res.role });
+            localStorage.setItem("roleId", role);
+            localStorage.setItem("token", token);
+            localStorage.setItem("userDetails", JSON.stringify(res));
+            navigate("/");
+            getRoleList();
           }
         })
         .catch((err) => {

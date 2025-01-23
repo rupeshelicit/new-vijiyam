@@ -20,6 +20,7 @@ export const MetaDataProvider = ({ children }) => {
         custmerDetails,
         setCustmerDetails,
         deleteVoter,
+        setCustmerDetails,
       }}
     >
       {children}

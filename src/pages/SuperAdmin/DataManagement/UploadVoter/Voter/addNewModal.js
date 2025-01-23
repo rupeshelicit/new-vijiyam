@@ -55,7 +55,7 @@ const StyledButton = styled(Button)`
 const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
   const [uploadFile, setuploadFile] = useState(null);
   const { mutateAsync: UploadVotersExcel } = usePost();
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const closeModal = () => {
     setIsModalOpen(false);
@@ -87,9 +87,9 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
 
         if (response) {
           toast.success("Files uploaded successfully!", {
-                   position: "top-right",
+            position: "top-right",
           });
-          setIsModalOpen(false)
+          setIsModalOpen(false);
         }
       } catch (err) {
         console.error("Error uploading file:", err);
@@ -119,7 +119,7 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
             </svg>
             Excel sheet upload
             <input
-              style={{border:"0px",backgroundColor:"#fff"}}
+              style={{ border: "0px", backgroundColor: "#fff" }}
               type="file"
               id="uploadFile1"
               accept=".xlsx, .xls, .csv"
