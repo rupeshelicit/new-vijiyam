@@ -1,28 +1,35 @@
+import { render } from "@testing-library/react";
+
 const ElectionExcelColum = [
-  {
-    title: "Election Type",
-    dataIndex: "electionType",
-    key: "electionType",
-    align: "center",
-  },
   {
     title: "State",
     dataIndex: "state",
     key: "state",
     align: "center",
+    render: (record) => record?.state?.name,
   },
   {
     title: "District",
     dataIndex: "district",
     key: "district",
     align: "center",
+    render: (record) => record?.state?.name,
   },
+
   {
     title: "Assembly Name",
-    dataIndex: "assembly",
-    key: "assembly",
+    dataIndex: "vidhansabha",
+    key: "vidhansabha",
+    align: "center",
+    render: (record) => record?.state?.name,
+  },
+  {
+    title: "Election Type",
+    dataIndex: "electionType",
+    key: "electionType",
     align: "center",
   },
+
   {
     title: "Election Date	",
     dataIndex: "electionDate",
@@ -33,6 +40,18 @@ const ElectionExcelColum = [
     title: "AcharSanhita Date",
     dataIndex: "acharSanhitaDate",
     key: "acharSanhitaDate",
+    align: "center",
+  },
+  {
+    title: "Created Date",
+    dataIndex: "createdAt",
+    key: "createdAt",
+    align: "center",
+  },
+  {
+    title: "Updated Date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
     align: "center",
   },
 ];
