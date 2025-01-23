@@ -18,7 +18,6 @@ export const MetaDataProvider = ({ children }) => {
     <MetaDataContext.Provider
       value={{
         custmerDetails,
-        setCustmerDetails,
         deleteVoter,
         setCustmerDetails,
       }}

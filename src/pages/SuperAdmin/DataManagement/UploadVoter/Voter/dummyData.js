@@ -78,20 +78,18 @@ export const columns = [
     dataIndex: "caste.name",
     key: "caste",
     align: "center",
-    render: (record) => (record ? record : "NA"),
+    render: ( record ) => ( record ? record?.caste?.name : "NA"),
 
     sorter: (a, b) => a.caste.name.localeCompare(b.caste.name),
-    render: (text, record) => record?.caste?.name,
   },
   {
     title: "जाति",
     dataIndex: "caste.hiName",
     key: "hiCasteName",
     align: "center",
-    render: (record) => (record ? record : "NA"),
+    render: ( record ) => ( record ? record?.caste?.hiName : "NA"),
 
     sorter: (a, b) => a.caste.hiName.localeCompare(b.caste.hiName),
-    render: (text, record) => record?.caste?.hiName,
   },
   {
     title: "Religion Name",
@@ -226,7 +224,6 @@ export const columns = [
     dataIndex: "createdAt",
     key: "createdAt",
     align: "center",
-    render: (record) => (record ? record : "NA"),
     render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
     sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
   },

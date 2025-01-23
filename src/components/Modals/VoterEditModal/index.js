@@ -21,6 +21,7 @@ import DropdownSelect from "components/common/FormControl/DropdownSelect";
 import { GET_ELECTION_PARTY, UPDATE_VOTER_DETAILS } from "constants/api";
 import useGet from "hooks/useGet";
 import usePatch from "hooks/usePatch";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
 
@@ -39,7 +40,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
   };
 
   const handleFormSubmit = async (creds) => {
-    setLoading(true);
+    // setLoading(true);
     if (creds) {
       const payload = {
         id: voterData?.id,
@@ -73,7 +74,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
         });
     }
     setTimeout(() => {
-      setLoading(false);
+      // setLoading(false);
       handleClose();
     }, 3000);
   };
