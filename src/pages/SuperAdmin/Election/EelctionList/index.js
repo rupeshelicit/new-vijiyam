@@ -207,9 +207,9 @@ console.log(elecotionExcelData,'ddddddddddddddddddddddd')
 
               <div className="add-new-client">
                 <ButtonComponent
-                  text={"Add new client"}
+                  text={"Add Election"}
                   Icons={<PlusIcons />}
-                  onClick={() => navigate("/add-new-client")}
+                  onClick={ () => navigate("/add-elections")}
                 />
               </div>
               <div className="add-new-client">

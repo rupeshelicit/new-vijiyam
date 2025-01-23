@@ -12,7 +12,7 @@ import { Card } from "antd";
 const ClientProfile = () => {
   return (
     <ClientProfileSection>
-      <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="p-6 min-h-screen">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-[300px_1fr] gap-6">
             <div className="space-y-6">

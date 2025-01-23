@@ -3,6 +3,7 @@ export const LOGIN = "auth/login";
 export const FORGOT_PASSWORD = "user/forget-password";
 export const VERIFY_OTP = "user/verify-otp";
 export const UPDATE_PASSWORD = "user/update-password";
+export const ProfileDetails = "user/id/";
 
 //Common Api
 export const GET_ROLE_LIST = "/roles/list";

@@ -39,6 +39,7 @@ import TermsAndConditions from "pages/SuperAdmin/Settings/Terms&Conditions";
 import UploadGuidelinesAndTerms from "pages/SuperAdmin/Settings/UploadedTerms&Conditions";
 import AuthorizedUserSuperAdmin from "pages/SuperAdmin/User/AuthorizedUser";
 import AddNewAuthorizedUsers from "pages/SuperAdmin/User/AuthorizedUser/AddNewUser";
+import PersonalProfile from "pages/ClientAdmin/ClientProfile";
 import UploadLoksabha from "pages/SuperAdmin/Settings/UploadLoksabha";
 import UploadVidhansabha from "pages/SuperAdmin/Settings/UploadVidhansabha";
 export const LoginRoute = {
@@ -171,6 +172,11 @@ export const ClientProfileRoute = {
   path: "/client-profile",
   restricted: true,
 };
+export const PersonalProfileRoute = {
+  component: PersonalProfile,
+  path: "/profile",
+  restricted: true,
+};
 export const DistributorRoute = {
   component: DistributortList,
   path: "/distributor",
@@ -292,7 +298,8 @@ const IRouteS = {
     MessagesRoutes,
     UploadPostRoutes,
     DisplayProfileRoutes,
-    MobileSlipsSettingsRoutes,
+    MobileSlipsSettingsRoutes, PersonalProfileRoute
+    
   ],
   //Super Admin
   5: [
