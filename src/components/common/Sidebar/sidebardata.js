@@ -63,7 +63,7 @@ const SidebarData = [
     children: [
       {
         id: 1203,
-        title: "Distributor  User",
+        title: "Distributor ",
         icon: <UserIcon />,
         path: "/distributor",
         disable: true,
@@ -79,9 +79,9 @@ const SidebarData = [
       },
       {
         id: 1202,
-        title: "Authorized User",
+        title: "KaryaKarta",
         icon: <UserIcon />,
-        path: "/authorized-users",
+        path: "/karyaKarta",
         disable: true,
         roleId: ["5"],
         // children: [

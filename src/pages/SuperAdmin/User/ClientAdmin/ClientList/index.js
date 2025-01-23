@@ -47,6 +47,7 @@ function ClientList() {
         return index + 1;
       },
     },
+    
     {
       title: "Active User",
       dataIndex: "isPermission",
@@ -67,7 +68,7 @@ function ClientList() {
       key: "status",
       align: "center",
       render: (text, record) =>
-        record === true ? (
+        record.status === true ? (
           <Button
             disabled={true}
             className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#54408C] text-[12px] font-medium bg-[#54408C66] border-[none]"
@@ -91,6 +92,7 @@ function ClientList() {
       dataIndex: "voterId",
       key: "voterId",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.voterId.localeCompare(b.voterId),
     },
     {
@@ -98,6 +100,7 @@ function ClientList() {
       dataIndex: "name",
       key: "name",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
@@ -105,6 +108,7 @@ function ClientList() {
       dataIndex: "fatherName",
       key: "fatherName",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.fatherName.localeCompare(b.fatherName),
     },
     {
@@ -116,10 +120,27 @@ function ClientList() {
       sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
     },
     {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      align: "center",
+      render: (record) => (record ? record : "NA"),
+      sorter: (a, b) => a.gender.localeCompare(b.gender),
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+      align: "center",
+      render: (record) => (record ? record : "NA"),
+      sorter: (a, b) => a.age.localeCompare(b.age),
+    },
+    {
       title: "Email",
       dataIndex: "email",
       key: "email",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
@@ -127,88 +148,101 @@ function ClientList() {
       dataIndex: "mobileNumber",
       key: "mobileNumber",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
     },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
-      align: "center",
-      sorter: (a, b) => a.gender.localeCompare(b.gender),
-    },
+   
+
     {
       title: "State Name",
       dataIndex: "state",
       key: "state",
       align: "center",
-      render: (record) => record?.name,
+      render: (record) => (record ? record?.name : "NA"),
       sorter: (a, b) => a.state.localeCompare(b.state),
     },
+
     {
       title: "District",
       dataIndex: "district",
       key: "district",
       align: "center",
-      render: (record) => record?.name,
+      render: (record) => (record ? record?.name : "NA"),
       sorter: (a, b) => a.district.localeCompare(b.district),
+    },
+    {
+      title: "Vidhansabha",
+      dataIndex: "vidhansabha",
+      key: "vidhansabha",
+      align: "center",
+      render: (record) => (record ? record?.name : "NA"),
+      sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
+    },
+    {
+      title: "Loksabha",
+      dataIndex: "loksabha",
+      key: "loksabha",
+      align: "center",
+      render: (record) => (record ? record?.name : "NA"),
+      sorter: (a, b) => a.loksabha.localeCompare(b.loksabha),
+    },
+
+    {
+      title: "Nigam Ward Number",
+      dataIndex: "nigamWardNumber",
+      key: "nigamWardNumber",
+      align: "center",
+      render: (record) => (record ? record : "NA"),
+      sorter: (a, b) => a.nigamWardNumber.localeCompare(b.nigamWardNumber),
+    },
+    {
+      title: "City",
+      dataIndex: "city",
+      key: "city",
+      align: "center",
+      render: (record) => (record ? record : "NA"),
+      sorter: (a, b) => a.city.localeCompare(b.city),
+    },
+
+
+
+    {
+      title: "House No",
+      dataIndex: "houseNo",
+      key: "houseNo",
+      align: "center",
+      render: (record) => (record ? record : "NA"),
+      sorter: (a, b) => parseInt(a.houseNo) - parseInt(b.houseNo),
+    },
+
+
+  
+  
+
+    {
+      title: "Address",
+      dataIndex: "newAddress",
+      key: "newAddress",
+      align: "center",
+      render: (record) => (record ? record : "NA"),
+      sorter: (a, b) => a.newAddress.localeCompare(b.newAddress),
+    },
+    {
+      title: "Caste",
+      dataIndex: "caste",
+      key: "caste",
+      align: "center",
+      render: (record) => (record ? record?.name : "NA"),
+      sorter: (a, b) => a.caste.localeCompare(b.caste),
     },
     {
       title: "Party",
       dataIndex: "party",
       key: "party",
       align: "center",
-      render: (record) => record?.name,
+      render: (record) => (record ? record?.name : "NA"),
       sorter: (a, b) => a.party.localeCompare(b.party),
     },
-
-    {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-      align: "center",
-      sorter: (a, b) => a.age.localeCompare(b.age),
-    },
-
-    {
-      title: "Designation",
-      dataIndex: "designation",
-      key: "designation",
-      align: "center",
-      sorter: (a, b) => a.designation.localeCompare(b.designation),
-    },
-    {
-      title: "Vidhansabha",
-      dataIndex: "vidhansabha",
-      key: "vidhansabha",
-      render: (record) => record?.name,
-      align: "center",
-      sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
-    },
-    {
-      title: "Loksabha",
-      dataIndex: "loksabhaId",
-      key: "loksabhaId",
-      align: "center",
-      render: (record) => record?.name,
-      sorter: (a, b) => a.loksabhaId.localeCompare(b.loksabhaId),
-    },
-
-    {
-      title: "City",
-      dataIndex: "city",
-      key: "city",
-      align: "center",
-      sorter: (a, b) => a.city.localeCompare(b.city),
-    },
-
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      align: "center",
-      sorter: (a, b) => a.address.localeCompare(b.address),
-    },
-
     {
       title: "Create Date",
       dataIndex: "createdAt",
@@ -232,15 +266,14 @@ function ClientList() {
       align: "center",
       render: (text, record) => (
         <div className="flex gap-[10px]">
-          <EditComponent record={record} roleType={"client"} />
-          <DeleteComponet record={record} roleType={"client"} />
-          <ViewComponent record={record} roleType={"client"} />
+          <EditComponent record={record} roleType={"karyakarta"} />
+          <DeleteComponet record={record} roleType={"karyakarta"} />
+          <ViewComponent record={record} roleType={"karyakarta"} />
         </div>
       ),
     },
   ];
 
-  const data = [];
 
   const getClietnList = async (page, limit) => {
     const id = loginUsers.role;
@@ -251,9 +284,9 @@ function ClientList() {
     })
       .then((res) => {
         if (res) {
-          // let newRes = [...voterData];
-          // newRes = newRes.concat(res?.items);
-          setClientData(res?.items);
+          let newRes = [...clientData];
+          newRes = newRes.concat(res?.items);
+          setClientData(newRes);
         }
       })
       .catch((error) => console.log(error));

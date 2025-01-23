@@ -295,3 +295,7 @@ p {
   height: auto;
   padding: 11px 0px;
 }
+
+.client-list-header p{
+  text-align: left !important;
+}

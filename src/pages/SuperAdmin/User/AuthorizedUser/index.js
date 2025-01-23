@@ -281,7 +281,7 @@ function AuthorizedUser() {
             <div>
               <h3 className="text-[17px] font-bold mb-[10px]">
                 {" "}
-                Authorized User List
+                KaryaKarta List
               </h3>
               <p className="text-[13px] font-medium text-[#667085]">
                 Search list
@@ -302,7 +302,7 @@ function AuthorizedUser() {
 
               <div className="add-new-client">
                 <ButtonComponent
-                  text={"Add Authorized User"}
+                  text={"Add KaryaKarta"}
                   Icons={<PlusIcons />}
                   onClick={() => SetAddAuthorizedUser(true)}
                 />

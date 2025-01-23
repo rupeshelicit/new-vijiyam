@@ -159,7 +159,7 @@ export const AddNewClientRoute = {
 };
 export const AuthorizedUserRoute = {
   component: AuthorizedUserSuperAdmin,
-  path: "/authorized-users",
+  path: "/karyaKarta",
   restricted: true,
 };
 export const AddNewAuthorizedUserRoute = {

@@ -22,6 +22,7 @@ import {
   CREAT_DISTRIBUTOR,
   CREAT_ELECTION,
   GET_ASSEMBLY_LIST,
+  GET_ASSEMBLY_LIST_BY_DISTRICT,
   GET_DISTRICT_LIST_BY_STATE,
   GET_ELECTION_PARTY,
   GET_STATE_LIST,
@@ -39,11 +40,7 @@ const AddNewDistributor = () => {
   const [districtList, setDistrictList] = useState([]);
   const [party, setParty] = useState([]);
   const [selectState, setSelectState] = useState();
-  // const [slipSettings, setSlipSettings] = useState(false);
-  // const [candidateImage, setCandidateImage] = useState(false);
-  // const [isOnline, setiIsOnline] = useState(false);
-  // const [status, setStatus] = useState(false);
-  // const [isPermission, setIsPermission] = useState(false);
+  const [selectDistrict, setSelectDistrict] = useState();
   const { mutateAsync: AddNewElection } = usePost();
   const { mutateAsync: GetStateList } = useGet();
   const { mutateAsync: GetAssemblyList } = useGet();
@@ -54,12 +51,13 @@ const AddNewDistributor = () => {
     getStateList();
     getElectionParty();
     {
-      selectState && getAssemblyist();
+      selectDistrict && getAssemblyist();
     }
     {
       selectState && getDistrict();
     }
-  }, [selectState]);
+   
+  }, [selectState,selectDistrict,]);
 
   const getStateList = async () => {
     await GetStateList({
@@ -78,7 +76,7 @@ const AddNewDistributor = () => {
 
   const getAssemblyist = async () => {
     await GetAssemblyList({
-      url: GET_ASSEMBLY_LIST + selectState,
+      url: GET_ASSEMBLY_LIST_BY_DISTRICT + selectDistrict,
       type: "details",
     })
       .then((res) => {
@@ -250,6 +248,32 @@ const AddNewDistributor = () => {
 
               <Col span={8}>
                 <Form.Item
+                  name="districtName"
+                  label="District"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Select a District",
+                    },
+                  ]}
+                >
+                  <DropdownSelect
+                    name={"districtName"}
+                    setSelectState={setSelectDistrict}
+                    options={districtList && districtList}
+                    placeholder="Select District"
+                    required={false}
+                    disabled={selectState ? false : true}
+                    defaultOption={
+                      !districtList.length
+                        ? "No District found  Select Correct State "
+                        : "Select District"
+                    }
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item
                   name="assemblyName"
                   label="Assembly Name"
                   rules={[
@@ -264,7 +288,7 @@ const AddNewDistributor = () => {
                     options={assambly && assambly}
                     placeholder="Select Assambly"
                     required={false}
-                    disabled={selectState ? false : true}
+                    disabled={selectDistrict ? false : true}
                     defaultOption={
                       !assambly.length
                         ? "No Assambly found  Select Correct State "
@@ -274,31 +298,6 @@ const AddNewDistributor = () => {
                 </Form.Item>
               </Col>
 
-              <Col span={8}>
-                <Form.Item
-                  name="districtName"
-                  label="District"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please Select a District",
-                    },
-                  ]}
-                >
-                  <DropdownSelect
-                    name={"districtName"}
-                    options={districtList && districtList}
-                    placeholder="Select District"
-                    required={false}
-                    disabled={selectState ? false : true}
-                    defaultOption={
-                      !districtList.length
-                        ? "No District found  Select Correct State "
-                        : "Select District"
-                    }
-                  />
-                </Form.Item>
-              </Col>
 
               <Col span={8}>
                 <Form.Item
@@ -338,61 +337,6 @@ const AddNewDistributor = () => {
               </Col>
             </Row>
 
-            {/* <h4
-              className="text-[18px] font-semibold mb-[5px] text-[#54408C] mt-[10px]"
-              style={{ marginBottom: "10px" }}
-            >
-              Settings
-            </h4>
-            <Row
-              gutter={[16, 16]}
-              className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
-            >
-              <Col span={8}>
-                <div className="flex gap-[50px] items-center mb-[10px]">
-                  <div className="settings ">
-                    <Switch onChange={(checked) => setSlipSettings(checked)} />
-                  </div>
-                  <label className="text-[20px] font-semibold items-center">
-                    Slip Settings{" "}
-                  </label>
-                </div>
-                <div className="flex gap-[50px] items-center mb-[10px]">
-                  <div className="settings ">
-                    <Switch
-                      onChange={(checked) => setCandidateImage(checked)}
-                    />
-                  </div>
-                  <label className="text-[20px] font-semibold items-center">
-                    with Candidate Image
-                  </label>
-                </div>
-                <div className="flex gap-[50px] items-center mb-[10px]">
-                  <div className="settings ">
-                    <Switch onChange={(checked) => setiIsOnline(checked)} />
-                  </div>
-                  <label className="text-[20px] font-semibold items-center">
-                    isOnline
-                  </label>
-                </div>
-                <div className="flex gap-[50px] items-center mb-[10px]">
-                  <div className="settings ">
-                    <Switch onChange={(checked) => setStatus(checked)} />
-                  </div>
-                  <label className="text-[20px] font-semibold items-center">
-                    status
-                  </label>
-                </div>
-                <div className="flex gap-[50px] items-center mb-[10px]">
-                  <div className="settings ">
-                    <Switch onChange={(checked) => setIsPermission(checked)} />
-                  </div>
-                  <label className="text-[20px] font-semibold items-center">
-                    Permission
-                  </label>
-                </div>
-              </Col>
-            </Row> */}
 
             <Form.Item>
               <Button

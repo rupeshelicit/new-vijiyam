@@ -43,7 +43,7 @@ function ElectionsList() {
       dataIndex: "electionType",
       key: "electionType",
       align: "center",
-      render: (text, record) => record?.electionType,
+      render: (text, record) => (record ? record?.electionType : "NA"),
       sorter: (a, b) => a.electionType.localeCompare(b.electionType),
     },
     {
@@ -51,29 +51,25 @@ function ElectionsList() {
       dataIndex: "stateId",
       key: "stateId",
       align: "center",
-      render: (text, record) => record?.state?.name,
-      // {
-      //   console.log(record?.state?.name, "ddddddddddddddd");
-      // },
-
+      render: (text, record) => (record ? record?.state?.name : "NA"),
       sorter: (a, b) => a.stateId.localeCompare(b.stateId),
     },
 
     {
       title: "District",
-      dataIndex: "districtId",
-      key: "districtId",
+      dataIndex: "district",
+      key: "district",
       align: "center",
-      render: (text, record) => record?.district,
-      sorter: (a, b) => a.districtId.localeCompare(b.districtId),
+      render: (text, record) => (record ? record?.district?.name : "NA"),
+      sorter: (a, b) => a.district.localeCompare(b.district),
     },
     {
       title: "Vidhansabha",
-      dataIndex: "vidhansabhaId",
-      key: "vidhansabhaId",
+      dataIndex: "vidhansabha",
+      key: "vidhansabha",
       align: "center",
-      render: (text, record) => record?.vidhansabha?.name,
-      sorter: (a, b) => a.vidhansabhaId.localeCompare(b.vidhansabhaId),
+      render: (text, record) => (record ? record?.name : "NA"),
+      sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
     },
 
     {
@@ -134,7 +130,7 @@ function ElectionsList() {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
+   
   const getElectionList = async (page, limit) => {
     const id = loginUsers.role;
     await GetElectionsList({
@@ -159,7 +155,7 @@ function ElectionsList() {
       getElectionList(currentPage, 10);
       setPrevPage((prev) => prev + 1);
     }
-  }, [currentPage]);
+  }, [currentPage ]);
   return (
     <ClientListSection>
       <Container>
@@ -168,7 +164,7 @@ function ElectionsList() {
             <div>
               <h3 className="text-[17px] font-bold mb-[10px]">
                 {" "}
-                Election list
+                Election List
               </h3>
               <p className="text-[13px] font-medium text-[#667085]">
                 Search list
@@ -189,9 +185,9 @@ function ElectionsList() {
 
               <div className="add-new-client">
                 <ButtonComponent
-                  text={"Add new client"}
+                  text={"Add Election "}
                   Icons={<PlusIcons />}
-                  onClick={() => navigate("/add-new-client")}
+                  onClick={() => navigate("/add-elections")}
                 />
               </div>
               <div className="add-new-client">

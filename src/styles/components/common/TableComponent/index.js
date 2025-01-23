@@ -11,6 +11,9 @@ export const TableContainer = styled.div`
   // .ant-table-wrapper {
   //   padding: 20px 20px 45px 20px;
   // }
+  p{
+    text-align: left !important;
+  }
   .ant-table {
     overflow: auto;
   }

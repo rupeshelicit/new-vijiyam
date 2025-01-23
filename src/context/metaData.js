@@ -11,16 +11,17 @@ export const MetaDataProvider = ({ children }) => {
   const [custmerDetails, setCustmerDetails] = useState(
     contextDefaultValues.custmerDetails
   );
-  const [deleteVoter, setDeleteVoters] = useState(
-    contextDefaultValues.deleteVoter
-  );
+  const [isDelteElection, setDelteElection] = useState(false);
   return (
     <MetaDataContext.Provider
       value={{
         custmerDetails,
-        deleteVoter,
+        isDelteElection,
         setCustmerDetails,
+        setDelteElection,
       }}
+
+      
     >
       {children}
     </MetaDataContext.Provider>
