@@ -27,7 +27,13 @@ const KaryaKartaList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(0);
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
-
+  const handleSwitchChange = (checked, recordKey) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.key === recordKey ? { ...item, activeClient: checked } : item
+      )
+    );
+  };
 
   console.log(accountStatus, "");
   const columns = [
@@ -84,6 +90,7 @@ const KaryaKartaList = () => {
       dataIndex: "voterId",
       key: "voterId",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.voterId.localeCompare(b.voterId),
     },
     {
@@ -91,6 +98,7 @@ const KaryaKartaList = () => {
       dataIndex: "name",
       key: "name",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
@@ -98,6 +106,7 @@ const KaryaKartaList = () => {
       dataIndex: "fatherName",
       key: "fatherName",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.fatherName.localeCompare(b.fatherName),
     },
     {
@@ -105,6 +114,7 @@ const KaryaKartaList = () => {
       dataIndex: "dateOfBirth",
       key: "dateOfBirth",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
     },
     {
@@ -112,6 +122,7 @@ const KaryaKartaList = () => {
       dataIndex: "email",
       key: "email",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
@@ -119,6 +130,7 @@ const KaryaKartaList = () => {
       dataIndex: "mobileNumber",
       key: "mobileNumber",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
     },
     {
@@ -126,6 +138,7 @@ const KaryaKartaList = () => {
       dataIndex: "gender",
       key: "gender",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.gender.localeCompare(b.gender),
     },
     {
@@ -133,6 +146,7 @@ const KaryaKartaList = () => {
       dataIndex: "casteId",
       key: "casteId",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.casteId.localeCompare(b.casteId),
     },
     {
@@ -140,6 +154,7 @@ const KaryaKartaList = () => {
       dataIndex: "stateId",
       key: "stateId",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.stateId.localeCompare(b.stateId),
     },
     {
@@ -147,6 +162,7 @@ const KaryaKartaList = () => {
       dataIndex: "districtId",
       key: "districtId",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.districtId.localeCompare(b.districtId),
     },
     {
@@ -154,6 +170,7 @@ const KaryaKartaList = () => {
       dataIndex: "nigamWardNumber",
       key: "nigamWardNumber",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.nigamWardNumber.localeCompare(b.nigamWardNumber),
     },
     {
@@ -161,6 +178,7 @@ const KaryaKartaList = () => {
       dataIndex: "age",
       key: "age",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.age.localeCompare(b.age),
     },
     {
@@ -168,6 +186,7 @@ const KaryaKartaList = () => {
       dataIndex: "section",
       key: "section",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.section.localeCompare(b.section),
     },
     {
@@ -175,6 +194,7 @@ const KaryaKartaList = () => {
       dataIndex: "designation",
       key: "designation",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.designation.localeCompare(b.designation),
     },
     {
@@ -182,6 +202,7 @@ const KaryaKartaList = () => {
       dataIndex: "vidhansabhaId",
       key: "vidhansabhaId",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.vidhansabhaId.localeCompare(b.vidhansabhaId),
     },
     {
@@ -189,6 +210,7 @@ const KaryaKartaList = () => {
       dataIndex: "loksabhaId",
       key: "loksabhaId",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.loksabhaId.localeCompare(b.loksabhaId),
     },
 
@@ -197,6 +219,7 @@ const KaryaKartaList = () => {
       dataIndex: "houseNo",
       key: "houseNo",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => parseInt(a.houseNo) - parseInt(b.houseNo),
     },
     {
@@ -211,6 +234,7 @@ const KaryaKartaList = () => {
       dataIndex: "vidhansabha",
       key: "vidhansabha",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
     },
     {
@@ -218,6 +242,7 @@ const KaryaKartaList = () => {
       dataIndex: "loksabha",
       key: "loksabha",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.loksabha.localeCompare(b.loksabha),
     },
     {
@@ -225,6 +250,7 @@ const KaryaKartaList = () => {
       dataIndex: "mobileNumber",
       key: "mobileNumber",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
     },
     {
@@ -232,6 +258,7 @@ const KaryaKartaList = () => {
       dataIndex: "district",
       key: "district",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.district.localeCompare(b.district),
     },
     {
@@ -239,6 +266,7 @@ const KaryaKartaList = () => {
       dataIndex: "newAddress",
       key: "newAddress",
       align: "center",
+      render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.newAddress.localeCompare(b.newAddress),
     },
 
@@ -265,9 +293,9 @@ const KaryaKartaList = () => {
       align: "center",
       render: (text, record) => (
         <div className="flex gap-[10px]">
-          <EditComponent record={record} roleType={"karykarta"} />
-          <DeleteComponet record={record} roleType={"karykarta"} />
-          <ViewComponent record={record} roleType={"karykarta"} />
+          <EditComponent record={record} roleType={"karyakarta"} />
+          <DeleteComponet record={record} roleType={"karyakarta"} />
+          <ViewComponent record={record} roleType={"karyakarta"} />
         </div>
       ),
     },

@@ -29,7 +29,9 @@ function AuthorizedUser() {
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(0);
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
-  const authorizedUsers = usersRole.filter((item) => item.name === "authorized");
+  const authorizedUsers = usersRole.filter(
+    (item) => item.name === "authorized"
+  );
   const authorizedUserID = authorizedUsers[0]?.id;
 
   const columns = [
@@ -170,7 +172,6 @@ function AuthorizedUser() {
       sorter: (a, b) => a.age.localeCompare(b.age),
     },
 
-  
     {
       title: "Vidhansabha",
       dataIndex: "vidhansabha",
@@ -226,9 +227,9 @@ function AuthorizedUser() {
       align: "center",
       render: (text, record) => (
         <div className="flex gap-[10px]">
-          <EditComponent record={record} />
-          <DeleteComponet record={record} />
-          <ViewComponent record={record} />
+          <EditComponent record={record} roleType={"karyakarta"} />
+          <DeleteComponet record={record} roleType={"karyakarta"} />
+          <ViewComponent record={record} roleType={"karyakarta"} />
         </div>
       ),
     },

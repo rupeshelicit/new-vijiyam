@@ -228,7 +228,7 @@ span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
 p {
   font-size: 16px;
   text-align: center;
-  /* margin-bottom: 17px; */
+  margin-bottom: 17px;
 }
 
 .success-modal .ant-btn-default {
@@ -273,4 +273,26 @@ p {
 .confimation-modal .ant-modal {
   width: 100%;
   max-width: 450px !important;
+}
+
+.ant-input-outlined:hover {
+  border-color: #54408c;
+}
+.ant-btn-primary:hover {
+  background: #54408c !important;
+}
+.cancel:hover {
+  border-color: #54408c;
+  color: #55418d;
+}
+
+.edit-modal .ant-form-item,
+.view-modal .ant-form-item {
+  margin-bottom: 0px;
+}
+.edit-modal .ant-btn,
+.view-modal .ant-btn {
+  width: 25%;
+  height: auto;
+  padding: 11px 0px;
 }

@@ -10,24 +10,20 @@ import SwitchComponent from "components/common/SwitchComponent";
 import { ClientListSection } from "styles/pages/SuperAdmin/user";
 import { useNavigate } from "react-router-dom";
 import useGet from "hooks/useGet";
-import { DOWNLOAD_ELECTION_EXCEL, GET_ELECTION_LIST } from "constants/api";
+import { GET_ELECTION_LIST } from "constants/api";
 import { Button } from "antd";
 import EditComponent from "components/common/Action/Edit";
 import DeleteComponet from "components/common/Action/Delete";
 import ViewComponent from "components/common/Action/View";
 import ExportToExcel from "components/common/ExportToExcel";
 import ExcelIcons from "assets/svg/excelIcons";
-import ElectionExcelColum from "Data/Election";
 
 function ElectionsList() {
   const navigate = useNavigate();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [ElecotionData, setElecotionData] = useState([]);
-  const [elecotionExcelData, setElecotionExcelData] = useState([]);
-
   const { mutateAsync: GetElectionsList } = useGet();
-  const { mutateAsync: GetExcelData } = useGet();
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(0);
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
@@ -56,6 +52,10 @@ function ElectionsList() {
       key: "stateId",
       align: "center",
       render: (text, record) => record?.state?.name,
+      // {
+      //   console.log(record?.state?.name, "ddddddddddddddd");
+      // },
+
       sorter: (a, b) => a.stateId.localeCompare(b.stateId),
     },
 
@@ -115,17 +115,13 @@ function ElectionsList() {
       align: "center",
       render: (text, record) => (
         <div className="flex gap-[10px]">
-          <EditComponent record={record} />
-          <DeleteComponet record={record} />
-          <ViewComponent record={record} />
+          <EditComponent record={record} roleType={"election"} />
+          <DeleteComponet record={record} roleType={"election"} />
+          <ViewComponent record={record} roleType={"election"} />
         </div>
       ),
     },
   ];
-
-  useEffect(() => {
-    getElectionExcelList();
-  }, []);
 
   const onSelectChange = (newSelectedRowKeys, newSelectedRows) => {
     console.log("Selected Row Keys:", newSelectedRowKeys);
@@ -158,20 +154,6 @@ function ElectionsList() {
       .catch((error) => console.log(error));
   };
 
-  const getElectionExcelList = async () => {
-    await GetExcelData({
-      url: DOWNLOAD_ELECTION_EXCEL,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          setElecotionExcelData(res);
-          console.log(res)
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-console.log(elecotionExcelData,'ddddddddddddddddddddddd')
   useMemo(() => {
     if (currentPage > prevPage) {
       getElectionList(currentPage, 10);
@@ -207,17 +189,17 @@ console.log(elecotionExcelData,'ddddddddddddddddddddddd')
 
               <div className="add-new-client">
                 <ButtonComponent
-                  text={"Add Election"}
+                  text={"Add new client"}
                   Icons={<PlusIcons />}
-                  onClick={ () => navigate("/add-elections")}
+                  onClick={() => navigate("/add-new-client")}
                 />
               </div>
               <div className="add-new-client">
                 <ExportToExcel
                   buttonText={"Export Election List"}
                   Icons={<ExcelIcons />}
-                  data={elecotionExcelData}
-                  columns={ElectionExcelColum}
+                  data={ElecotionData}
+                  columns={columns}
                   excelName="ElectionList"
                 />
               </div>

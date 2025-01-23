@@ -23,14 +23,14 @@ const Profile = () => {
           />
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
-          <div >
-            <p className="text-[18px] text-left mb-[15px] font-semibold text-[#455A5C]">
+          <div className="space-y-2">
+            <p className="text-[18px] mb-[15px] font-semibold text-[#455A5C]">
               Vidhan Sabha
             </p>
-            <p className="text-[18px] text-left mb-[15px] font-semibold text-[#455A5C]">Loksabha</p>
-            <p className="text-[18px] text-left mb-[15px] font-semibold text-[#455A5C]">Total Karykarta</p>
+            <p className="text-[18px] mb-[15px] font-semibold text-[#455A5C]">Loksabha</p>
+            <p className="text-[18px] mb-[15px] font-semibold text-[#455A5C]">Total Karykarta</p>
           </div>
-          <div >
+          <div className="space-y-2">
             <p className="text-[16px] mb-[15px] font-medium text-[#455A5C]">
             Indore
             </p>

@@ -71,7 +71,7 @@ const ManageData = () => {
   };
 
   const handleButtonClick = (buttonName) => {
-    // setActiveButton(buttonName); 
+    setActiveButton(buttonName); // Update Active button state
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {

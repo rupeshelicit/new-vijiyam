@@ -104,12 +104,13 @@ const VoterList = () => {
                   columns={columns}
                   Icons={<ExcelIcons />}
                   buttonText={"Export"}
+                  excelName="voterlist"
                 />
               </div>
 
               <div className="export-file">
                 <ExportToExcel
-                  buttonText={" Export Blank Excel"}
+                  buttonText={" Export Demo Excel"}
                   Icons={<ExcelIcons />}
                   columns={ExcelColum}
                   excelName="VoterDemo"

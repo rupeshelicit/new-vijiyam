@@ -106,7 +106,7 @@ const AssignSurvey = ({ setOpen, open, title, data }) => {
   };
 
   const handleAddNewKaryakarta = () => {
-    // setAddNew(true);
+    setAddNew(true);
   };
 
   return (

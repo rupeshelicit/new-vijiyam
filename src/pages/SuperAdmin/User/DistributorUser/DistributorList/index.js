@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Container } from "styles/components/common/Layout";
 import deleteIcon from "assets/svg/trans-icon.svg";
 
@@ -19,25 +19,24 @@ import ViewComponent from "components/common/Action/View";
 function DistributortList() {
   const navigate = useNavigate();
   const [accountStatus, setAccountStatus] = useState(false);
-  const [userPermissions, setUserPermissions] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const distributor = usersRole?.filter((item) => item.name === "distributor");
-  const [selectedRows, setSelectedRows] = useState([]);
   const [distributors, setDistributors] = useState([]);
-  const { mutateAsync: GetDistributsData } = useGet();
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(0);
-  const usersRole = JSON.parse(localStorage.getItem("roleList"));
-  const distributorUserID = distributor[0]?.id;
+
+  const usersRole = JSON.parse(localStorage.getItem("roleList")) || [];
+  const distributor = usersRole.find((item) => item?.name === "distributor");
+  const distributorUserID = distributor?.id;
+
+  const { mutateAsync: GetDistributsData } = useGet();
+
   const columns = [
     {
       title: "S.NO",
       dataIndex: "serialNumber",
       key: "serialNumber",
       align: "center",
-      render: (text, record, index) => {
-        return index + 1;
-      },
+      render: (text, record, index) => index + 1,
     },
     {
       title: "Active User",
@@ -52,7 +51,6 @@ function DistributortList() {
         />
       ),
     },
-
     {
       title: "User Permissions",
       dataIndex: "status",
@@ -64,8 +62,7 @@ function DistributortList() {
             disabled={true}
             className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#54408C] text-[12px] font-medium bg-[#54408C66] border-[none]"
           >
-            <b className="h-[8px] w-[8px] bg-[#14BA6D] rounded-[50px]"></b>{" "}
-            Active
+            <b className="h-[8px] w-[8px] bg-[#14BA6D] rounded-[50px]"></b> Active
           </Button>
         ) : (
           <Button
@@ -77,136 +74,6 @@ function DistributortList() {
           </Button>
         ),
       width: 120,
-    },
-    {
-      title: "Voter Id",
-      dataIndex: "voterId",
-      key: "voterId",
-      align: "center",
-      sorter: (a, b) => a.voterId.localeCompare(b.voterId),
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      align: "center",
-      sorter: (a, b) => a.name.localeCompare(b.name),
-    },
-    {
-      title: "Father Name",
-      dataIndex: "fatherName",
-      key: "fatherName",
-      align: "center",
-      sorter: (a, b) => a.fatherName.localeCompare(b.fatherName),
-    },
-    {
-      title: "Date Of Birth",
-      dataIndex: "dateOfBirth",
-      key: "dateOfBirth",
-      align: "center",
-      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
-      sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-      align: "center",
-      sorter: (a, b) => a.email.localeCompare(b.email),
-    },
-    {
-      title: "Mobile Number",
-      dataIndex: "mobileNumber",
-      key: "mobileNumber",
-      align: "center",
-      sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
-    },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
-      align: "center",
-      sorter: (a, b) => a.gender.localeCompare(b.gender),
-    },
-    {
-      title: "State Name",
-      dataIndex: "state",
-      key: "state",
-      align: "center",
-      render: (record) => record?.name,
-      sorter: (a, b) => a.state.localeCompare(b.state),
-    },
-    {
-      title: "District",
-      dataIndex: "district",
-      key: "district",
-      align: "center",
-      render: (record) => record?.name,
-      sorter: (a, b) => a.district.localeCompare(b.district),
-    },
-
-    {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-      align: "center",
-      sorter: (a, b) => a.age.localeCompare(b.age),
-    },
-
-    {
-      title: "Designation",
-      dataIndex: "designation",
-      key: "designation",
-      align: "center",
-      sorter: (a, b) => a.designation.localeCompare(b.designation),
-    },
-    {
-      title: "Vidhansabha",
-      dataIndex: "vidhansabha",
-      key: "vidhansabha",
-      align: "center",
-      render: (record) => record?.name,
-      sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
-    },
-    {
-      title: "Loksabha",
-      dataIndex: "loksabhaId",
-      key: "loksabhaId",
-      align: "center",
-      sorter: (a, b) => a.loksabhaId.localeCompare(b.loksabhaId),
-    },
-
-    {
-      title: "City",
-      dataIndex: "city",
-      key: "city",
-      align: "center",
-      sorter: (a, b) => a.city.localeCompare(b.city),
-    },
-
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      align: "center",
-      sorter: (a, b) => a.address.localeCompare(b.address),
-    },
-
-    {
-      title: "Create Date",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      align: "center",
-      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
-      sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
-    },
-    {
-      title: "Update Date",
-      dataIndex: "updatedAt",
-      key: "updatedAt",
-      align: "center",
-      render: (record) => new Date(record ? record : "NA").toLocaleDateString(),
-      sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt),
     },
     {
       title: "Action",
@@ -227,7 +94,6 @@ function DistributortList() {
     console.log("Selected Row Keys:", newSelectedRowKeys);
     console.log("Selected Rows:", newSelectedRows);
     setSelectedRowKeys(newSelectedRowKeys);
-    setSelectedRows(newSelectedRows);
   };
 
   const rowSelection = {
@@ -236,32 +102,28 @@ function DistributortList() {
   };
 
   const getDistributorList = async (page, limit) => {
-    await GetDistributsData({
-      url: `${
-        GET_DISTRIBUTOR_LITS + distributorUserID
-      }?page=${page}&limit=${limit}`,
-      type: "details",
-      token: true,
-    })
-      .then((res) => {
-        if (res) {
-          console.log(res?.items, "sdfsdfs");
-
-          // let newRes = [...ElecotionData];
-          // newRes = newRes.concat(res?.items);
-
-          // setElecotionData(newRes);
-          let newRes = [...distributors];
-          newRes = newRes.concat(res?.items);
-          setDistributors(newRes);
-        }
-      })
-      .catch((error) => console.log(error));
+    if (!distributorUserID) {
+      console.error("Distributor User ID not found.");
+      return;
+    }
+    try {
+      const response = await GetDistributsData({
+        url: `${GET_DISTRIBUTOR_LITS + distributorUserID}?page=${page}&limit=${limit}`,
+        type: "details",
+        token: true,
+      });
+      if (response && response.items) {
+        setDistributors((prev) => [...prev, ...response.items]);
+      }
+    } catch (error) {
+      console.error("Error fetching distributor list:", error);
+    }
   };
-  useMemo(() => {
+
+  useEffect(() => {
     if (currentPage > prevPage) {
       getDistributorList(currentPage, 10);
-      setPrevPage((prev) => prev + 1);
+      setPrevPage(currentPage);
     }
   }, [currentPage]);
 
@@ -275,18 +137,14 @@ function DistributortList() {
           <div className="client-list-header flex justify-between items-center px-[22px] py-[20px] flex-wrap bg-[#FFFFFF] border-[1px] border-[#EAECF0] rounded-[4px]">
             <div>
               <h3 className="text-[17px] font-bold mb-[10px]">
-                {" "}
-                Distributor list
+                Distributor List
               </h3>
               <p className="text-[13px] font-medium text-[#667085]">
-                Search list
+                Search and manage distributors
               </p>
             </div>
             <div className="client-search-list-buttons flex gap-[20px]">
-              <div
-                className="delete-button flex items-center
-"
-              >
+              <div className="delete-button flex items-center">
                 <button className="flex gap-[5px] items-center">
                   <img src={deleteIcon} alt="Delete Icon" />
                   <span className="text-[13px] font-medium text-[#344054]">
@@ -294,10 +152,9 @@ function DistributortList() {
                   </span>
                 </button>
               </div>
-
               <div className="add-new-client">
                 <ButtonComponent
-                  text={"Add new distributor"}
+                  text={"Add New Distributor"}
                   Icons={<PlusIcons />}
                   onClick={() => navigate("/add-distributor")}
                 />
@@ -307,24 +164,11 @@ function DistributortList() {
               rowSelection={rowSelection}
               columns={columns}
               data={distributors}
-              setCurrentPage={setCurrentPage}
+              pagination={{
+                current: currentPage,
+                onChange: (page) => setCurrentPage(page),
+              }}
             />
-            <div className="flex items-center mb-4">
-              <input
-                // onClick={setMultiUserDelete}
-                disabled=""
-                id="disabled-checkbox"
-                type="checkbox"
-                defaultValue=""
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-              <label
-                htmlFor="disabled-checkbox"
-                className="ms-2 text-[16px] font-medium text-#000000-400 dark:text-gray-500"
-              >
-                Multi user can select and delete{" "}
-              </label>
-            </div>
           </div>
         </div>
       </Container>
