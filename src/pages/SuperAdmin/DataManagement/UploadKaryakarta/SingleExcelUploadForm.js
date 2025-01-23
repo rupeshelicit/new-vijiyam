@@ -37,7 +37,7 @@ const SingleExcelUploadForm = ({
           toast.success("Files uploaded successfully!", {
             position: "top-right",
           });
-          setIsModalOpen(false);
+          // setIsModalOpen(false);
         }
       } catch (err) {
         console.error("Error uploading file:", err);

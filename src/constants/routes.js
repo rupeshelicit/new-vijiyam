@@ -40,6 +40,8 @@ import TermsAndConditions from "pages/SuperAdmin/Settings/Terms&Conditions";
 import UploadGuidelinesAndTerms from "pages/SuperAdmin/Settings/UploadedTerms&Conditions";
 import AuthorizedUserSuperAdmin from "pages/SuperAdmin/User/AuthorizedUser";
 import AddNewAuthorizedUsers from "pages/SuperAdmin/User/AuthorizedUser/AddNewUser";
+import UploadVidhansabha from "pages/SuperAdmin/Settings/UploadVidhansabha";
+import UploadLoksabha from "pages/SuperAdmin/Settings/UploadLoksabha";
 export const LoginRoute = {
   component: Login,
   path: "/",
@@ -219,6 +221,16 @@ export const UploadguidelinesRoute = {
   path: "/upload-guidlines",
   restricted: true,
 };
+export const UploadVidhansabhaRoute = {
+  component: UploadVidhansabha,
+  path: "/upload-vidhansabha",
+  restricted: true,
+};
+export const UploadLoksabhaRoute = {
+  component: UploadLoksabha,
+  path: "/upload-loksabha",
+  restricted: true,
+};
 // Distributor Routes
 export const DistributorsRoute = {
   component: DistributorDashboard,
@@ -304,6 +316,8 @@ const IRouteS = {
     TermsandConditionRoute,
     UploadguidelinesRoute,
     AuthorizedUserRoute,
+    UploadVidhansabhaRoute,
+UploadLoksabhaRoute
   ],
   // Distributor Admin
   4: [

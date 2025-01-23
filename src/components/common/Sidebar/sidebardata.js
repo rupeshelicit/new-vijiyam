@@ -10,6 +10,7 @@ import WhatsappIcon from "assets/svg/whatsappIcon";
 import SendMessageIcon from "assets/svg/sendMessageIcon";
 import DataManagementIcon from "assets/svg/dataManagementIcon";
 import ElectionIcon from "assets/svg/ElectionIcon";
+import UploadIcons from "assets/svg/UploadIcons";
 const SidebarData = [
   // super-admin-routes
   {
@@ -178,7 +179,32 @@ const SidebarData = [
         roleId: ["5"],
       },
       {
+        id: 1603,
+        title: "Upload guidelines",
+        icon: <SettingsIcon />,
+        path: "/upload-guidlines",
+        disable: true,
+        roleId: ["5"],
+      },
+      {
         id: 1604,
+        title: "Upload Vidhansabha",
+        icon: <UploadIcons />,
+        path: "/upload-vidhansabha",
+        disable: true,
+        roleId: [ "5" ],
+      },
+      {
+        id: 1605,
+        title: "Upload Loksabha",
+        icon: <UploadIcons />,
+        path: "/upload-loksabha",
+        disable: true,
+        roleId: [ "5" ],
+      },
+
+      {
+        id: 1606,
         title: "Other",
         icon: <SettingsIcon />,
         path: "/upload-guidlines",
