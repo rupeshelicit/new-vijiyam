@@ -33,11 +33,11 @@ const ListViewEditComponent = () => {
   const authorized = usersRole?.filter((item) => item.name === "authorized");
   const authorizedUserID = authorized[0]?.id;
   const handleSwitchChange = (checked, recordKey) => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.key === recordKey ? { ...item, activeClient: checked } : item
-      )
-    );
+    // setData((prevData) =>
+    //   prevData.map((item) =>
+    //     item.key === recordKey ? { ...item, activeClient: checked } : item
+    //   )
+    // );
   };
 
   console.log(accountStatus, "");

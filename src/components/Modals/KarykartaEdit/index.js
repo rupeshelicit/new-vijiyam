@@ -15,6 +15,7 @@ import {
 } from "constants/api";
 import useGet from "hooks/useGet";
 import usePatch from "hooks/usePatch";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
 
@@ -33,7 +34,7 @@ const KarykartaEditModal = ({ isOpen, setIsOpen, karykartaData, onSubmit }) => {
   };
 
   const handleFormSubmit = async (creds) => {
-    setLoading(true);
+    // setLoading(true);
     if (creds) {
       const payload = {
         id: karykartaData?.id,
@@ -67,7 +68,7 @@ const KarykartaEditModal = ({ isOpen, setIsOpen, karykartaData, onSubmit }) => {
         });
     }
     setTimeout(() => {
-      setLoading(false);
+      // setLoading(false);
       handleClose();
     }, 3000);
   };
