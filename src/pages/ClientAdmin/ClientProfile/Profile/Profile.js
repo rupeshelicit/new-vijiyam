@@ -2,7 +2,10 @@ import { Card } from "antd";
 import React from "react";
 import { Container } from "styles/components/common/Layout";
 import ClientProfileImg from "assets/images/Client-Profile.png";
-const Profile = () => {
+const Profile = ( profileDetails ) =>
+{
+  console.log( profileDetails ,"sdfjgsdjh");
+  
   return (
     <Container>
       {" "}

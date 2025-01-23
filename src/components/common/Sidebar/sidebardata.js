@@ -225,11 +225,36 @@ const SidebarData = [
   {
     id: 3,
     icons: <UserIcon />,
-    title: "Voter",
-    path: "/voter-list",
+    title: "User List",
     disable: true,
-    roleId: ["3"],
+    roleId: [ "3" ],
+    children: [
+      {
+        id: 201,
+        title: "Karyakarta List",
+        icon: <ListIcons />,
+        path: "/list-view",
+        disable: true,
+        roleId: [ "301" ],
+      },
+      {
+        id: 202,
+        title: "Voter List ",
+        icon: <ListIcons />,
+        path: "/voter-list ",
+        disable: true,
+        roleId: [ "302" ],
+      },
+    ],
   },
+  // {
+  //   id: 3,
+  //   icons: <UserIcon />,
+  //   title: "Voter",
+  //   path: "/voter-list",
+  //   disable: true,
+  //   roleId: ["3"],
+  // },
 
  
 

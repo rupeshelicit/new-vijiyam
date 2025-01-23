@@ -6,7 +6,7 @@ const Residency = () => {
     <div>
       <div title="" className="mb-[20px]">
         <label>Residency</label>
-        <div className="grid gap-4 text-sm">
+        <div className="grid gap-4 text-sm my-6">
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">Country</span>
             <span>India</span>

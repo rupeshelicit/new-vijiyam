@@ -8,7 +8,7 @@ const AccountDetails = () => {
       {" "}
       <div title="" className="mb-[20px]">
         <label>Account Details</label>
-        <div className="grid gap-4 text-sm">
+        <div className="grid gap-4 text-sm my-6">
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">Account</span>
             <span>Demo</span>
