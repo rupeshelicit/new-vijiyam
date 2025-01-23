@@ -33,7 +33,7 @@ const SingleExcelUploadForm = ({ setSeletedAssembly, }) => {
           toast.success("Files uploaded successfully!", {
             position: "top-right",
           });
-          setIsModalOpen(false);
+          // setIsModalOpen(false);
         }
       } catch (err) {
         toast.error("Files is not uploaded !", {

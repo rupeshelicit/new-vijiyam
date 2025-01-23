@@ -77,7 +77,7 @@ const Login = () => {
             <h3 className="sigin-title text-[26px] font-[600] mb-[5px]">
               Login
             </h3>
-            <p className="text-[14px] font-[400] pb-[24px]  mb-[0px] text-[#313131]">
+            <p className="text-left text-[14px] font-[400] pb-[24px]  mb-[0px] text-[#313131]">
               Login to access your travelwise account
             </p>
             <div>
