@@ -19,10 +19,8 @@ import { render } from "@testing-library/react";
 
 function ClientList() {
   const navigate = useNavigate();
-  const [activeButton, setActiveButton] = useState("addNewclient");
+
   const [accountStatus, setAccountStatus] = useState();
-  const [userPermissions, setUserPermissions] = useState(false);
-  const [openExportDrawer, setOpeExportDrawer] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [clientData, setClientData] = useState([]);
@@ -36,7 +34,7 @@ function ClientList() {
   const handleAddnewclient = () => {
     navigate("/add-new-client");
   };
-
+console.log(setCurrentPage,currentPage,'currentPage----------->')
   const columns = [
     {
       title: "S.NO",
@@ -266,9 +264,9 @@ function ClientList() {
       align: "center",
       render: (text, record) => (
         <div className="flex gap-[10px]">
-          <EditComponent record={record} roleType={"karyakarta"} />
-          <DeleteComponet record={record} roleType={"karyakarta"} />
-          <ViewComponent record={record} roleType={"karyakarta"} />
+          <EditComponent record={record} roleType={"client"} />
+          <DeleteComponet record={record} roleType={"client"} />
+          <ViewComponent record={record} roleType={"client"} />
         </div>
       ),
     },
@@ -293,7 +291,7 @@ function ClientList() {
   };
   useMemo(() => {
     if (currentPage > prevPage) {
-      getClietnList(currentPage, 10);
+      getClietnList(currentPage, 3);
       setPrevPage((prev) => prev + 1);
     }
   }, [currentPage]);

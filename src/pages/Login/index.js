@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import useMetaData from "context/metaData";
+import { useMetaDataContext } from "context/metaData";
 import { LoginPage } from "styles/pages/Login";
 import sideImg from "assets/images/side right.png";
 import Logo from "assets/svg/logo.svg";
@@ -13,7 +13,7 @@ const Login = () => {
   console.log(userDetails, setUserDetails);
 
   const navigate = useNavigate();
-  const { setCustmerDetails } = useMetaData();
+  const { setCustmerDetails } = useMetaDataContext();
   const [loading, setLoading] = useState(false);
   const { mutateAsync: UserLogin } = usePost();
   const { mutateAsync: RoleList } = useGet();

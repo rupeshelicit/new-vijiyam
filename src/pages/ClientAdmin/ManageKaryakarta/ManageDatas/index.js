@@ -48,10 +48,7 @@ const ManageData = () => {
           setKayrkartaData(newRes);
         }
       })
-      .catch((error) =>
-          console.log(error)
-
-      );
+      .catch((error) => console.log(error));
   };
   useMemo(() => {
     if (currentPage > prevPage) {
@@ -341,7 +338,7 @@ const ManageData = () => {
       render: (text, record) => (
         <div className="flex gap-[10px]">
           <EditComponent record={record} roleType={"karykarta"} />
-          <DeleteComponent record={record} roleType={"karykarta"} />
+          <DeleteComponent record={record} />
           <ViewComponent record={record} roleType={"karykarta"} />
         </div>
       ),

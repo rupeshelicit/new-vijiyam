@@ -56,8 +56,7 @@ const AddNewDistributor = () => {
     {
       selectState && getDistrict();
     }
-   
-  }, [selectState,selectDistrict,]);
+  }, [selectState, selectDistrict]);
 
   const getStateList = async () => {
     await GetStateList({
@@ -135,13 +134,16 @@ const AddNewDistributor = () => {
       url: CREAT_ELECTION,
       type: "details",
       payload: payload,
-      token:true
+      token: true,
     })
       .then((res) => {
         if (res) {
-          toast.success("Success! You have successfully created a new Election", {
-            position: "top-right",
-          });
+          toast.success(
+            "Success! You have successfully created a new Election",
+            {
+              position: "top-right",
+            }
+          );
           form.resetFields();
         }
       })
@@ -278,7 +280,7 @@ const AddNewDistributor = () => {
                   label="Assembly Name"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Please Select  Assembly Name",
                     },
                   ]}
@@ -297,7 +299,6 @@ const AddNewDistributor = () => {
                   />
                 </Form.Item>
               </Col>
-
 
               <Col span={8}>
                 <Form.Item
@@ -336,7 +337,6 @@ const AddNewDistributor = () => {
                 </Form.Item>
               </Col>
             </Row>
-
 
             <Form.Item>
               <Button

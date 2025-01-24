@@ -1,21 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Form,
-  Input,
-  Button,
-  Select,
-  DatePicker,
-  Tag,
-  Row,
-  Col,
-} from "antd";
-import {
-  UserOutlined,
-  PhoneOutlined,
-  HomeOutlined,
-  IdcardOutlined,
-} from "@ant-design/icons";
+import { Modal, Form, Input, Button, Select, Row, Col } from "antd";
+import { UserOutlined, PhoneOutlined, HomeOutlined } from "@ant-design/icons";
 import FormInput from "components/common/FormControl/FormInput";
 import DropdownSelect from "components/common/FormControl/DropdownSelect";
 import { GET_ELECTION_PARTY, UPDATE_VOTER_DETAILS } from "constants/api";
@@ -40,18 +25,24 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
   };
 
   const handleFormSubmit = async (creds) => {
-    // setLoading(true);
     if (creds) {
       const payload = {
         id: voterData?.id,
-        // name: creds?.name,
-        // stateId: creds?.stateId,
-        // electionType: creds?.electionType,
-        // districtId: creds?.districtId,
-        // assemblyId: creds?.assemblyId,
-        // electionDate: creds?.electionDate,
-        // acharSanhitaDate: creds?.acharSanhitaDate,
+        name: creds?.name,
+        fatherName: creds?.fatherName,
+        mobileNumber: creds?.mobileNumber,
+        voterId: creds?.voterId,
+        gender: creds?.gender,
+        partyName: creds?.partyName,
+        age: creds?.age,
+        caste: creds?.caste,
+        section: creds?.section,
+        boothNo: creds?.boothNo,
+        city: creds?.city,
+        supportingParty: creds?.supportingParty,
+        newAddress: creds?.newAddress,
       };
+
       await UpdateVoterDetails({
         url: UPDATE_VOTER_DETAILS,
         type: "details",
@@ -60,7 +51,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
         .then((res) => {
           if (res) {
             toast.success(
-              "Success! You have successfully update voter details",
+              "Success! You have successfully updated voter details",
               {
                 position: "top-right",
               }
@@ -74,10 +65,10 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
         });
     }
     setTimeout(() => {
-      // setLoading(false);
       handleClose();
     }, 3000);
   };
+
   const getElectionParty = async () => {
     await GetPartyList({
       url: GET_ELECTION_PARTY,
@@ -163,22 +154,8 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
 
           <Col span={8}>
             <Form.Item
-              name="email"
-              label="Email"
-              rules={[{ required: true, message: "Please Enter Email" }]}
-            >
-              <FormInput
-                name="email"
-                placeholder="Enter Gmail"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              label="Phone Number"
               name="mobileNumber"
+              label="Phone Number"
               rules={[
                 { required: true, message: "Please Input Your Phone Number!" },
                 {
@@ -198,8 +175,8 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
 
           <Col span={8}>
             <Form.Item
-              label="Voter ID"
               name="voterId"
+              label="Voter ID"
               rules={[
                 { required: true, message: "Please Input Your Voter ID!" },
               ]}
@@ -234,25 +211,6 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
 
           <Col span={8}>
             <Form.Item
-              name="partyName"
-              label="Party Name"
-              rules={[
-                { required: true, message: "Please Select a Party Name" },
-              ]}
-            >
-              <DropdownSelect
-                name={"party"}
-                options={party && party}
-                placeholder="Select Party Name"
-                required={false}
-                disabled={false}
-                defaultOption={"Select Party Name"}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
               label="Age"
               name="age"
               rules={[{ required: true, message: "Please Input Your Age!" }]}
@@ -269,13 +227,12 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
 
           <Col span={8}>
             <Form.Item
-              label="Caste"
               name="caste"
+              label="Caste"
               rules={[{ required: true, message: "Please Input Your Caste!" }]}
             >
               <FormInput
                 name="caste"
-                defaultValue={voterData?.caste?.name}
                 placeholder="Enter Caste"
                 required={false}
                 maxLength={10}
@@ -298,9 +255,9 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item label="Booth Number" name="boothNo">
+            <Form.Item label="Booth Number" name="booth">
               <FormInput
-                name="boothNo"
+                name="booth"
                 placeholder="Enter Booth Number"
                 required={false}
               />
@@ -326,6 +283,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
               />
             </Form.Item>
           </Col>
+
           <Col span={8}>
             <Form.Item label="House No" name="houseNo">
               <FormInput
@@ -335,6 +293,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
               />
             </Form.Item>
           </Col>
+
           <Col span={8}>
             <Form.Item label="Vidhansabha" name="vidhansabha">
               <FormInput
@@ -344,6 +303,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
               />
             </Form.Item>
           </Col>
+
           <Col span={8}>
             <Form.Item label="Loksabha" name="loksabha">
               <FormInput
@@ -353,6 +313,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
               />
             </Form.Item>
           </Col>
+
           <Col span={8}>
             <Form.Item label="District" name="district">
               <FormInput
@@ -362,6 +323,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
               />
             </Form.Item>
           </Col>
+
           <Col span={24}>
             <Form.Item name="newAddress" label="Address">
               <Input.TextArea
@@ -372,24 +334,25 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
             </Form.Item>
           </Col>
         </Row>
-
-        <Form.Item>
-          <div className="flex justify-end space-x-4">
+        <Col span={24}>
+          <Form.Item>
             <Button
-              onClick={handleClose}
-              className="cancel py-[15px]g-[#54408C]"
-            >
-              Cancel
-            </Button>
-            <Button
+              // loading={loading}
               type="primary"
               htmlType="submit"
-              className="bg-[#54408C] px-[35px] py-[15px]g-[#54408C]"
+              className="sigin-btn text-[16px] font-[500] h-[48px] bg-[#54408C]  mt-[30px]"
+              style={{ width: "100%" }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#432C6A")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "#54408C")
+              }
             >
               Submit
             </Button>
-          </div>
-        </Form.Item>
+          </Form.Item>
+        </Col>
       </Form>
     </Modal>
   );

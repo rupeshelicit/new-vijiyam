@@ -1,11 +1,6 @@
 import React from "react";
 import { Modal, Descriptions, Tag, Button } from "antd";
-import {
-  UserOutlined,
-  PhoneOutlined,
-  HomeOutlined,
-  IdcardOutlined,
-} from "@ant-design/icons";
+import { CalendarOutlined, HomeOutlined } from "@ant-design/icons";
 
 const ElectionViewModal = ({ isOpen, setIsOpen, electionData }) => {
   const handleClose = () => {
@@ -17,10 +12,8 @@ const ElectionViewModal = ({ isOpen, setIsOpen, electionData }) => {
       className="view-modal"
       title={
         <div className="flex items-center space-x-2">
-          <UserOutlined className="text-#54408C-500" />
           <span className="text-xl font-semibold">
-            {electionData?.name || "Voter Name"}{" "}
-            {electionData?.hiName && `(${electionData?.hiName})`}
+            Election Details - {electionData?.name || "Election Name"}
           </span>
         </div>
       }
@@ -36,92 +29,56 @@ const ElectionViewModal = ({ isOpen, setIsOpen, electionData }) => {
       <div className="p-4">
         {electionData ? (
           <Descriptions bordered column={2}>
-            <Descriptions.Item label="Father's Name" span={2}>
-              {electionData.fatherName || "N/A"}{" "}
-              {electionData.hiFatherName && `(${electionData.hiFatherName})`}
+            <Descriptions.Item label="Election Name">
+              {electionData.name || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item
-              label={
-                <span className="flex items-center">
-                  <PhoneOutlined className="mr-2" /> Mobile Number
-                </span>
-              }
-            >
-              {electionData.mobileNumber || "N/A"}
+            <Descriptions.Item label="Election Type">
+              {electionData.electionType || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Alternate Number">
-              {electionData.alternateNumber || "N/A"}
+            <Descriptions.Item label="State">
+              {electionData.state?.name || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Party">
-              <Tag color="#54408C">
-                {electionData.party || "N/A"}{" "}
-                {electionData.hiParty && `(${electionData.hiParty})`}
-              </Tag>
+            <Descriptions.Item label="District">
+              {electionData.district?.name || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Age">
-              {electionData.age || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Gender">
-              {electionData.gender || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Date of Birth">
-              {electionData.dateOfBirth
-                ? new Date(electionData.dateOfBirth).toLocaleDateString()
+            <Descriptions.Item label="Election Date">
+              {electionData.electionDate
+                ? new Date(electionData.electionDate).toLocaleDateString()
                 : "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item
-              label={
-                <span className="flex items-center">
-                  <HomeOutlined className="mr-2" /> Address
-                </span>
-              }
-              span={2}
-            >
-              {electionData.houseNo}, {electionData.newAddress || "N/A"}{" "}
-              {electionData.hiNewAddress && `(${electionData.hiNewAddress})`}
+            <Descriptions.Item label="Achar Sanhita Date">
+              {electionData.acharSanhitaDate
+                ? new Date(electionData.acharSanhitaDate).toLocaleDateString()
+                : "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Section" span={2}>
-              {electionData.section || "N/A"}{" "}
-              {electionData.hiSection && `(${electionData.hiSection})`}
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={
-                <span className="flex items-center">
-                  <IdcardOutlined className="mr-2" /> Voter ID
-                </span>
-              }
-            >
-              {electionData.voterId || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Caste">
-              {electionData.caste?.name || "N/A"}{" "}
-              {electionData.caste?.hiName && `(${electionData.caste.hiName})`}
-            </Descriptions.Item>
-            <Descriptions.Item label="Assembly">
-              {electionData.assembly || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Booth">
-              {electionData.booth || "N/A"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Supporting Party">
-              <Tag
-                color={
-                  electionData.supportingParty === "Neutral"
-                    ? "orange"
-                    : "green"
-                }
-              >
-                {electionData.supportingParty || "N/A"}
+            <Descriptions.Item label="Is Achar Sanhita Active">
+              <Tag color={electionData.isAcharSanhita ? "green" : "red"}>
+                {electionData.isAcharSanhita ? "Yes" : "No"}
               </Tag>
             </Descriptions.Item>
-            <Descriptions.Item label="Voted">
-              <Tag color={electionData.isVoted ? "green" : "red"}>
-                {electionData.isVoted ? "Yes" : "No"}
+            <Descriptions.Item label="Is Without Image">
+              <Tag color={electionData.iswithoutImage ? "green" : "red"}>
+                {electionData.iswithoutImage ? "Yes" : "No"}
               </Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label="Is Print Slip Setting">
+              <Tag color={electionData.isPrintSlipSetting ? "green" : "red"}>
+                {electionData.isPrintSlipSetting ? "Yes" : "No"}
+              </Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label="Created At">
+              {electionData.createdAt
+                ? new Date(electionData.createdAt).toLocaleDateString()
+                : "N/A"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Updated At">
+              {electionData.updatedAt
+                ? new Date(electionData.updatedAt).toLocaleDateString()
+                : "N/A"}
             </Descriptions.Item>
           </Descriptions>
         ) : (
-          <p>No voter data available</p>
+          <p>No election data available</p>
         )}
       </div>
     </Modal>

@@ -401,7 +401,7 @@ const AddNewClient = () => {
                   label="Assembly Name"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Please Select  Assembly Name",
                     },
                   ]}
@@ -427,7 +427,7 @@ const AddNewClient = () => {
                   label="Party Name"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Please Select a Party Name",
                     },
                   ]}
@@ -516,8 +516,6 @@ const AddNewClient = () => {
                       setFile={setCandidatesPhoto}
                       inputName="candidatesPhoto"
                     />
-
-               
                   </div>
                   {candidatesPhoto && candidatesPhoto.name}
                 </Form.Item>
