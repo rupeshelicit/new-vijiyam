@@ -3,7 +3,6 @@ export const LOGIN = "auth/login";
 export const FORGOT_PASSWORD = "user/forget-password";
 export const VERIFY_OTP = "user/verify-otp";
 export const UPDATE_PASSWORD = "user/update-password";
-
 //Common Api
 export const GET_ROLE_LIST = "/roles/list";
 export const GET_STATE_LIST = "/state/list";
@@ -38,13 +37,11 @@ export const UPDATE_CLIENT_DETAILS = "/user";
 export const UPDATE_DISTRIBUTOR_DETAILS = "/user";
 export const UPDATE_KARYAKARTA_DETAILS = "/user";
 export const UPDATE_VOTER_DETAILS = "/voter-survey";
-
 // Client Api
 export const GET_DASHBOARD_SUREVY = "/voter-survey/dashboard/";
-export const GET_VIDHANSABHA_LIST_ASSIGN_SURVEY =
-  "/voter-survey/vidhansabha-list/";
+export const GET_VIDHANSABHA_LIST_ASSIGN_SURVEY ="/voter-survey/vidhansabha-list/";
 export const GET_BOOATH_LIST_ASSIGN_SURVEY = "/voter-survey/vidhansabha-list/";
 export const ASSIGN_SURVEY = "/survey-assign";
 export const SILIP_SETTINGS = "/slip-setting";
-
+export const ProfileDetails = "/user/id/";
 // Distributor Api

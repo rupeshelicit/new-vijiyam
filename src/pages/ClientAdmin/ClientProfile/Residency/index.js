@@ -1,7 +1,7 @@
 import { Card } from "antd";
 import React from "react";
 
-const Residency = () => {
+const Residency = ( profileDetails ) => {
   return (
     <div>
       <div title="" className="mb-[20px]">
@@ -13,11 +13,11 @@ const Residency = () => {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">State / District</span>
-            <span>Madhya Pradesh</span>
+            <span>{ profileDetails?.profileDetails?.state?.name }/{ profileDetails?.profileDetails?.district?.name }</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">City</span>
-            <span>Indore</span>
+            <span>{ profileDetails?.profileDetails?.vidhansabha?.name }</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">Pin Code</span>
