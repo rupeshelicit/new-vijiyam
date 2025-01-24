@@ -33,8 +33,8 @@ const ProfileDetail = ( profileDetails ) =>
     <Container>
       <Card className="shadow-sm">
         <div className="flex flex-col items-center space-y-4">
-          <div className="w-32 h-32 bg-[#FF6B35] rounded-full flex items-center justify-center">
-            <img src={partyIcon} alt="BJP Logo" className="w-24 h-24" />
+          <div className="w-32 h-32 bg-[#ffff] rounded-full flex items-center justify-center">
+            <img src={ profileDetails?.profileDetails?.partyIcon } alt="BJP Logo" className="w-24 h-24" />
           </div>
           <div className="w-full space-y-3">
             <div className="grid grid-cols-2 gap-2 text-sm">
@@ -49,13 +49,13 @@ const ProfileDetail = ( profileDetails ) =>
               </span>
               <span className="font-medium text-[#A6A8A8]">{ profileDetails?.profileDetails?.fatherName }</span>
               <span className="text-[#455A5C] text-[18px] font-semibold">
-                Country
+                VidhanSabha
               </span>
-              <span className="font-medium text-[#A6A8A8]">India</span>
+              <span className="font-medium text-[#A6A8A8]">{ profileDetails?.profileDetails?.vidhansabha?.name }</span>
               <span className="text-[#455A5C] text-[18px] font-semibold">
                 Age
               </span>
-              <span className="font-medium text-[#A6A8A8]">28 Years</span>
+              <span className="font-medium text-[#A6A8A8]">{ profileDetails?.profileDetails?.age } Years</span>
               <span className="text-[#455A5C] text-[18px] font-semibold">
                 DOB
               </span>
@@ -67,21 +67,20 @@ const ProfileDetail = ( profileDetails ) =>
               <span className="text-[#455A5C] text-[18px] font-semibold">
                 Gender
               </span>
-              <span className="font-medium text-[#A6A8A8]">Male</span>
+              <span className="font-medium text-[#A6A8A8]">{ profileDetails?.profileDetails?.gender }</span>
               <span className="text-[#455A5C] text-[18px] font-semibold">
                 Address
               </span>
-              <span className="font-medium text-[#A6A8A8]">Info</span>
+              <span className="font-medium text-[#A6A8A8]">{ profileDetails?.profileDetails?.vidhansabha?.name }</span>
               <span className="text-[#455A5C] text-[18px] font-semibold">
                 Mobile No.
               </span>
-              <span className="font-medium text-[#A6A8A8]">9876543210</span>
+              <span className="font-medium text-[#A6A8A8]">{ profileDetails?.profileDetails?.mobileNumber }</span>
             </div>
           </div>
-          <button className="w-full bg-[#54408C] text-white py-2 rounded-md flex items-center justify-center gap-2 text-[20px] font-semibold">
+          <button className="w-full bg-[#54408C] text-white py-2 rounded-md flex items-center justify-center gap-2 text-[20px] font-semibold border border-solid border-[#54408C]">
             <div className="flex items-center gap-2">
-              <MessageIcon size={20} className="text-white" />
-
+              <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.125 7.1499H17.375M4.125 4.1499H17.375M4.125 10.1499H12.375M19 0.649902H2.5C2.10218 0.649902 1.72064 0.807937 1.43934 1.08924C1.15804 1.37055 1 1.75208 1 2.1499V12.1499C1 12.5477 1.15804 12.9293 1.43934 13.2106C1.72064 13.4919 2.10218 13.6499 2.5 13.6499H3.32V17.3499L7.45 13.6499H19C19.3978 13.6499 19.7794 13.4919 20.0607 13.2106C20.342 12.9293 20.5 12.5477 20.5 12.1499V2.1499C20.5 1.75208 20.342 1.37055 20.0607 1.08924C19.7794 0.807937 19.3978 0.649902 19 0.649902Z" stroke="#fff" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"></path></svg>
               <span>Contact</span>
             </div>
           </button>
