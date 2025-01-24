@@ -78,7 +78,7 @@ export const columns = [
     dataIndex: "caste.name",
     key: "caste",
     align: "center",
-    render: ( record ) => ( record ? record?.caste?.name : "NA"),
+    render: (record) => (record ? record?.caste?.name : "NA"),
 
     sorter: (a, b) => a.caste.name.localeCompare(b.caste.name),
   },
@@ -87,7 +87,7 @@ export const columns = [
     dataIndex: "caste.hiName",
     key: "hiCasteName",
     align: "center",
-    render: ( record ) => ( record ? record?.caste?.hiName : "NA"),
+    render: (record) => (record ? record?.caste?.hiName : "NA"),
 
     sorter: (a, b) => a.caste.hiName.localeCompare(b.caste.hiName),
   },
@@ -243,7 +243,7 @@ export const columns = [
     render: (text, record) => (
       <div className="flex gap-[10px]">
         <EditComponent record={record} roleType={"voter"} />
-        <DeleteComponet record={record} roleType={"voter"} />
+        <DeleteComponet record={record} />
         <ViewComponent record={record} roleType={"voter"} />
       </div>
     ),

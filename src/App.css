@@ -39,11 +39,7 @@ th {
   padding: 0px;
 }
 
-.login-shortcut-modal
-  .login-type-btn
-  .ant-radio-group
-  .ant-radio-wrapper
-  .ant-radio {
+.login-shortcut-modal .login-type-btn .ant-radio-group .ant-radio-wrapper .ant-radio {
   opacity: 0;
 }
 
@@ -53,10 +49,7 @@ th {
   opacity: 0.5;
 }
 
-.login-shortcut-modal
-  .login-type-btn
-  .ant-radio-group
-  .ant-radio-wrapper-checked {
+.login-shortcut-modal .login-type-btn .ant-radio-group .ant-radio-wrapper-checked {
   background-color: #fff;
   opacity: 1;
   color: #000;
@@ -185,11 +178,13 @@ span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
 .iconimages {
   min-width: 24px;
 }
+
 .ant-table::-webkit-scrollbar,
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
 }
+
 .ant-table::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
   border-radius: 2px;
@@ -207,10 +202,12 @@ span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
 ::-webkit-scrollbar-corner {
   background-color: #f1f1f1;
 }
+
 .ant-table-content table th {
   text-align: left !important;
   white-space: nowrap;
 }
+
 .ant-table-content table tr td {
   text-align: left !important;
   white-space: nowrap;
@@ -225,6 +222,7 @@ span.ant-upload-wrapper .ant-upload.ant-upload-select:hover {
   margin-top: 40px !important;
   margin-bottom: 40px !important;
 }
+
 p {
   font-size: 16px;
   text-align: center;
@@ -233,18 +231,22 @@ p {
 .success-modal .ant-btn-default {
   display: none;
 }
+
 .success-modal .ant-btn-primary {
   padding: 16px 32px;
   border: 1px solid #13c39c;
   background-color: white !important;
   color: #038266;
 }
+
 .success-modal .ant-btn-primary:hover {
   background: #038266 !important;
 }
+
 .success-modal .modal-icon {
   background: #0da785;
 }
+
 .confimation-modal .modal-icon {
   height: 80px;
   width: 80px;
@@ -257,18 +259,22 @@ p {
   right: 42%;
   position: absolute;
 }
+
 .confimation-modal .modal-icon {
   background-color: #fb4b4b;
 }
+
 .confimation-modal .ant-btn-default {
   border: 1px solid #fb4b4b;
   color: #fb4b4b;
 }
+
 .confimation-modal .ant-btn-default:hover {
   background-color: #fb4b4b !important;
   color: #fff !important;
   border: 1px solid #fb4b4b !important;
 }
+
 .confimation-modal .ant-modal {
   width: 100%;
   max-width: 450px !important;
@@ -277,9 +283,11 @@ p {
 .ant-input-outlined:hover {
   border-color: #54408c;
 }
+
 .ant-btn-primary:hover {
   background: #54408c !important;
 }
+
 .cancel:hover {
   border-color: #54408c;
   color: #55418d;
@@ -289,9 +297,23 @@ p {
 .view-modal .ant-form-item {
   margin-bottom: 0px;
 }
+
 .edit-modal .ant-btn,
 .view-modal .ant-btn {
   width: 25%;
   height: auto;
   padding: 11px 0px;
+}
+
+.client-list-header p {
+  text-align: left !important;
+}
+
+.edit-modal .ant-switch.ant-switch-checked {
+  background: #54408c !important;
+}
+
+.edit-modal .ant-switch.ant-switch {
+  background: #54408cbf;
+
 }

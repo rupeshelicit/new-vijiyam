@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { Table } from "antd";
 import {
   TableContainer,
@@ -10,23 +10,10 @@ const TableComponent = ({
   columns,
   data,
   rowSelection,
-  setCurrentPage,
+  tableParams,
+  handleTableChange,
+  loading
 }) => {
-  const [tableParams, setTableParams] = useState({
-    pagination: {
-      current: 1,
-      pageSize: 5,
-    },
-  });
-
-  const handleTableChange = (pagination, filters, sorter) => {
-    setCurrentPage(pagination?.current);
-    setTableParams({
-      pagination,
-      filters,
-      sorter,
-    });
-  };
   return (
     <>
       <TableContainer>
@@ -36,8 +23,13 @@ const TableComponent = ({
             rowSelection={rowSelection}
             columns={columns}
             dataSource={data}
-            pagination={tableParams.pagination}
+            pagination={{
+              current: tableParams.current,
+              pageSize: tableParams.pageSize,
+              total: tableParams.total,
+            }}
             onChange={handleTableChange}
+            loading={loading}
           />
         ) : (
           <p className="text-center text-[30px] font-bold">
@@ -48,4 +40,4 @@ const TableComponent = ({
     </>
   );
 };
-export default TableComponent;
+export default memo(TableComponent);

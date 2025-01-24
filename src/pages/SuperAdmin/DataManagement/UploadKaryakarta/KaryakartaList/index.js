@@ -294,7 +294,7 @@ const KaryaKartaList = () => {
       render: (text, record) => (
         <div className="flex gap-[10px]">
           <EditComponent record={record} roleType={"karyakarta"} />
-          <DeleteComponet record={record} roleType={"karyakarta"} />
+          <DeleteComponet record={record} />
           <ViewComponent record={record} roleType={"karyakarta"} />
         </div>
       ),

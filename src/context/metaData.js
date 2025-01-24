@@ -1,25 +1,46 @@
 import React, { createContext, useContext, useState } from "react";
 
-const contextDefaultValues = {
+// Create the context with default values
+const MetaDataContext = createContext({
   custmerDetails: {},
-  setCustmerDetails: (data) => data,
-};
+  deleteStates: { election: false, voter: false },
+  setCustmerDetails: () => {},
+  updateDeleteState: () => {},
+});
 
-const MetaDataContext = createContext(contextDefaultValues);
-
+// Provider Component
 export const MetaDataProvider = ({ children }) => {
-  const [custmerDetails, setCustmerDetails] = useState(
-    contextDefaultValues.custmerDetails
-  );
-  const [deleteVoter, setDeleteVoters] = useState(
-    contextDefaultValues.deleteVoter
-  );
+  const [custmerDetails, setCustmerDetails] = useState({});
+  const [deleteStates, setDeleteStates] = useState({
+    election: false,
+    voter: false,
+  });
+  const [updateStatus, setUpdateStatus] = useState({
+    election: false,
+    voter: false,
+  });
+  const updateDeleteState = (key, value) => {
+    setDeleteStates((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+  const updateEditState = (key, value) => {
+    setUpdateStatus((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
   return (
     <MetaDataContext.Provider
       value={{
         custmerDetails,
-        deleteVoter,
+        deleteStates,
+        updateStatus,
         setCustmerDetails,
+        updateDeleteState,
+        setUpdateStatus,
+        updateEditState,
       }}
     >
       {children}
@@ -27,4 +48,4 @@ export const MetaDataProvider = ({ children }) => {
   );
 };
 
-export default () => useContext(MetaDataContext);
+export const useMetaDataContext = () => useContext(MetaDataContext);

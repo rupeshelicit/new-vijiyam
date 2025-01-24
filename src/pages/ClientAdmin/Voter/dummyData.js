@@ -215,7 +215,7 @@ export const columns = [
     render: (text, record) => (
       <div className="flex gap-[10px]">
         <EditComponent record={record} roleType={"voter"} />
-        <DeleteComponet record={record} roleType={"voter"} />
+        <DeleteComponet record={record} />
         <ViewComponent record={record} roleType={"voter"} />
       </div>
     ),

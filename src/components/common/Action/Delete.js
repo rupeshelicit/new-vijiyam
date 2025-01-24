@@ -11,159 +11,68 @@ import {
   DELETE_KARYAKARTA,
   DELETE_VOTER,
 } from "constants/api";
+import { useMetaDataContext } from "context/metaData";
+import useDelete from "hooks/useDelete";
 
-const DeleteComponent = ({ record, roleType }) => {
+const API_ENDPOINTS = {
+  voter: DELETE_VOTER,
+  karyakarta: DELETE_KARYAKARTA,
+  election: DELETE_ELECTION,
+  client: DELETE_CLIENT,
+  distributor: DELETE_DISTRIBUTOR,
+};
+
+const SUCCESS_MESSAGES = {
+  voter: "Success! You have successfully deleted this Voter.",
+  karyakarta: "Success! You have successfully deleted this Karyakarta.",
+  election: "Success! You have successfully deleted this Election.",
+  client: "Success! You have successfully deleted this Client.",
+  distributor: "Success! You have successfully deleted this Distributor.",
+};
+
+const DeleteComponent = ({ record, roleType, handleDelete }) => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { mutateAsync: Delete } = usePatch();
+  const { mutateAsync: Delete } = useDelete();
+  const { updateDeleteState } = useMetaDataContext();
 
   const handleDeleteClick = () => {
     setIsConfirmationModalOpen(true);
   };
 
-  const handleDeleteAction = () => {
-    if (!isConfirmed) return;
+  const handleDeleteAction = async () => {
+    const endpoint = API_ENDPOINTS[roleType];
+    const successMessage = SUCCESS_MESSAGES[roleType];
 
-    if (roleType === "voter") {
-      handleVoterDelete();
-    } else if (roleType === "karyakarta") {
-      handleKaryakartaDelete();
-    } else if (roleType === "election") {
-      handleDeleteElection();
-    } else if (roleType === "client") {
-      handleDeleteClient();
-    } else if (roleType === "distributor") {
-      handleDeleteDistributor();
+    if (!endpoint) {
+      toast.error("Error! Invalid role type.", { position: "top-right" });
+      return;
     }
-  };
 
-  const handleVoterDelete = async () => {
+    if (!record?.id) {
+      toast.error("Error! Record ID is missing.", { position: "top-right" });
+      return;
+    }
+
     setLoading(true);
-    const voterId = record?.id;
-    await Delete({
-      url: DELETE_VOTER + voterId,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          toast.success("Success! You have successfully delete this Voter", {
-            position: "top-right",
-          });
-        }
-      })
-      .catch((error) => {
-        toast.error(`Error! ${error?.response?.data?.message}`, {
-          position: "top-right",
-        });
+    try {
+      const response = await Delete({
+        url: `${endpoint}${record?.id}`,
+        type: "details",
+        token: true,
       });
-
-    setTimeout(() => {
+      if (response) {
+        handleDelete();
+        toast.success(successMessage, { position: "top-right" });
+        updateDeleteState(roleType, true);
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "An unexpected error occurred!";
+      toast.error(`Error! ${errorMessage}`, { position: "top-right" });
+    } finally {
       setLoading(false);
-    }, 3000);
-  };
-
-  const handleKaryakartaDelete = async () => {
-    setLoading(true);
-    const karyakartaId = record?.id;
-    await Delete({
-      url: DELETE_KARYAKARTA + karyakartaId,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          toast.success(
-            "Success! You have successfully delete this Karyakarta",
-            {
-              position: "top-right",
-            }
-          );
-        }
-      })
-      .catch((error) => {
-        toast.error(`Error! ${error?.response?.data?.message}`, {
-          position: "top-right",
-        });
-      });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-  };
-  const handleDeleteDistributor = async () => {
-    setLoading(true);
-    const distributerId = record?.id;
-    await Delete({
-      url: DELETE_DISTRIBUTOR + distributerId,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          toast.success(
-            "Success! You have successfully delete this distributor",
-            {
-              position: "top-right",
-            }
-          );
-        }
-      })
-      .catch((error) => {
-        toast.error(`Error! ${error?.response?.data?.message}`, {
-          position: "top-right",
-        });
-      });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-  };
-  const handleDeleteClient = async () => {
-    setLoading(true);
-    const clienId = record?.id;
-    await Delete({
-      url: DELETE_CLIENT + clienId,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          toast.success("Success! You have successfully delete this client", {
-            position: "top-right",
-          });
-        }
-      })
-      .catch((error) => {
-        toast.error(`Error! ${error?.response?.data?.message}`, {
-          position: "top-right",
-        });
-      });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-  };
-  const handleDeleteElection = async () => {
-    setLoading(true);
-    const electionID = record?.id;
-    await Delete({
-      url: DELETE_ELECTION + electionID,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          toast.success("Success! You have successfully delete this eleciton", {
-            position: "top-right",
-          });
-        }
-      })
-      .catch((error) => {
-        toast.error(`Error! ${error?.response?.data?.message}`, {
-          position: "top-right",
-        });
-      });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
+    }
   };
 
   return (
@@ -173,15 +82,19 @@ const DeleteComponent = ({ record, roleType }) => {
         onClick={handleDeleteClick}
         size="small"
         danger
+        loading={loading}
+        disabled={loading}
       />
 
       <DeleteModal
         isModalOpen={isConfirmationModalOpen}
-        setIsModalOpen={setIsConfirmationModalOpen}
+        setIsModalOpen={(isOpen) => {
+          setIsConfirmationModalOpen(isOpen);
+          if (!isOpen) setLoading(false);
+        }}
         name={roleType}
-        setConfirmation={(value) => {
-          setIsConfirmed(value);
-          if (value) handleDeleteAction();
+        setConfirmation={(isConfirmed) => {
+          if (isConfirmed) handleDeleteAction();
         }}
       />
     </div>

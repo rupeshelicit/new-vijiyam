@@ -9,6 +9,7 @@ import {
   Tag,
   Row,
   Col,
+  Switch,
 } from "antd";
 import {
   UserOutlined,
@@ -18,66 +19,119 @@ import {
 } from "@ant-design/icons";
 import FormInput from "components/common/FormControl/FormInput";
 import DropdownSelect from "components/common/FormControl/DropdownSelect";
-import { GET_ELECTION_PARTY, UPDATE_CLIENT_DETAILS } from "constants/api";
+import {
+  GET_ASSEMBLY_LIST,
+  GET_DISTRICT_LIST_BY_STATE,
+  GET_ELECTION_PARTY,
+  GET_STATE_LIST,
+  UPDATE_CLIENT_DETAILS,
+} from "constants/api";
 import useGet from "hooks/useGet";
 import usePatch from "hooks/usePatch";
 import { toast } from "react-toastify";
+import UploadFile from "components/common/FormControl/UploadFile";
+import moment from "moment";
+import { id } from "date-fns/locale";
 
 const { Option } = Select;
 
 const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState();
-  const { mutateAsync: GetPartyList } = useGet();
-  const { mutateAsync: UpdateClientDetails } = usePatch();
+  const [loading, setLoading] = React.useState(false);
+
+  const [partySymbole, setPartySymbole] = useState();
+  const [candidatesPhoto, setCandidatesPhoto] = useState();
+  const [states, setStates] = useState([]);
+  const [assambly, setAssambly] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [district, setSelctedDistrict] = useState();
   const [party, setParty] = useState([]);
-
+  const [password, setPassword] = useState();
+  const [confirmassword, setConfirmPassword] = useState();
+  const [selectState, setSelectState] = useState();
+  const [slipSettings, setSlipSettings] = useState(
+    ClientData?.isOnline || false
+  );
+  const [candidateImage, setCandidateImage] = useState(
+    ClientData?.isOnline || false
+  );
+  const [isOnline, setiIsOnline] = useState(ClientData?.isOnline || false);
+  const [status, setStatus] = useState(ClientData?.status || false);
+  const [isPermission, setIsPermission] = useState(
+    ClientData?.isPermission || false
+  );
+  const { mutateAsync: GetStateList } = useGet();
+  const { mutateAsync: GetAssemblyList } = useGet();
+  const { mutateAsync: GetDistrictList } = useGet();
+  const { mutateAsync: GetPartyList } = useGet();
+  const { mutateAsync: updateClientDetails } = usePatch();
+  const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
+  const usersRole = JSON.parse(localStorage.getItem("roleList"));
+  const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
+  const data = {
+    ...ClientData,
+    dateOfBirth: ClientData?.dateOfBirth
+      ? moment(ClientData.dateOfBirth).isValid()
+        ? moment(ClientData.dateOfBirth)
+        : null
+      : null,
+  };
+  const stateId = selectState ? selectState : data?.stateId;
+  const districtId = district ? district : data?.districtId;
   useEffect(() => {
+    getStateList();
     getElectionParty();
-  }, []);
+    {
+      districtId && getAssemblyist();
+    }
+    {
+      stateId && getDistrict();
+    }
+  }, [selectState, stateId, districtId]);
 
-  const handleClose = () => {
-    setIsOpen(false);
+  const getStateList = async () => {
+    await GetStateList({
+      url: GET_STATE_LIST,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setStates(res && res);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  const handleFormSubmit = async (creds) => {
-    setLoading(true);
-    if (creds) {
-      const payload = {
-        id: ClientData?.id,
-        // name: creds?.name,
-        // stateId: creds?.stateId,
-        // electionType: creds?.electionType,
-        // districtId: creds?.districtId,
-        // assemblyId: creds?.assemblyId,
-        // electionDate: creds?.electionDate,
-        // acharSanhitaDate: creds?.acharSanhitaDate,
-      };
-      await UpdateClientDetails({
-        url: UPDATE_CLIENT_DETAILS,
-        type: "details",
-        payload: payload,
+  const getAssemblyist = async () => {
+    await GetAssemblyList({
+      url: GET_ASSEMBLY_LIST + districtId,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setAssambly(res && res);
+        }
       })
-        .then((res) => {
-          if (res) {
-            toast.success(
-              "Success! You have successfully update client details",
-              {
-                position: "top-right",
-              }
-            );
-          }
-        })
-        .catch((error) => {
-          toast.error(`Error! ${error?.response?.data?.message}`, {
-            position: "top-right",
-          });
-        });
-    }
-    setTimeout(() => {
-      setLoading(false);
-      handleClose();
-    }, 3000);
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getDistrict = async () => {
+    await GetDistrictList({
+      url: GET_DISTRICT_LIST_BY_STATE + stateId,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setDistrictList(res && res.districts);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const getElectionParty = async () => {
@@ -95,13 +149,65 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
       });
   };
 
+  const handleFormSubmit = async (creds) => {
+    setLoading(true);
+    const clientId = ClientData.id;
+    const payload = {
+      id:clientId,
+      image: candidatesPhoto,
+      partyIcon: partySymbole,
+      name: creds?.name,
+      fatherName: creds?.fatherName,
+      partyId: creds?.partyId,
+      dateOfBirth: creds?.dateOfBirth,
+      gender: creds?.gender,
+      email: creds?.email,
+      mobileNumber: creds?.mobileNumber,
+      districtId: creds?.districtId,
+      stateId: creds?.stateId,
+      vidhansabhaId: creds?.vidhansabhaId,
+      role: clientRole[0]?.id,
+      isCandidateImage: creds?.isCandidateImage,
+      isSlipSetting:creds?.isSlipSetting,
+    };
+
+    await updateClientDetails({
+      url: UPDATE_CLIENT_DETAILS,
+      type: "details",
+      payload: payload,
+      token: true,
+    })
+      .then((res) => {
+        if (res) {
+          toast.success("Success! You have successfully created a new client", {
+            position: "top-right",
+          });
+          form.resetFields();
+        }
+      })
+      .catch((error) => {
+        toast.error(`Error! ${error?.response?.data?.message}`, {
+          position: "top-right",
+        });
+      });
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  console.log(data, "datasa");
   return (
     <Modal
       className="edit-modal"
       title={
         <div className="flex items-center space-x-2">
           <UserOutlined className="text-#54408C-500" />
-          <span className="text-xl font-semibold">Edit Voter Details</span>
+          <span className="text-xl font-semibold">Update Client Details</span>
         </div>
       }
       visible={isOpen}
@@ -112,7 +218,7 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
       <Form
         form={form}
         layout="vertical"
-        initialValues={ClientData}
+        initialValues={data}
         onFinish={handleFormSubmit}
       >
         <Row
@@ -120,6 +226,7 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
           className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
         >
           <Col span={8}>
+            {" "}
             <Form.Item
               name="name"
               label="Full Name"
@@ -127,33 +234,22 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
             >
               <FormInput
                 name="name"
-                placeholder="First Name"
+                placeholder="First Name "
                 required={false}
               />
             </Form.Item>
           </Col>
-
           <Col span={8}>
-            <Form.Item
-              name="hiName"
-              label="Full Name (Hindi)"
-              rules={[
-                { required: true, message: "Please Enter Full Name in Hindi" },
-              ]}
-            >
-              <FormInput
-                name="hiName"
-                placeholder="First Name in Hindi"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
+            {" "}
             <Form.Item
               name="fatherName"
               label="Father Name"
-              rules={[{ required: true, message: "Please Enter Father Name" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please Enter Father Name",
+                },
+              ]}
             >
               <FormInput
                 name="fatherName"
@@ -162,12 +258,35 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
               />
             </Form.Item>
           </Col>
-
+          <Col span={8}>
+            <Form.Item
+              name="dateOfBirth"
+              label="DOB"
+              rules={[
+                {
+                  required: true,
+                  message: "Please Select  Date of Birth ",
+                },
+              ]}
+            >
+              {/* {moment(ClientData?.dateOfBirth).format('YYYY-MM-DD')} */}
+              <DatePicker
+                format="YYYY-MM-DD"
+                placeholder="Select Election Date"
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+          </Col>
           <Col span={8}>
             <Form.Item
               name="email"
               label="Email"
-              rules={[{ required: true, message: "Please Enter Email" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please Enter Email",
+                },
+              ]}
             >
               <FormInput
                 name="email"
@@ -182,7 +301,10 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
               label="Phone Number"
               name="mobileNumber"
               rules={[
-                { required: true, message: "Please Input Your Phone Number!" },
+                {
+                  required: true,
+                  message: "Please Input Your Phone Number!",
+                },
                 {
                   pattern: /^[6-9]\d{9}$/,
                   message: "Please enter a valid 10-digit mobile number!",
@@ -192,23 +314,6 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
               <FormInput
                 name="mobileNumber"
                 placeholder="Enter Mobile Number"
-                required={false}
-                maxLength={10}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              label="Voter ID"
-              name="voterId"
-              rules={[
-                { required: true, message: "Please Input Your Voter ID!" },
-              ]}
-            >
-              <FormInput
-                name="voterId"
-                placeholder="Enter Voter ID"
                 required={false}
                 maxLength={10}
               />
@@ -233,17 +338,122 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
               />
             </Form.Item>
           </Col>
+        </Row>
 
+        <h4
+          className="text-[18px] font-semibold mb-[5px] text-[#54408C] mt-[10px]"
+          style={{ marginBottom: "10px" }}
+        >
+          Election Details{" "}
+        </h4>
+        <Row
+          gutter={[16, 16]}
+          className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
+        >
           <Col span={8}>
             <Form.Item
-              name="partyName"
-              label="Party Name"
+              name="electionType"
+              label="Election Type"
               rules={[
-                { required: true, message: "Please Select a Party Name" },
+                {
+                  required: true,
+                  message: "Please select a Election Type",
+                },
               ]}
             >
               <DropdownSelect
-                name={"party"}
+                name={"electionType"}
+                placeholder="Select Election Typer"
+                options={[
+                  { id: "Vidhansabha", name: "Vidhansabha" },
+                  { id: "LookSabha", name: "LookSabha" },
+                  { id: "Nigam", name: "Nigam" },
+                ]}
+                required={false}
+              />
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item
+              name="stateId"
+              label="State Name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please Select a State Name",
+                },
+              ]}
+            >
+              <DropdownSelect
+                name={"stateId"}
+                placeholder="Select State Name"
+                options={states && states}
+                required={false}
+                setSelectState={setSelectState}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              name="districtId"
+              label="District"
+              rules={[
+                {
+                  required: true,
+                  message: "Please Select a District",
+                },
+              ]}
+            >
+              <DropdownSelect
+                name={"districtId"}
+                options={districtList && districtList}
+                placeholder="Select Party District"
+                required={false}
+                disabled={stateId ? false : true}
+                setSelectState={setSelctedDistrict}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              name="vidhansabhaId"
+              label="Assembly Name"
+              rules={[
+                {
+                  required: false,
+                  message: "Please Select  Assembly Name",
+                },
+              ]}
+            >
+              <DropdownSelect
+                name={"vidhansabhaId"}
+                options={assambly && assambly}
+                placeholder="Select Party Assambly"
+                required={false}
+                disabled={districtId ? false : true}
+                defaultOption={
+                  !assambly.length
+                    ? "No Assambly found  Select Correct State "
+                    : "Select Assambly"
+                }
+              />
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item
+              name="partyId"
+              label="Party Name"
+              rules={[
+                {
+                  required: false,
+                  message: "Please Select a Party Name",
+                },
+              ]}
+            >
+              <DropdownSelect
+                name={"partyId"}
                 options={party && party}
                 placeholder="Select Party Name"
                 required={false}
@@ -252,130 +462,154 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
               />
             </Form.Item>
           </Col>
-
-          <Col span={8}>
+        </Row>
+        <Row
+          gutter={[16, 16]}
+          className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px] client-upload-input-filed"
+        >
+          <Col span={12}>
             <Form.Item
-              label="Age"
-              name="age"
-              rules={[{ required: true, message: "Please Input Your Age!" }]}
+              name="partyIcon"
+              className="mb-1 image-upload"
+              rules={[
+                {
+                  required: false,
+                  message: "Please Uoload a Party Symbole",
+                },
+              ]}
             >
-              <FormInput
-                type={"number"}
-                name="age"
-                placeholder="Enter Age"
-                required={false}
-                maxLength={10}
-              />
+              <label className="text-[16px] font-normal mb-[20px]">
+                Party Symbols
+              </label>
+              <div className="  flex justify-between gap-[50px] mt-[15px] max-w-[140px] h-[110px] ">
+                <UploadFile
+                  inputLable={"Upload Party Icon"}
+                  setFile={setPartySymbole}
+                  inputName="partyIcon"
+                />
+                {partySymbole && partySymbole.name}
+              </div>
             </Form.Item>
           </Col>
-
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
-              label="Section"
-              name="section"
-              rules={[{ required: true, message: "Please Enter Section" }]}
+              name="image"
+              className="mb-1 image-upload"
+              rules={[
+                {
+                  required: false,
+                  message: "Please Uoload Candidate Photo ",
+                },
+              ]}
             >
-              <FormInput
-                name="section"
-                placeholder="Enter Section"
-                required={false}
-              />
+              <label className="text-[16px] font-normal mb-[20px]">
+                Candidates Photo
+              </label>
+              <div className="flex justify-between gap-[50px] mt-[15px] ">
+                <UploadFile
+                  inputLable={"Upload Candidates Photo"}
+                  setFile={setCandidatesPhoto}
+                  inputName="image"
+                />
+              </div>
+              {candidatesPhoto && candidatesPhoto.name}
             </Form.Item>
           </Col>
-
-          <Col span={8}>
-            <Form.Item label="Booth Number" name="boothNo">
-              <FormInput
-                name="boothNo"
-                placeholder="Enter Booth Number"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="City" name="city">
-              <FormInput
-                name="city"
-                placeholder="Enter City"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="Supporting Party" name="supportingParty">
-              <FormInput
-                name="supportingParty"
-                placeholder="Enter Supporting Party"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item label="House No" name="houseNo">
-              <FormInput
-                name="houseNo"
-                placeholder="Enter House No"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item label="Vidhansabha" name="vidhansabha">
-              <FormInput
-                name="vidhansabha"
-                placeholder="Enter Vidhansabha"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item label="Loksabha" name="loksabha">
-              <FormInput
-                name="loksabha"
-                placeholder="Enter Loksabha"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item label="District" name="district">
-              <FormInput
-                name="district"
-                placeholder="Enter District"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item name="newAddress" label="Address">
-              <Input.TextArea
-                placeholder="Enter address"
-                rows={3}
-                prefix={<HomeOutlined />}
-              />
-            </Form.Item>
+        </Row>
+        <h4
+          className="text-[18px] font-semibold mb-[5px] text-[#54408C] mt-[10px]"
+          style={{ marginBottom: "10px" }}
+        >
+          Settings
+        </h4>
+        <Row
+          gutter={[16, 16]}
+          className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
+        >
+          <Col span={16}>
+            <div className="flex gap-[50px] items-center mb-[10px]">
+              <div className="settings ">
+                <Switch
+                  onChange={(checked) => setSlipSettings(checked)}
+                  checkedChildren="On"
+                  unCheckedChildren="Off"
+                />
+              </div>
+              <label className="text-[20px] font-semibold items-center">
+                Slip Settings{" "}
+              </label>
+            </div>
+            <div className="flex gap-[50px] items-center mb-[10px]">
+              <div className="settings ">
+                <Switch
+                  checkedChildren="On"
+                  unCheckedChildren="Off"
+                  onChange={(checked) => setCandidateImage(checked)}
+                />
+              </div>
+              <label className="text-[20px] font-semibold items-center">
+                with Candidate Image
+              </label>
+            </div>
+            <div className="flex gap-[50px] items-center mb-[10px]">
+              <div className="settings ">
+                <Switch
+                  onChange={(checked) => setiIsOnline(checked)}
+                  checked={isOnline}
+                  checkedChildren="On"
+                  unCheckedChildren="Off"
+                />
+              </div>
+              <label className="text-[20px] font-semibold items-center">
+                isOnline
+              </label>
+            </div>
+            <div className="flex gap-[50px] items-center mb-[10px]">
+              <div className="settings ">
+                <Switch
+                  onChange={(checked) => setStatus(checked)}
+                  checked={status}
+                  checkedChildren="On"
+                  unCheckedChildren="Off"
+                />
+              </div>
+              <label className="text-[20px] font-semibold items-center">
+                status
+              </label>
+            </div>
+            <div className="flex gap-[50px] items-center mb-[10px]">
+              <div className="settings ">
+                <Switch
+                  onChange={(checked) => setIsPermission(checked)}
+                  checked={isPermission}
+                  checkedChildren="On"
+                  unCheckedChildren="Off"
+                />
+              </div>
+              <label className="text-[20px] font-semibold items-center">
+                Permission
+              </label>
+            </div>
           </Col>
         </Row>
 
         <Form.Item>
-          <div className="flex justify-end space-x-4">
-            <Button
-              onClick={handleClose}
-              className="cancel py-[15px]g-[#54408C]"
-            >
-              Cancel
-            </Button>
-            <Button
-              loading={loading}
-              type="primary"
-              htmlType="submit"
-              className="bg-[#54408C] px-[35px] py-[15px]g-[#54408C]"
-            >
-              Submit
-            </Button>
-          </div>
+          <Button
+            loading={loading}
+            type="primary"
+            htmlType="submit"
+            className="sigin-btn text-[16px] font-[500] h-[48px] bg-[#54408C] max-w-[200px] mt-[30px]"
+            style={{ width: "100%" }}
+            // loading={loading}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#432C6A")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#54408C")
+            }
+          >
+            Submit
+          </Button>
         </Form.Item>
       </Form>
     </Modal>

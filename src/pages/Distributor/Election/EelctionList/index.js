@@ -9,6 +9,7 @@ import PlusIcons from "assets/svg/plusIcons";
 import SwitchComponent from "components/common/SwitchComponent";
 import { ClientListSection } from "styles/pages/SuperAdmin/user";
 import { useNavigate } from "react-router-dom";
+import { render } from "@testing-library/react";
 
 function ElectionsList() {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ function ElectionsList() {
       dataIndex: "sheet",
       key: "sheet",
       align: "center",
+      render:(record)=>record?record:'NA',
       sorter: (a, b) => a.sheet?.localeCompare(b.sheet ?? "") ?? 0,
     },
     {
@@ -44,6 +46,8 @@ function ElectionsList() {
       dataIndex: "electionType",
       key: "electionType",
       align: "center",
+      render:(record)=>record?record:'NA',
+
       sorter: (a, b) =>
         a.electionType?.localeCompare(b.electionType ?? "") ?? 0,
     },
@@ -52,6 +56,8 @@ function ElectionsList() {
       dataIndex: "electionDate",
       key: "electionDate",
       align: "center",
+      render:(record)=>record?record:'NA',
+
       sorter: (a, b) =>
         a.electionDate?.localeCompare(b.electionDate ?? "") ?? 0,
     },
@@ -60,6 +66,8 @@ function ElectionsList() {
       dataIndex: "acharSanhitaDate",
       key: "acharSanhitaDate",
       align: "center",
+      render:(record)=>record?record:'NA',
+
       sorter: (a, b) =>
         a.acharSanhitaDate?.localeCompare(b.acharSanhitaDate ?? "") ?? 0,
     },
@@ -68,6 +76,8 @@ function ElectionsList() {
       dataIndex: "state",
       key: "state",
       align: "center",
+      render:(record)=>record?record:'NA',
+
       sorter: (a, b) => a.state?.localeCompare(b.state ?? "") ?? 0,
     },
   ];

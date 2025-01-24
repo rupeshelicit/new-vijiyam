@@ -5,8 +5,12 @@ const deleteRequest = async ({ url, type, token = false, }) => {
   const instance = determineInstance(type);
   let headers = {};
   if (token) {
-    const accessToken = localStorage.getItem('token')
-    headers = { 'token': accessToken }
+    const token = localStorage.getItem("token");
+    console.log(token,'------------toke')
+    headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${ token }`,
+    };
   }
   const { data } = await instance.delete(url, { headers })
     .then((res) => {

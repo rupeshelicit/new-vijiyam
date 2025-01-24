@@ -1,399 +1,301 @@
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Form,
-  Input,
-  Button,
-  Select,
-  DatePicker,
-  Tag,
-  Row,
-  Col,
-} from "antd";
-import {
-  UserOutlined,
-  PhoneOutlined,
-  HomeOutlined,
-  IdcardOutlined,
-} from "@ant-design/icons";
-import FormInput from "components/common/FormControl/FormInput";
-import DropdownSelect from "components/common/FormControl/DropdownSelect";
-import { GET_ELECTION_PARTY, UPDATE_ELECTION_DETAILS } from "constants/api";
+import { Modal, Form, Button, Row, Col, DatePicker, Select } from "antd";
+import { toast } from "react-toastify";
 import useGet from "hooks/useGet";
 import usePatch from "hooks/usePatch";
-import { toast } from "react-toastify";
-
+import {
+  GET_ASSEMBLY_LIST_BY_DISTRICT,
+  GET_DISTRICT_LIST_BY_STATE,
+  GET_STATE_LIST,
+  UPDATE_ELECTION_DETAILS,
+} from "constants/api";
+import DropdownSelect from "components/common/FormControl/DropdownSelect";
+import { ClientAdminComponent } from "styles/pages/SuperAdmin/user";
+import { Container } from "styles/components/common/Layout";
+import moment from "moment";
+import FormInput from "components/common/FormControl/FormInput";
+import { useMetaDataContext } from "context/metaData";
 const { Option } = Select;
 
 const ElectionEditModal = ({ isOpen, setIsOpen, ElectionData, onSubmit }) => {
   const [form] = Form.useForm();
-  const { mutateAsync: GetPartyList } = useGet();
-  const { mutateAsync: UpdateElection } = usePatch();
-  const [party, setParty] = useState([]);
+  const { updateEditState } = useMetaDataContext();
   const [loading, setLoading] = useState(false);
+  const [states, setStates] = useState([]);
+  const [assemblies, setAssemblies] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [selectDistrict, setSelectDistrict] = useState();
+  const [selectState, setSelectState] = useState();
+  const { mutateAsync: UpdateElectionDetails } = usePatch();
+  const { mutateAsync: GetStateList } = useGet();
+  const { mutateAsync: GetAssemblyList } = useGet();
+  const { mutateAsync: GetDistrictList } = useGet();
+
   useEffect(() => {
-    getElectionParty();
-  }, []);
+    if (isOpen) {
+      if (ElectionData) {
+        setSelectState(ElectionData?.stateId);
+        setSelectDistrict(ElectionData?.districtId);
+      }
+      getStateList();
+    }
+  }, [ElectionData, isOpen]);
+
+  useEffect(() => {
+    if (selectState) {
+      getDistrict();
+    }
+  }, [selectState]);
+
+  useEffect(() => {
+    if (selectDistrict) {
+      getAssemblyList();
+    }
+  }, [selectDistrict]);
+
+  const getStateList = async () => {
+    const res = await GetStateList({
+      url: GET_STATE_LIST,
+      type: "details",
+    });
+    setStates(res || []);
+  };
+
+  const getDistrict = async () => {
+    const res = await GetDistrictList({
+      url: GET_DISTRICT_LIST_BY_STATE + selectState,
+      type: "details",
+    });
+    setDistrictList(res?.districts || []);
+  };
+
+  const getAssemblyList = async () => {
+    const res = await GetAssemblyList({
+      url: GET_ASSEMBLY_LIST_BY_DISTRICT + selectDistrict,
+      type: "details",
+    });
+    setAssemblies(res || []);
+  };
 
   const handleClose = () => {
     setIsOpen(false);
   };
 
-  const handleFormSubmit = async (creds) => {
+  const handleSubmit = async (creds) => {
     setLoading(true);
-    if (creds) {
-      const payload = {
-        id: ElectionData?.id,
-        name: creds?.name,
-        stateId: creds?.stateId,
-        electionType: creds?.electionType,
-        districtId: creds?.districtId,
-        assemblyId: creds?.assemblyId,
-        electionDate: creds?.electionDate,
-        acharSanhitaDate: creds?.acharSanhitaDate,
-      };
-      await UpdateElection({
-        url: UPDATE_ELECTION_DETAILS,
-        type: "details",
-        payload: payload,
-      })
-        .then((res) => {
-          if (res) {
-            toast.success(
-              "Success! You have successfully update this election",
-              {
-                position: "top-right",
-              }
-            );
-          }
-        })
-        .catch((error) => {
-          toast.error(`Error! ${error?.response?.data?.message}`, {
-            position: "top-right",
-          });
-        });
-    }
-    setTimeout(() => {
-      setLoading(false);
-      handleClose();
-    }, 3000);
-  };
+    const payload = {
+      id: ElectionData?.id,
+      name: creds?.name,
+      electionType: creds?.electionType,
+      stateId: creds?.stateId,
+      districtId: creds?.districtName,
+      vidhansabhaId: creds?.vidhansabhaId,
+      electionDate: creds?.electionDate
+        ? moment(creds.electionDate).toISOString()
+        : null,
+      acharSanhitaDate: creds?.acharSanhitaDate
+        ? moment(creds.acharSanhitaDate).toISOString()
+        : null,
+    };
 
-  const getElectionParty = async () => {
-    await GetPartyList({
-      url: GET_ELECTION_PARTY,
+    await UpdateElectionDetails({
+      url: UPDATE_ELECTION_DETAILS,
       type: "details",
+      payload,
+      token: true,
     })
       .then((res) => {
         if (res) {
-          setParty(res && res);
+          toast.success("Election updated successfully!", {
+            position: "top-right",
+          });
+          form.resetFields();
+          setIsOpen(false);
+          updateEditState("election", true);
         }
       })
       .catch((error) => {
-        console.log(error);
-      });
-    handleClose();
+        toast.error(`Error: ${error?.response?.data?.message}`, {
+          position: "top-right",
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
     <Modal
-      className="edit-modal"
-      title={
-        <div className="flex items-center space-x-2">
-          <UserOutlined className="text-#54408C-500" />
-          <span className="text-xl font-semibold">Edit Voter Details</span>
-        </div>
-      }
+      title="Edit Election Details"
       visible={isOpen}
       onCancel={handleClose}
       footer={null}
       width={700}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={ElectionData}
-        onFinish={handleFormSubmit}
-      >
-        <Row
-          gutter={[16, 16]}
-          className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
-        >
-          <Col span={8}>
-            <Form.Item
-              name="name"
-              label="Full Name"
-              rules={[{ required: true, message: "Please Enter Full Name " }]}
-            >
-              <FormInput
-                name="name"
-                placeholder="First Name"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
+      <ClientAdminComponent>
+        <Container>
+          <Form
+            layout="vertical"
+            onFinish={handleSubmit}
+            form={form}
+            initialValues={{
+              ...ElectionData, // Spread ElectionData to include its fields
+              electionDate: ElectionData?.electionDate
+                ? moment(ElectionData.electionDate)
+                : null,
+              acharSanhitaDate: ElectionData?.acharSanhitaDate
+                ? moment(ElectionData.acharSanhitaDate)
+                : null,
+            }}
+            className="mt-4"
+          >
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                <Form.Item
+                  name="name"
+                  label="Election Name"
+                  rules={[
+                    { required: true, message: "Please Enter Election Name" },
+                  ]}
+                >
+                  <FormInput placeholder="Election Name" />
+                </Form.Item>
+              </Col>
 
-          <Col span={8}>
-            <Form.Item
-              name="hiName"
-              label="Full Name (Hindi)"
-              rules={[
-                { required: true, message: "Please Enter Full Name in Hindi" },
-              ]}
-            >
-              <FormInput
-                name="hiName"
-                placeholder="First Name in Hindi"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="electionType"
+                  label="Election Type"
+                  rules={[
+                    { required: true, message: "Please Select Election Type" },
+                  ]}
+                >
+                  <DropdownSelect
+                    name="electionType"
+                    options={[
+                      { id: "Vidhansabha", name: "Vidhansabha" },
+                      { id: "LokSabha", name: "LokSabha" },
+                      { id: "Nigam", name: "Nigam" },
+                    ]}
+                    placeholder="Select Election Type"
+                  />
+                </Form.Item>
+              </Col>
 
-          <Col span={8}>
-            <Form.Item
-              name="fatherName"
-              label="Father Name"
-              rules={[{ required: true, message: "Please Enter Father Name" }]}
-            >
-              <FormInput
-                name="fatherName"
-                placeholder="Enter Father Name"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="stateId"
+                  label="State"
+                  rules={[{ required: true, message: "Please Select State" }]}
+                >
+                  <DropdownSelect
+                    name="stateId"
+                    options={states.map((state) => ({
+                      id: state.id,
+                      name: state.name,
+                    }))}
+                    placeholder="Select State"
+                    setSelectState={setSelectState}
+                  />
+                </Form.Item>
+              </Col>
 
-          <Col span={8}>
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[{ required: true, message: "Please Enter Email" }]}
-            >
-              <FormInput
-                name="email"
-                placeholder="Enter Gmail"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="districtName"
+                  label="District"
+                  rules={[
+                    { required: true, message: "Please Select District" },
+                  ]}
+                >
+                  <DropdownSelect
+                    name="districtName"
+                    options={districtList.map((district) => ({
+                      id: district.id,
+                      name: district.name,
+                    }))}
+                    placeholder="Select District"
+                    setSelectState={setSelectDistrict}
+                    disabled={!selectState}
+                  />
+                </Form.Item>
+              </Col>
 
-          <Col span={8}>
-            <Form.Item
-              label="Phone Number"
-              name="mobileNumber"
-              rules={[
-                { required: true, message: "Please Input Your Phone Number!" },
-                {
-                  pattern: /^[6-9]\d{9}$/,
-                  message: "Please enter a valid 10-digit mobile number!",
-                },
-              ]}
-            >
-              <FormInput
-                name="mobileNumber"
-                placeholder="Enter Mobile Number"
-                required={false}
-                maxLength={10}
-              />
-            </Form.Item>
-          </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="vidhansabhaId"
+                  label="Assembly"
+                  rules={[
+                    { required: false, message: "Please Select Assembly" },
+                  ]}
+                >
+                  <DropdownSelect
+                    name="vidhansabhaId"
+                    options={assemblies.map((assembly) => ({
+                      id: assembly.id,
+                      name: assembly.name,
+                    }))}
+                    placeholder="Select Assembly"
+                    disabled={!selectDistrict}
+                  />
+                </Form.Item>
+              </Col>
 
-          <Col span={8}>
-            <Form.Item
-              label="Voter ID"
-              name="voterId"
-              rules={[
-                { required: true, message: "Please Input Your Voter ID!" },
-              ]}
-            >
-              <FormInput
-                name="voterId"
-                placeholder="Enter Voter ID"
-                required={false}
-                maxLength={10}
-              />
-            </Form.Item>
-          </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="electionDate"
+                  label="Election Date"
+                  rules={[
+                    { required: false, message: "Please select Election Date" },
+                  ]}
+                >
+                  <DatePicker
+                    format="YYYY-MM-DD"
+                    placeholder="Select Election Date"
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
 
-          <Col span={8}>
-            <Form.Item
-              name="gender"
-              label="Gender"
-              rules={[{ required: true, message: "Please Select a Gender" }]}
-            >
-              <DropdownSelect
-                name={"gender"}
-                placeholder="Please select a Gender"
-                options={[
-                  { id: "Male", name: "Male" },
-                  { id: "Female", name: "Female" },
-                  { id: "Other", name: "Other" },
-                ]}
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name="partyName"
-              label="Party Name"
-              rules={[
-                { required: true, message: "Please Select a Party Name" },
-              ]}
-            >
-              <DropdownSelect
-                name={"party"}
-                options={party && party}
-                placeholder="Select Party Name"
-                required={false}
-                disabled={false}
-                defaultOption={"Select Party Name"}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              label="Age"
-              name="age"
-              rules={[{ required: true, message: "Please Input Your Age!" }]}
-            >
-              <FormInput
-                type={"number"}
-                name="age"
-                placeholder="Enter Age"
-                required={false}
-                maxLength={10}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              label="Caste"
-              name="caste"
-              rules={[{ required: true, message: "Please Input Your Caste!" }]}
-            >
-              <FormInput
-                name="caste"
-                // defaultValue={voterData?.caste?.name}
-                placeholder="Enter Caste"
-                required={false}
-                maxLength={10}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              label="Section"
-              name="section"
-              rules={[{ required: true, message: "Please Enter Section" }]}
-            >
-              <FormInput
-                name="section"
-                placeholder="Enter Section"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="Booth Number" name="boothNo">
-              <FormInput
-                name="boothNo"
-                placeholder="Enter Booth Number"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="City" name="city">
-              <FormInput
-                name="city"
-                placeholder="Enter City"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="Supporting Party" name="supportingParty">
-              <FormInput
-                name="supportingParty"
-                placeholder="Enter Supporting Party"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item label="House No" name="houseNo">
-              <FormInput
-                name="houseNo"
-                placeholder="Enter House No"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item label="Vidhansabha" name="vidhansabha">
-              <FormInput
-                name="vidhansabha"
-                placeholder="Enter Vidhansabha"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item label="Loksabha" name="loksabha">
-              <FormInput
-                name="loksabha"
-                placeholder="Enter Loksabha"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item label="District" name="district">
-              <FormInput
-                name="district"
-                placeholder="Enter District"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item name="newAddress" label="Address">
-              <Input.TextArea
-                placeholder="Enter address"
-                rows={3}
-                prefix={<HomeOutlined />}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Form.Item>
-          <div className="flex justify-end space-x-4">
-            <Button
-              onClick={handleClose}
-              className="cancel py-[15px]g-[#54408C]"
-            >
-              Cancel
-            </Button>
-            <Button
-              loading={loading}
-              type="primary"
-              htmlType="submit"
-              className="bg-[#54408C] px-[35px] py-[15px]g-[#54408C]"
-            >
-              Submit
-            </Button>
-          </div>
-        </Form.Item>
-      </Form>
+              <Col span={12}>
+                <Form.Item
+                  name="acharSanhitaDate"
+                  label="Achar Sanhita Date"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Please select Achar Sanhita Date",
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    format="YYYY-MM-DD"
+                    placeholder="Select Achar Sanhita Date"
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item>
+                  <Button
+                    loading={loading}
+                    type="primary"
+                    htmlType="submit"
+                    className="sigin-btn text-[16px] font-[500] h-[48px] bg-[#54408C]  mt-[30px]"
+                    style={{ width: "100%" }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#432C6A")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#54408C")
+                    }
+                  >
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Container>
+      </ClientAdminComponent>
     </Modal>
   );
 };
