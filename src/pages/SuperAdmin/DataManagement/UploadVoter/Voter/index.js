@@ -26,7 +26,30 @@ const VoterList = () => {
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const { mutateAsync: GetVoterList } = useGet();
   const [currentPage, setCurrentPage] = useState(1);
-  const [prevPage, setPrevPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const [tableParams, setTableParams] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      getVoterList(currentPage, 10);
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentPage]);
+
+  const handleTableChange = (pagination) => {
+    setTableParams({ ...tableParams, current: pagination.current });
+    setCurrentPage(pagination.current);
+  };
   const handleButtonClick = (button) => {
     setActiveButton(button);
   };
@@ -60,14 +83,6 @@ const VoterList = () => {
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {}, [voterData]);
-
-  useMemo(() => {
-    if (currentPage > prevPage) {
-      getVoterList(currentPage, 10);
-      setPrevPage((prev) => prev + 1);
-    }
-  }, [currentPage]);
   return (
     <VoterListSection>
       <Container>
@@ -126,11 +141,19 @@ const VoterList = () => {
                 />
               </div>
             </div>
-            <TableComponent
+            {/* <TableComponent
               rowSelection={rowSelection}
               columns={columns}
               data={voterData}
               setCurrentPage={setCurrentPage}
+            /> */}
+            <TableComponent
+              rowSelection={rowSelection}
+              columns={columns}
+              data={voterData}
+              tableParams={tableParams}
+              handleTableChange={handleTableChange}
+              loading={loading}
             />
             <div className="flex items-center mb-4">
               <input
