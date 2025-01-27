@@ -1,8 +1,11 @@
 import { Card } from "antd";
 import React from "react";
+import moment from 'moment';
 import { Container } from "styles/components/common/Layout";
 
-const AccountDetails = () => {
+const AccountDetails = ( profileDetails ) =>
+{
+  console.log( profileDetails?.profileDetails, "dsfsdf" );
   return (
     <Container>
       {" "}
@@ -15,19 +18,19 @@ const AccountDetails = () => {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">Email</span>
-            <span>Demo@Gmail.Com</span>
+            <span>{ profileDetails?.profileDetails?.email }</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">User Name</span>
-            <span>Demo</span>
+            <span>{ profileDetails?.profileDetails?.userName}</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">Created Date</span>
-            <span>20/04/2024</span>
+            <span>{moment( profileDetails?.profileDetails?.createdAt ).format( 'YYYY-MM-DD' )}</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">Activated</span>
-            <span>True</span>
+            <span>{ profileDetails?.profileDetails?.status }</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <span className="text-gray-600">Activated Date</span>

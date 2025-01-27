@@ -8,6 +8,7 @@ import ratingIcon from "assets/svg/ratingIcon.svg";
 import notificationIcon from "assets/svg/notification.svg";
 import { Avatar, Button, Popover } from "antd";
 import { EditOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const MenuIcons = ({ icons }) => (
   <div className="menu-icons flex space-x-4 gap-[22px]">
@@ -48,6 +49,7 @@ export default function PrivateNavbar() {
     localStorage.clear();
     window.location.reload();
   };
+   const navigate = useNavigate();
 
   const content = (
     <div className="user-profile-Modal">
@@ -58,7 +60,7 @@ export default function PrivateNavbar() {
             <img src={userImage} />
           </span>
         ) : (
-          <Avatar size={70}>{MD}</Avatar>
+          <Avatar size={70}></Avatar>
         )}
         <div className="editicon">
           <Avatar size={25} style={{ backgroundColor: "#fff" }}>
@@ -68,7 +70,7 @@ export default function PrivateNavbar() {
         </div>
       </div>
       <h3 className="userName">Hi, {LoginUser}</h3>
-      <Button>Manage Your Account</Button>
+      <Button onClick={ ()=>navigate('/profile')}>Manage Your Account</Button>
       <Button onClick={logout}>Logout</Button>
     </div>
   );

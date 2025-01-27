@@ -42,6 +42,7 @@ import AuthorizedUserSuperAdmin from "pages/SuperAdmin/User/AuthorizedUser";
 import AddNewAuthorizedUsers from "pages/SuperAdmin/User/AuthorizedUser/AddNewUser";
 import UploadVidhansabha from "pages/SuperAdmin/Settings/UploadVidhansabha";
 import UploadLoksabha from "pages/SuperAdmin/Settings/UploadLoksabha";
+import PersonalProfile from "pages/ClientAdmin/ClientProfile";
 export const LoginRoute = {
   component: Login,
   path: "/",
@@ -172,6 +173,11 @@ export const ClientProfileRoute = {
   path: "/client-profile",
   restricted: true,
 };
+export const ProfileRoute = {
+  component: PersonalProfile,
+  path: "/profile",
+  restricted: true,
+};
 export const DistributorRoute = {
   component: DistributortList,
   path: "/distributor",
@@ -291,6 +297,7 @@ const IRouteS = {
     WhatsappMessageRoutes,
     MessagesRoutes,
     UploadPostRoutes,
+    ProfileRoute,
     DisplayProfileRoutes,
     MobileSlipsSettingsRoutes,
   ],

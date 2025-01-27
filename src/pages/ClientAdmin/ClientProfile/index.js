@@ -28,9 +28,7 @@ const PersonalProfile = () =>
     } )
       .then( ( res ) =>
       {
-        setProfileDetails( res )
-        console.log(res,"jjjjjjjjjjjjjjjj")
-       
+        setProfileDetails( res )       
       } )
       .catch( ( err ) => { } );
   };
@@ -58,7 +56,7 @@ const PersonalProfile = () =>
                 
               <Card>
                   <AccountDetails profileDetails={ profileDetails } />
-              <Residency />
+                  <Residency profileDetails={ profileDetails } />
 
                   <OtherDetails profileDetails={ profileDetails } />
                   </Card>
