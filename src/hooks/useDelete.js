@@ -1,18 +1,19 @@
 import { useMutation } from "react-query";
 import { determineInstance } from "utils/helper";
 
-const deleteRequest = async ({ url, type, token = false, }) => {
+const deleteRequest = async ({ url, type, token = false }) => {
   const instance = determineInstance(type);
   let headers = {};
   if (token) {
     const token = localStorage.getItem("token");
-    console.log(token,'------------toke')
+    console.log(token, "------------toke");
     headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${ token }`,
+      Authorization: `Bearer ${token}`,
     };
   }
-  const { data } = await instance.delete(url, { headers })
+  const { data } = await instance
+    .delete(url, { headers })
     .then((res) => {
       return res;
     })

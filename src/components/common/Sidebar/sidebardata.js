@@ -71,7 +71,7 @@ const SidebarData = [
       },
       {
         id: 1201,
-        title: "Client Admin",
+        title: "Client",
         icon: <UserIcon />,
         path: "/client-admin",
         disable: true,
@@ -192,7 +192,7 @@ const SidebarData = [
         icon: <UploadIcons />,
         path: "/upload-vidhansabha",
         disable: true,
-        roleId: [ "5" ],
+        roleId: ["5"],
       },
       {
         id: 1605,
@@ -200,7 +200,7 @@ const SidebarData = [
         icon: <UploadIcons />,
         path: "/upload-loksabha",
         disable: true,
-        roleId: [ "5" ],
+        roleId: ["5"],
       },
 
       {
@@ -256,8 +256,6 @@ const SidebarData = [
     disable: true,
     roleId: ["3"],
   },
-
- 
 
   {
     id: 4,

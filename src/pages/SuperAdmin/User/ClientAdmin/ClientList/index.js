@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Container } from "styles/components/common/Layout";
 import deleteIcon from "assets/svg/trans-icon.svg";
 
@@ -16,6 +16,7 @@ import EditComponent from "components/common/Action/Edit";
 import DeleteComponet from "components/common/Action/Delete";
 import ViewComponent from "components/common/Action/View";
 import { render } from "@testing-library/react";
+import { useMetaDataContext } from "context/metaData";
 
 function ClientList() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ function ClientList() {
   const [accountStatus, setAccountStatus] = useState();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [loading, setLoading] = useState();
   const [clientData, setClientData] = useState([]);
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const { mutateAsync: ClientList } = useGet();
@@ -31,10 +33,64 @@ function ClientList() {
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
   const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
   const clientId = clientRole[0]?.id;
-  const handleAddnewclient = () => {
-    navigate("/add-new-client");
+  const { deleteStates, updateStatus } = useMetaDataContext();
+  const [tableParams, setTableParams] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      getClietnList(currentPage, 10);
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentPage, deleteStates?.client, updateStatus?.client]);
+  console.log(updateStatus?.deleteStates);
+  const getClietnList = async (page, limit) => {
+    setLoading(true);
+    const id = loginUsers.role;
+    await ClientList({
+      url: `${GET_CLIENTS_LIST + clientId}?page=${page}&limit=${limit}`,
+      type: "details",
+      token: true,
+    })
+      .then((res) => {
+        if (res) {
+          setClientData(res?.items);
+          setTableParams({ ...tableParams, total: res?.meta?.totalItems });
+
+          setLoading(false);
+        }
+      })
+      .catch((error) => console.log(error));
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
   };
-console.log(setCurrentPage,currentPage,'currentPage----------->')
+
+  const handleTableChange = (pagination) => {
+    setTableParams({ ...tableParams, current: pagination.current });
+    setCurrentPage(pagination.current);
+  };
+
+  const onSelectChange = (newSelectedRowKeys, newSelectedRows) => {
+    console.log("Selected Row Keys:", newSelectedRowKeys);
+    console.log("Selected Rows:", newSelectedRows);
+    setSelectedRowKeys(newSelectedRowKeys);
+    setSelectedRows(newSelectedRows);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
   const columns = [
     {
       title: "S.NO",
@@ -45,7 +101,7 @@ console.log(setCurrentPage,currentPage,'currentPage----------->')
         return index + 1;
       },
     },
-    
+
     {
       title: "Active User",
       dataIndex: "isPermission",
@@ -149,7 +205,6 @@ console.log(setCurrentPage,currentPage,'currentPage----------->')
       render: (record) => (record ? record : "NA"),
       sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
     },
-   
 
     {
       title: "State Name",
@@ -202,8 +257,6 @@ console.log(setCurrentPage,currentPage,'currentPage----------->')
       sorter: (a, b) => a.city.localeCompare(b.city),
     },
 
-
-
     {
       title: "House No",
       dataIndex: "houseNo",
@@ -212,10 +265,6 @@ console.log(setCurrentPage,currentPage,'currentPage----------->')
       render: (record) => (record ? record : "NA"),
       sorter: (a, b) => parseInt(a.houseNo) - parseInt(b.houseNo),
     },
-
-
-  
-  
 
     {
       title: "Address",
@@ -272,40 +321,6 @@ console.log(setCurrentPage,currentPage,'currentPage----------->')
     },
   ];
 
-
-  const getClietnList = async (page, limit) => {
-    const id = loginUsers.role;
-    await ClientList({
-      url: `${GET_CLIENTS_LIST + clientId}?page=${page}&limit=${limit}`,
-      type: "details",
-      token: true,
-    })
-      .then((res) => {
-        if (res) {
-          let newRes = [...clientData];
-          newRes = newRes.concat(res?.items);
-          setClientData(newRes);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-  useMemo(() => {
-    if (currentPage > prevPage) {
-      getClietnList(currentPage, 3);
-      setPrevPage((prev) => prev + 1);
-    }
-  }, [currentPage]);
-  const onSelectChange = (newSelectedRowKeys, newSelectedRows) => {
-    console.log("Selected Row Keys:", newSelectedRowKeys);
-    console.log("Selected Rows:", newSelectedRows);
-    setSelectedRowKeys(newSelectedRowKeys);
-    setSelectedRows(newSelectedRows);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
   return (
     <ClientListSection>
       <Container>
@@ -348,7 +363,9 @@ console.log(setCurrentPage,currentPage,'currentPage----------->')
               rowSelection={rowSelection}
               columns={columns}
               data={clientData}
-              setCurrentPage={setCurrentPage}
+              tableParams={tableParams}
+              handleTableChange={handleTableChange}
+              loading={loading}
             />
             <div className="flex items-center mb-4">
               <input

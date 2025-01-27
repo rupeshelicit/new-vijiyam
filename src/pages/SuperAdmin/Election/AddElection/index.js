@@ -28,6 +28,7 @@ import {
   GET_STATE_LIST,
 } from "constants/api";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 const { Option } = Select;
 
@@ -72,7 +73,20 @@ const AddNewDistributor = () => {
         console.log(error);
       });
   };
-
+  const getDistrict = async () => {
+    await GetDistrictList({
+      url: GET_DISTRICT_LIST_BY_STATE + selectState,
+      type: "details",
+    })
+      .then((res) => {
+        if (res) {
+          setDistrictList(res && res.districts);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const getAssemblyist = async () => {
     await GetAssemblyList({
       url: GET_ASSEMBLY_LIST_BY_DISTRICT + selectDistrict,
@@ -88,20 +102,7 @@ const AddNewDistributor = () => {
       });
   };
 
-  const getDistrict = async () => {
-    await GetDistrictList({
-      url: GET_DISTRICT_LIST_BY_STATE + selectState,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          setDistrictList(res && res.districts);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+
 
   const getElectionParty = async () => {
     await GetPartyList({
@@ -157,7 +158,9 @@ const AddNewDistributor = () => {
       setLoading(false);
     }, 3000);
   };
-
+  const disablePreviousDates = (current) => {
+    return current && current < moment().startOf("day");
+  };
   return (
     <ClientAdminComponent>
       <Container>
@@ -280,7 +283,7 @@ const AddNewDistributor = () => {
                   label="Assembly Name"
                   rules={[
                     {
-                      required: false,
+                      required: true,
                       message: "Please Select  Assembly Name",
                     },
                   ]}
@@ -312,6 +315,7 @@ const AddNewDistributor = () => {
                   ]}
                 >
                   <DatePicker
+                    disabledDate={disablePreviousDates}
                     className="w-[100%]"
                     name="electionDate"
                     required={false}
@@ -333,6 +337,7 @@ const AddNewDistributor = () => {
                     className="w-[100%]"
                     name="acharSanhitaDate"
                     required={false}
+                    disabledDate={disablePreviousDates}
                   />
                 </Form.Item>
               </Col>

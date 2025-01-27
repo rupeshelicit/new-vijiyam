@@ -22,7 +22,7 @@ import ClientProfile from "pages/SuperAdmin/User/ClientAdmin/ClientProfile";
 import AddDistributor from "pages/SuperAdmin/User/DistributorUser/AddDistributor";
 import DistributortList from "pages/SuperAdmin/User/DistributorUser/DistributorList";
 import AddElections from "pages/SuperAdmin/Election/AddElection";
-import ElectionsList from "pages/SuperAdmin/Election/EelctionList";
+import ElectionsList from "pages/SuperAdmin/Election/ElectionsList";
 import Survey from "pages/SuperAdmin/Survey";
 import AddBulkElection from "pages/SuperAdmin/Election/AddBulkelection";
 import DistributorDashboard from "pages/Distributor/Dashboard";

@@ -1,0 +1,66 @@
+export const electionExcelColumns = [
+  {
+    title: "Election Name",
+    dataIndex: "name",
+    key: "name",
+    align: "center",
+    render: (record) => record || "NA",
+  },
+
+  {
+    title: "Election Type",
+    dataIndex: "electionType",
+    key: "electionType",
+    align: "center",
+    render: (record) => record || "NA",
+  },
+  {
+    title: "State Name",
+    dataIndex: "state",
+    key: "state",
+    align: "center",
+    render: (_, record) => record?.state?.name || "NA",
+  },
+  {
+    title: "district",
+    dataIndex: "district",
+    key: "district",
+    align: "center",
+    render: (_, record) => record?.district?.name || "NA",
+  },
+  {
+    title: "vidhansabha",
+    dataIndex: "vidhansabha",
+    key: "vidhansabha",
+    align: "center",
+    render: (_, record) => record?.name || "NA",
+  },
+  {
+    title: "Achar Sanhita Date",
+    dataIndex: "acharSanhitaDate",
+    key: "acharSanhitaDate",
+    align: "center",
+    render: (date) => (date ? new Date(date).toLocaleDateString() : "NA"),
+  },
+  {
+    title: "Election Date",
+    dataIndex: "electionDate",
+    key: "electionDate",
+    align: "center",
+    render: (date) => (date ? new Date(date).toLocaleDateString() : "NA"),
+  },
+  {
+    title: "Create Date",
+    dataIndex: "createdAt",
+    key: "createdAt",
+    align: "center",
+    render: (date) => (date ? new Date(date).toLocaleDateString() : "NA"),
+  },
+  {
+    title: "Update Date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    align: "center",
+    render: (date) => (date ? new Date(date).toLocaleDateString() : "NA"),
+  },
+];

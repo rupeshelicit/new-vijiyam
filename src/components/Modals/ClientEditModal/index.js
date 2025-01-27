@@ -21,6 +21,7 @@ import FormInput from "components/common/FormControl/FormInput";
 import DropdownSelect from "components/common/FormControl/DropdownSelect";
 import {
   GET_ASSEMBLY_LIST,
+  GET_ASSEMBLY_LIST_BY_DISTRICT,
   GET_DISTRICT_LIST_BY_STATE,
   GET_ELECTION_PARTY,
   GET_STATE_LIST,
@@ -106,7 +107,7 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
 
   const getAssemblyist = async () => {
     await GetAssemblyList({
-      url: GET_ASSEMBLY_LIST + districtId,
+      url: GET_ASSEMBLY_LIST_BY_DISTRICT + districtId,
       type: "details",
     })
       .then((res) => {
@@ -153,7 +154,7 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
     setLoading(true);
     const clientId = ClientData.id;
     const payload = {
-      id:clientId,
+      id: clientId,
       image: candidatesPhoto,
       partyIcon: partySymbole,
       name: creds?.name,
@@ -168,7 +169,7 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
       vidhansabhaId: creds?.vidhansabhaId,
       role: clientRole[0]?.id,
       isCandidateImage: creds?.isCandidateImage,
-      isSlipSetting:creds?.isSlipSetting,
+      isSlipSetting: creds?.isSlipSetting,
     };
 
     await updateClientDetails({
