@@ -36,7 +36,7 @@ function ClientList() {
   const { deleteStates, updateStatus } = useMetaDataContext();
   const [tableParams, setTableParams] = useState({
     current: 1,
-    pageSize: 10,
+    pageSize: 1,
     total: 0,
   });
 
@@ -44,7 +44,7 @@ function ClientList() {
     let isMounted = true;
 
     if (isMounted) {
-      getClietnList(currentPage, 10);
+      getClietnList(currentPage, 1);
     }
 
     return () => {
