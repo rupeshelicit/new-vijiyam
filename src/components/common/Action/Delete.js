@@ -61,7 +61,7 @@ const DeleteComponent = ({ record, roleType, handleDelete }) => {
         type: "details",
         token: true,
       });
-      if (response) {
+      if (response?.success) {
         handleDelete();
         toast.success(successMessage, { position: "top-right" });
         updateDeleteState(roleType, true);

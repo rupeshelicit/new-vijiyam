@@ -8,7 +8,7 @@ export const UPDATE_PASSWORD = "user/update-password";
 export const GET_ROLE_LIST = "/roles/list";
 export const GET_STATE_LIST = "/state/list";
 export const GET_ASSEMBLY_LIST = "/vidhansabha/list/state/";
-export const GET_ASSEMBLY_LIST_BY_DISTRICT='/vidhansabha/list/district/'
+export const GET_ASSEMBLY_LIST_BY_DISTRICT = "/vidhansabha/list/district/";
 export const UPLOAD_VIDHANSABHA_BY_EXCEL = "/vidhansabha/upload-excel";
 export const DOWNLOAD_ELECTION_EXCEL = "/election/download-excel";
 export const GET_VOTER_LIST = "voter-survey/list/";
@@ -38,7 +38,6 @@ export const UPDATE_CLIENT_DETAILS = "/user";
 export const UPDATE_DISTRIBUTOR_DETAILS = "/user";
 export const UPDATE_KARYAKARTA_DETAILS = "/user";
 export const UPDATE_VOTER_DETAILS = "/voter-survey";
-
 // Client Api
 export const GET_DASHBOARD_SUREVY = "/voter-survey/dashboard/";
 export const GET_VIDHANSABHA_LIST_ASSIGN_SURVEY =

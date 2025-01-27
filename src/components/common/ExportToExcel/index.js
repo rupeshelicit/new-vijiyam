@@ -10,12 +10,16 @@ const ExportToExcel = ({
   Icons,
   buttonText,
   type,
+  handleDownload,
   excelName,
   disabled,
 }) => {
   const [loading, setLoading] = useState(false);
 
   const handleExportExcel = () => {
+    handleDownload && handleDownload();
+
+    setLoading(true);
     if (!Array.isArray(columns) || columns.length === 0) {
       alert("Columns are not defined properly!");
       return;
@@ -28,22 +32,14 @@ const ExportToExcel = ({
 
     const formattedData =
       data.length > 0
-        ? data.map((item, index) => {
-            const row = { "S.NO": index + 1 };
+        ? data.map((item) => {
+            const row = {};
             columns.forEach((col) => {
               row[col.title] = item[col.dataIndex] || "";
             });
             return row;
           })
-        : [
-            {
-              "S.NO": "",
-              ...columnHeaders.reduce(
-                (acc, title) => ({ ...acc, [title]: "" }),
-                {}
-              ),
-            },
-          ];
+        : [columns.reduce((acc, col) => ({ ...acc, [col.title]: "" }), {})];
 
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
     const workbook = XLSX.utils.book_new();
@@ -65,8 +61,8 @@ const ExportToExcel = ({
 
     const formattedData =
       data.length > 0
-        ? data.map((item, index) => {
-            const row = [index + 1];
+        ? data.map((item) => {
+            const row = [];
             columns.forEach((col) => {
               row.push(item[col.dataIndex] || "");
             });

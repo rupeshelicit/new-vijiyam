@@ -10,14 +10,22 @@ const MetaDataContext = createContext({
 
 // Provider Component
 export const MetaDataProvider = ({ children }) => {
+  const [clientProfileData, setClientProfileData] = useState(null);
+
   const [custmerDetails, setCustmerDetails] = useState({});
   const [deleteStates, setDeleteStates] = useState({
     election: false,
     voter: false,
+    client: false,
+    distributor: false,
+    karykarta: false,
   });
   const [updateStatus, setUpdateStatus] = useState({
     election: false,
     voter: false,
+    client: false,
+    distributor: false,
+    karykarta: false,
   });
   const updateDeleteState = (key, value) => {
     setDeleteStates((prevState) => ({
@@ -31,16 +39,22 @@ export const MetaDataProvider = ({ children }) => {
       [key]: value,
     }));
   };
+  const setClientProfile = (data) => {
+    setClientProfileData(data);
+  };
+
   return (
     <MetaDataContext.Provider
       value={{
         custmerDetails,
         deleteStates,
         updateStatus,
+        clientProfileData,
         setCustmerDetails,
         updateDeleteState,
         setUpdateStatus,
         updateEditState,
+        setClientProfile,
       }}
     >
       {children}

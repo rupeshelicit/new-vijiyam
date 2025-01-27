@@ -19,7 +19,7 @@ import usePost from "hooks/usePost";
 import useGet from "hooks/useGet";
 import {
   CREAT_CLIENT,
-  GET_ASSEMBLY_LIST,
+  GET_ASSEMBLY_LIST_BY_DISTRICT,
   GET_DISTRICT_LIST_BY_STATE,
   GET_ELECTION_PARTY,
   GET_STATE_LIST,
@@ -42,6 +42,7 @@ const AddNewClient = () => {
   const [password, setPassword] = useState();
   const [confirmassword, setConfirmPassword] = useState();
   const [selectState, setSelectState] = useState();
+  const [selctedDistrict, setSelctedDistrict] = useState();
   const [slipSettings, setSlipSettings] = useState(false);
   const [candidateImage, setCandidateImage] = useState(false);
   const [isOnline, setiIsOnline] = useState(false);
@@ -52,21 +53,20 @@ const AddNewClient = () => {
   const { mutateAsync: GetAssemblyList } = useGet();
   const { mutateAsync: GetDistrictList } = useGet();
   const { mutateAsync: GetPartyList } = useGet();
-
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
   const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
-
+  console.log(candidateImage, partySymbole, "dddddddddddddddd");
   useEffect(() => {
     getStateList();
     getElectionParty();
     {
-      selectState && getAssemblyist();
+      selctedDistrict && getAssemblyist();
     }
     {
       selectState && getDistrict();
     }
-  }, [selectState]);
+  }, [selectState, selctedDistrict]);
 
   const getStateList = async () => {
     await GetStateList({
@@ -83,23 +83,9 @@ const AddNewClient = () => {
       });
   };
 
-  const getRoleList = async () => {
-    await GetStateList({
-      url: GET_STATE_LIST,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          setStates(res && res);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   const getAssemblyist = async () => {
     await GetAssemblyList({
-      url: GET_ASSEMBLY_LIST + selectState,
+      url: GET_ASSEMBLY_LIST_BY_DISTRICT + selctedDistrict,
       type: "details",
     })
       .then((res) => {
@@ -135,6 +121,7 @@ const AddNewClient = () => {
       .then((res) => {
         if (res) {
           setParty(res && res);
+          console.log(res, "-------------->party");
         }
       })
       .catch((error) => {
@@ -142,55 +129,53 @@ const AddNewClient = () => {
       });
   };
 
-  const handleSubmit = async (creds) => {
+  const handleFormSubmit = async (creds) => {
     const formData = new FormData();
     setLoading(true);
 
-    formData.append("image", candidatesPhoto);
-    formData.append("partyIcon", partySymbole);
-    formData.append("name", creds?.fullName || "");
+    formData.append("image", creds?.image || null);
+    formData.append("partyIcon", creds?.partyIcon || null);
+    formData.append("name", creds?.name || "");
     formData.append("fatherName", creds?.fatherName || "");
-    formData.append("partyId", creds?.partyName || "");
+    formData.append("partyId", parseInt(creds?.partyId || 0, 10));
     formData.append("dateOfBirth", creds?.dateOfBirth || "");
     formData.append("gender", creds?.gender || "");
     formData.append("email", creds?.email || "");
     formData.append("mobileNumber", creds?.mobileNumber || "");
-    formData.append("districtId", creds?.districtName || "");
-    formData.append("stateId", creds?.stateName || "");
-    formData.append("vidhansabhaId", creds?.assemblyName || "");
-    formData.append("userId", loginUsers.id || "");
+    formData.append("districtId", parseInt(creds?.districtId || 0, 10));
+    formData.append("stateId", parseInt(creds?.stateId || 0, 10));
+    formData.append("vidhansabhaId", parseInt(creds?.vidhansabhaId || 0, 10));
+    formData.append("userId", loginUsers?.id || 0);
     formData.append("password", creds?.password || "");
-    formData.append("role", clientRole[0]?.id || "");
-    formData.append("isCandidateImage", candidateImage || "");
-    formData.append("isSlipSetting", slipSettings || "");
+    formData.append("role", clientRole[0]?.id);
+    formData.append("isCandidateImage", candidateImage || false);
+    formData.append("isSlipSetting", slipSettings || false);
+
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
 
     const payload = formData;
 
-    await AddNewClients({
-      url: CREAT_CLIENT,
-      type: "details",
-      payload: payload,
-    })
-      .then((res) => {
-        if (res) {
-          toast.success("Success! You have successfully created a new client", {
-            position: "top-right",
-          });
-          form.resetFields();
-        }
-      })
-      .catch((error) => {
-        toast.error(`Error! ${error?.response?.data?.message}`, {
+    try {
+      const res = await AddNewClients({
+        url: CREAT_CLIENT,
+        type: "details",
+        payload: payload,
+      });
+      if (res) {
+        toast.success("Success! You have successfully created a new client", {
           position: "top-right",
         });
+        form.resetFields();
+      }
+    } catch (error) {
+      toast.error(`Error! ${error?.response?.data?.message}`, {
+        position: "top-right",
       });
-
-    setTimeout(() => {
+    } finally {
       setLoading(false);
-    }, 3000);
+    }
   };
 
   return (
@@ -206,18 +191,7 @@ const AddNewClient = () => {
         </Row>
 
         <Card>
-          <Form
-            layout="vertical"
-            onFinish={handleSubmit}
-            form={form}
-            className="mt-4"
-          >
-            <h4
-              className="text-[18px] font-semibold mb-[5px] text-[#54408C]"
-              style={{ marginBottom: "10px" }}
-            >
-              Personal Details
-            </h4>
+          <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
             <Row
               gutter={[16, 16]}
               className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
@@ -225,14 +199,14 @@ const AddNewClient = () => {
               <Col span={8}>
                 {" "}
                 <Form.Item
-                  name="fullName"
+                  name="name"
                   label="Full Name"
                   rules={[
                     { required: true, message: "Please Enter Full Name " },
                   ]}
                 >
                   <FormInput
-                    name="fullName"
+                    name="name"
                     placeholder="First Name "
                     required={false}
                   />
@@ -268,10 +242,11 @@ const AddNewClient = () => {
                     },
                   ]}
                 >
+                  {/* {moment(ClientData?.dateOfBirth).format('YYYY-MM-DD')} */}
                   <DatePicker
-                    className="w-[100%]"
-                    name="dateOfBirth"
-                    required={false}
+                    format="YYYY-MM-DD"
+                    placeholder="Select Election Date"
+                    style={{ width: "100%" }}
                   />
                 </Form.Item>
               </Col>
@@ -376,7 +351,7 @@ const AddNewClient = () => {
 
               <Col span={8}>
                 <Form.Item
-                  name="stateName"
+                  name="stateId"
                   label="State Name"
                   rules={[
                     {
@@ -386,7 +361,7 @@ const AddNewClient = () => {
                   ]}
                 >
                   <DropdownSelect
-                    name={"stateName"}
+                    name={"stateId"}
                     placeholder="Select State Name"
                     options={states && states}
                     required={false}
@@ -394,10 +369,30 @@ const AddNewClient = () => {
                   />
                 </Form.Item>
               </Col>
-
               <Col span={8}>
                 <Form.Item
-                  name="assemblyName"
+                  name="districtId"
+                  label="District"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Select a District",
+                    },
+                  ]}
+                >
+                  <DropdownSelect
+                    name={"districtId"}
+                    options={districtList && districtList}
+                    placeholder="Select Party District"
+                    required={false}
+                    disabled={selectState ? false : true}
+                    setSelectState={setSelctedDistrict}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item
+                  name="vidhansabhaId"
                   label="Assembly Name"
                   rules={[
                     {
@@ -407,11 +402,11 @@ const AddNewClient = () => {
                   ]}
                 >
                   <DropdownSelect
-                    name={"assamblyName"}
+                    name={"vidhansabhaId"}
                     options={assambly && assambly}
                     placeholder="Select Party Assambly"
                     required={false}
-                    disabled={selectState ? false : true}
+                    disabled={selctedDistrict ? false : true}
                     defaultOption={
                       !assambly.length
                         ? "No Assambly found  Select Correct State "
@@ -423,17 +418,17 @@ const AddNewClient = () => {
 
               <Col span={8}>
                 <Form.Item
-                  name="partyName"
+                  name="partyId"
                   label="Party Name"
                   rules={[
                     {
-                      required: false,
+                      required: true,
                       message: "Please Select a Party Name",
                     },
                   ]}
                 >
                   <DropdownSelect
-                    name={"partyName"}
+                    name={"partyId"}
                     options={party && party}
                     placeholder="Select Party Name"
                     required={false}
@@ -442,39 +437,14 @@ const AddNewClient = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="districtName"
-                  label="District"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please Select a District",
-                    },
-                  ]}
-                >
-                  <DropdownSelect
-                    name={"districtName"}
-                    options={districtList && districtList}
-                    placeholder="Select Party District"
-                    required={false}
-                    disabled={selectState ? false : true}
-                    defaultOption={
-                      !districtList.length
-                        ? "No District found  Select Correct State "
-                        : "Select District"
-                    }
-                  />
-                </Form.Item>
-              </Col>
             </Row>
             <Row
               gutter={[16, 16]}
               className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px] client-upload-input-filed"
             >
-              <Col span={6}>
+              <Col span={8}>
                 <Form.Item
-                  name="photos"
+                  name="partyIcon"
                   className="mb-1 image-upload"
                   rules={[
                     {
@@ -492,13 +462,17 @@ const AddNewClient = () => {
                       setFile={setPartySymbole}
                       inputName="partyIcon"
                     />
-                    {partySymbole && partySymbole.name}
                   </div>
                 </Form.Item>
+
+                <p className="mt-[60px] text-left">
+                  Uploaded file:
+                  {partySymbole && partySymbole.name}{" "}
+                </p>
               </Col>
-              <Col span={6}>
+              <Col span={8}>
                 <Form.Item
-                  name="photos"
+                  name="image"
                   className="mb-1 image-upload"
                   rules={[
                     {
@@ -514,11 +488,14 @@ const AddNewClient = () => {
                     <UploadFile
                       inputLable={"Upload Candidates Photo"}
                       setFile={setCandidatesPhoto}
-                      inputName="candidatesPhoto"
+                      inputName="image"
                     />
                   </div>
-                  {candidatesPhoto && candidatesPhoto.name}
                 </Form.Item>
+                <p className="mt-[25px] text-left">
+                  Uploaded file:
+                  {candidatesPhoto && candidatesPhoto.name}
+                </p>
               </Col>
             </Row>
             <h4
@@ -531,10 +508,14 @@ const AddNewClient = () => {
               gutter={[16, 16]}
               className="bg-[#EEEEEE63] rounded-[5px] px-[15px] py-[20px]"
             >
-              <Col span={8}>
+              <Col span={16}>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch onChange={(checked) => setSlipSettings(checked)} />
+                    <Switch
+                      onChange={(checked) => setSlipSettings(checked)}
+                      checkedChildren="On"
+                      unCheckedChildren="Off"
+                    />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     Slip Settings{" "}
@@ -543,6 +524,8 @@ const AddNewClient = () => {
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
                     <Switch
+                      checkedChildren="On"
+                      unCheckedChildren="Off"
                       onChange={(checked) => setCandidateImage(checked)}
                     />
                   </div>
@@ -552,7 +535,12 @@ const AddNewClient = () => {
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch onChange={(checked) => setiIsOnline(checked)} />
+                    <Switch
+                      onChange={(checked) => setiIsOnline(checked)}
+                      checked={isOnline}
+                      checkedChildren="On"
+                      unCheckedChildren="Off"
+                    />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     isOnline
@@ -560,7 +548,12 @@ const AddNewClient = () => {
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch onChange={(checked) => setStatus(checked)} />
+                    <Switch
+                      onChange={(checked) => setStatus(checked)}
+                      checked={status}
+                      checkedChildren="On"
+                      unCheckedChildren="Off"
+                    />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     status
@@ -568,7 +561,12 @@ const AddNewClient = () => {
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
-                    <Switch onChange={(checked) => setIsPermission(checked)} />
+                    <Switch
+                      onChange={(checked) => setIsPermission(checked)}
+                      checked={isPermission}
+                      checkedChildren="On"
+                      unCheckedChildren="Off"
+                    />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     Permission

@@ -6,14 +6,17 @@ import VoterViewModal from "components/Modals/VoterViewModal";
 import ClientViewModal from "components/Modals/ClientViewModal";
 import React, { useState } from "react";
 import DistributorViewModal from "components/Modals/DistributorViewModal";
-
+import { useNavigate } from "react-router-dom";
+import { useMetaDataContext } from "context/metaData";
 const ViewComponent = ({ record, roleType }) => {
+  const navigate = useNavigate();
+
   const [isVoterOpen, setIsVoterOpen] = useState(false);
   const [isKaryakartaOpen, setIsKaryakartaOpen] = useState(false);
   const [isElectionOpen, setIsElectionOpen] = useState(false);
   const [isClientOpen, setIsClientOpen] = useState(false);
   const [isDistributorOpen, setIsDistributorOpen] = useState(false);
-
+  const { setClientProfile } = useMetaDataContext();
   const handleViewClick = () => {
     if (roleType === "voter") {
       setIsVoterOpen(true);
@@ -22,7 +25,8 @@ const ViewComponent = ({ record, roleType }) => {
     } else if (roleType === "election") {
       setIsElectionOpen(true);
     } else if (roleType === "client") {
-      setIsClientOpen(true);
+      setClientProfile(record);
+      navigate("/client-profile");
     } else if (roleType === "distributor") {
       setIsClientOpen(true);
     }
