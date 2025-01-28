@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 // Create the context with default values
 const MetaDataContext = createContext({
   custmerDetails: {},
-  deleteStates: { election: false, voter: false },
+  deleteStatus: { election: false, voter: false },
   setCustmerDetails: () => {},
   updateDeleteState: () => {},
 });
@@ -13,7 +13,7 @@ export const MetaDataProvider = ({ children }) => {
   const [clientProfileData, setClientProfileData] = useState(null);
 
   const [custmerDetails, setCustmerDetails] = useState({});
-  const [deleteStates, setDeleteStates] = useState({
+  const [deleteStatus, setdeleteStatus] = useState({
     election: false,
     voter: false,
     client: false,
@@ -28,7 +28,7 @@ export const MetaDataProvider = ({ children }) => {
     karykarta: false,
   });
   const updateDeleteState = (key, value) => {
-    setDeleteStates((prevState) => ({
+    setdeleteStatus((prevState) => ({
       ...prevState,
       [key]: value,
     }));
@@ -47,7 +47,7 @@ export const MetaDataProvider = ({ children }) => {
     <MetaDataContext.Provider
       value={{
         custmerDetails,
-        deleteStates,
+        deleteStatus,
         updateStatus,
         clientProfileData,
         setCustmerDetails,

@@ -1,209 +1,105 @@
-import React, { useState, useCallback } from "react";
-import { Form, Button, Progress, Card } from "antd";
-import { InboxOutlined, CloseOutlined } from "@ant-design/icons";
-import { useDropzone } from "react-dropzone";
-import { ADD_NEW_TERMS_CONDITION } from "constants/api";
-import DropdownSelect from "components/common/FormControl/DropdownSelect";
-import { toast } from "react-toastify";
-import { useMutation } from "react-query";
+import React, { useEffect, useState, useCallback } from "react";
+import { Button, List } from "antd";
+import {
+  FileTextOutlined,
+  EyeOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { GET_TERMS_CONDITIONS_LIST } from "constants/api";
+import useGet from "hooks/useGet";
+  import { useNavigate } from "react-router-dom";
+import ViewComponent from "components/common/Action/View";
+import DeleteComponent from "components/common/Action/Delete";
 
-export default function TermsAndConditions() {
-  const [files, setFiles] = useState([]);
-  const [currentUploadingFile, setCurrentUploadingFile] = useState(null);
-  const [lastUploadedFile, setLastUploadedFile] = useState(null);
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+const TermsAndConditions = () => {
+  const navigate = useNavigate();
+  const { mutateAsync: fetchTermConditionList } = useGet();
+  const [guidelines, setGuidelines] = useState([]);
 
-  const usersRole = JSON.parse(localStorage.getItem("roleList")) || [];
-
-  const { mutateAsync: uploadTermsAndConditions } = useMutation(
-    async (data) => {
-      const response = await fetch(ADD_NEW_TERMS_CONDITION, {
-        method: "POST",
-        body: data,
+  // Fetch the terms and conditions list
+  const getTermConditionList = useCallback(async () => {
+    try {
+      const res = await fetchTermConditionList({
+        url: GET_TERMS_CONDITIONS_LIST,
+        type: "details",
+        token: true,
       });
-      if (!response.ok) throw new Error("Upload failed");
-      return response.json();
-    }
-  );
-
-  const simulateUpload = (file) => {
-    setCurrentUploadingFile(file.name);
-
-    const interval = setInterval(() => {
-      setFiles((prev) =>
-        prev.map((f) => {
-          if (f.name === file.name && f.progress < 100) {
-            return { ...f, progress: f.progress + 20 };
-          }
-          return f;
-        })
-      );
-    }, 500);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      setLastUploadedFile(file.name);
-      setCurrentUploadingFile(null);
-    }, 3000);
-  };
-
-  const onDrop = useCallback((acceptedFiles) => {
-    const newFiles = acceptedFiles.map((file) => ({
-      file,
-      name: file.name,
-      progress: 0,
-    }));
-
-    setFiles((prev) => [...prev, ...newFiles]);
-    newFiles.forEach((file) => simulateUpload(file));
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: {
-      "application/pdf": [".pdf"],
-    },
-    multiple: true,
-  });
-
-  const removeFile = (fileName) => {
-    setFiles((prev) => prev.filter((file) => file.name !== fileName));
-    if (currentUploadingFile === fileName) {
-      setCurrentUploadingFile(null);
-    }
-    if (lastUploadedFile === fileName) {
-      setLastUploadedFile(null);
-    }
-  };
-
-  const handleUploadTermsAndCondition = async (creds) => {
-    if (creds && files.length > 0) {
-      const formData = new FormData();
-      formData.append("key", "rules");
-      formData.append("roleId", creds.roleId);
-      files.forEach((fileObj) => formData.append("files", fileObj.file)); // Pass binary file here
-  
-      try {
-        setLoading(true);
-        await uploadTermsAndConditions(formData);
-        toast.success("Files uploaded successfully!", { position: "top-right" });
-        form.resetFields();
-        setFiles([]);
-      } catch (err) {
-        toast.error("Files not uploaded!", { position: "top-right" });
-      } finally {
-        setLoading(false);
+      if (res) {
+        setGuidelines(res);
+      } else {
+        console.warn("No items found in response.");
       }
-    } else {
-      toast.warn("Please select a role and upload files!", {
-        position: "top-right",
-      });
+    } catch (error) {
+      console.error("Error fetching terms and conditions:", error);
     }
-  };
-  const progressFile =
-    files.find((file) => file.name === currentUploadingFile) ||
-    files.find((file) => file.name === lastUploadedFile);
+  }, [fetchTermConditionList]);
 
+  useEffect(() => {
+    getTermConditionList();
+  }, [getTermConditionList]);
+  console.log(guidelines, "guidelines");
   return (
-    <Card className="mt-[50px] w-full max-w-[65%]">
-      <div className="single-excel-upload-content mt-[30px]">
-        <h3 className="head text-[20px] font-semibold text-[#54408c] flex justify-center mb-[35px]">
-          Terms And Condition
-        </h3>
-
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleUploadTermsAndCondition}
-        >
-          <div className="content pt-[20px] bg-[#EEEEEE63] p-[15px] rounded-[8px]">
-            <Form.Item
-              name="roleId"
-              label="Select Role"
-              rules={[{ required: true, message: "Please Select Role" }]}
-            >
-              <DropdownSelect
-                name="roleId"
-                options={usersRole}
-                placeholder="Please Select Role"
-              />
-            </Form.Item>
-            <Form.Item>
-              <div
-                {...getRootProps()}
-                className="bg-white hover:bg-gray-50 transition-colors"
-              >
-                <div className="border-2 border-dashed border-[#54408C] rounded-lg p-8 cursor-pointer">
-                  <input {...getInputProps()} />
-                  <div className="text-center">
-                    <InboxOutlined className="text-4xl text-[#54408C]" />
-                    <p className="text-[#54408C] mt-2">
-                      Drag & drop files or{" "}
-                      <span className="underline">Browse</span>
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Supported formats: PDF
-                    </p>
-                  </div>
+    <div className="mx-auto">
+      {guidelines.length > 0 ? (
+        <>
+          <List
+            dataSource={guidelines}
+            renderItem={(item) => (
+              <div className="flex items-center justify-between py-3 border-b border-gray-200 last:border-b-0 [box-shadow:0px_2px_8px_0px_#00000022] mt-[10px] mb-[10px] p-[15px] rounded-[8px] ">
+                <div className="flex items-center gap-3">
+                  <FileTextOutlined className="text-gray-600 text-xl" />
+                  <span className="text-sm font-medium">
+                    {item?.role?.name}
+                  </span>
                 </div>
-              </div>
-            </Form.Item>
-
-            {progressFile && (
-              <div className="mb-4 w-[100%]">
-                <Progress
-                  percent={progressFile.progress}
-                  size="small"
-                  status={progressFile.progress === 100 ? "success" : "active"}
-                  strokeColor="#52c41a"
-                />
-                <label className="block text-gray-700 mt-2">
-                  {currentUploadingFile
-                    ? `Uploading: ${progressFile.name}`
-                    : `Last Uploaded: ${progressFile.name}`}
-                </label>
+                <div className="flex items-center gap-3">
+               
+                  <button
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="View guidelines"
+                    onClick={() => console.log("Viewing item:", item)}
+                  >
+                    <ViewComponent roleType={'termsCondition'} record={item} />
+                  </button>
+                  <button
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="Delete guidelines"
+                    onClick={() => console.log("Deleting item:", item)}
+                  >
+                    <DeleteComponent roleType={"termsCondition"} record={item} />
+                  </button>
+                </div>
               </div>
             )}
-
-            <label>Uploaded Files</label>
-            {files.map((file) => (
-              <div
-                key={file.name}
-                className="bg-white border border-green-500 rounded-md mb-5 max-w-[445px] w-[100%] upload-file"
-              >
-                <div className="flex items-center justify-between p-[5px]">
-                  <span className="text-gray-800 font-medium">{file.name}</span>
-                  <Button
-                    type="text"
-                    icon={<CloseOutlined />}
-                    onClick={() => removeFile(file.name)}
-                    className="text-red-500 hover:text-red-700"
-                    disabled={file.name === currentUploadingFile}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-          <Form.Item className="mt-6">
+          />
+          <div className="flex justify-center  add-terms-condition mt-[50px]">
             <Button
-              type="primary"
-              htmlType="submit"
-              className="sigin-btn text-[16px] font-[500] h-[48px] bg-[#54408C]"
-              style={{ width: "100%" }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#432C6A")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#54408C")
-              }
-              disabled={files.length === 0 || loading}
+              onClick={() => navigate("/upload-terms-conditions")}
+              className="p-[15px] rounded-[8px] h-[40px] text-[white] bg-[#55418d] hover:text-[#55418d] hover:border-[#55418d] hover:bg-white"
             >
-              {loading ? "Uploading..." : "Upload Files"}
+              Add Terms&Condition
             </Button>
-          </Form.Item>
-        </Form>
-      </div>
-    </Card>
+          </div>
+        </>
+      ) : (
+        <>
+          <div>
+            <div className="text-center text-gray-500 py-5 ">
+              No terms & conditions available.
+            </div>
+            </div>
+            <div className="flex justify-center  add-terms-condition  mt-[50px]">
+            <Button
+              onClick={() => navigate("/upload-terms-conditions")}
+              className="p-[15px] rounded-[8px] h-[40px] text-[white] bg-[#55418d] hover:text-[#55418d] hover:border-[#55418d] hover:bg-white"
+            >
+              Add Terms&Condition
+            </Button>
+          </div>
+        </>
+      )}
+    </div>
   );
-}
+};
+
+export default TermsAndConditions;

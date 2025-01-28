@@ -33,13 +33,14 @@ const ViewKaryakartaModal = ({ isOpen, setIsOpen, karyakartaData }) => {
       ]}
       width={700}
     >
-      <div className="p-4">
+      <div className="">
         {karyakartaData ? (
           <Descriptions bordered column={2}>
+                <Descriptions.Item label="Client's Name" span={2}>
+              {karyakartaData.createdBy || "N/A"}
+            </Descriptions.Item>
             <Descriptions.Item label="Father's Name" span={2}>
-              {karyakartaData.fatherName || "N/A"}{" "}
-              {karyakartaData.hiFatherName &&
-                `(${karyakartaData.hiFatherName})`}
+              {karyakartaData.fatherName || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item
               label={
@@ -73,22 +74,21 @@ const ViewKaryakartaModal = ({ isOpen, setIsOpen, karyakartaData }) => {
               span={2}
             >
               {karyakartaData.address || "N/A"}
-              {karyakartaData.hiAddress && ` (${karyakartaData.hiAddress})`}
             </Descriptions.Item>
             <Descriptions.Item label="Voter ID">
               {karyakartaData.voterId || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Party">
-              {karyakartaData.party || "N/A"}
+              {karyakartaData.party?.name || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Role">
               {karyakartaData.designation || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="State">
-              {karyakartaData.state || "N/A"}
+              {karyakartaData.state?.name || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="District">
-              {karyakartaData.district || "N/A"}
+              {karyakartaData.district?.name || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Status">
               <Tag color={karyakartaData.status ? "green" : "red"}>

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Container } from "styles/components/common/Layout";
 import { ManageDataContainer } from "styles/pages/ClientAdmin/ManageKaryakarta";
-import VoterFilter from "components/common/FiltersComponent";
+import VoterFilter from "components/common/Filters/Voter";
 import ExcelIcons from "assets/svg/excelIcons";
 import SurveyAssign from "assets/svg/surveyAssign";
 import TableComponent from "components/common/Table";

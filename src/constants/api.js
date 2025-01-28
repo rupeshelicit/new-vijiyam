@@ -10,10 +10,15 @@ export const GET_ASSEMBLY_LIST = "/vidhansabha/list/state/";
 export const GET_ASSEMBLY_LIST_BY_DISTRICT = "/vidhansabha/list/district/";
 export const UPLOAD_VIDHANSABHA_BY_EXCEL = "/vidhansabha/upload-excel";
 export const DOWNLOAD_ELECTION_EXCEL = "/election/download-excel";
+export const DOWNLOAD_VOTER_EXCEL = "/voter-survey/download/excel";
+export const DOWNLOAD_USER_EXCEL = "/user/download-excel/";
+
 export const GET_VOTER_LIST = "voter-survey/list/";
 export const GET_ELECTION_PARTY = "/party/list";
 export const GET_KARYKARTA_AUTHORIZED_USER_LIST = "/user/list/";
 export const GET_DISTRICT_LIST_BY_STATE = "/state/district-list/";
+export const DELETE_VOTER = "/voter-survey/";
+
 // superAdmin Api
 export const GET_ELECTION_LIST = "/election/list";
 export const UPLOAD_VOTER_EXCEL = "voter-survey/upload-excel";
@@ -26,17 +31,18 @@ export const GET_TERMS_CONDITIONS_LIST = "/term-condition/list";
 export const CREAT_CLIENT = "/user";
 export const CREAT_DISTRIBUTOR = "/user";
 export const CREAT_ELECTION = "/election";
-export const ADD_NEW_TERMS_CONDITION = "/add-term-condition";
+export const ADD_NEW_TERMS_CONDITION = "/term-condition";
 export const DELETE_CLIENT = "/user/";
 export const DELETE_ELECTION = "/election/";
 export const DELETE_KARYAKARTA = "/user/";
 export const DELETE_DISTRIBUTOR = "/user/";
-export const DELETE_VOTER = "/voter-survey/";
 export const UPDATE_ELECTION_DETAILS = "/election/";
 export const UPDATE_CLIENT_DETAILS = "/user";
 export const UPDATE_DISTRIBUTOR_DETAILS = "/user";
 export const UPDATE_KARYAKARTA_DETAILS = "/user";
 export const UPDATE_VOTER_DETAILS = "/voter-survey";
+export const UPLOAD_GUIDELINE = '/guideline'
+export const  GET_GUIDLINES='/guideline'
 // Client Api
 export const GET_DASHBOARD_SUREVY = "/voter-survey/dashboard/";
 export const GET_VIDHANSABHA_LIST_ASSIGN_SURVEY ="/voter-survey/vidhansabha-list/";

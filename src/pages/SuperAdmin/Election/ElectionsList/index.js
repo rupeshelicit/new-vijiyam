@@ -15,6 +15,7 @@ import ElectionTableColumns from "../Columns/ElectionTableColumns";
 import ElectionExcelColumns, {
   electionExcelColumns,
 } from "../Columns/ElectionExcelColumns";
+import ElectionFilter from "components/common/Filters/Election";
 // import ElectionExcelColumns from "../ElectionTableColumns";
 
 function ElectionsList() {
@@ -27,13 +28,26 @@ function ElectionsList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [excelData, setExcelData] = useState([]);
-  const { deleteStates, updateStatus } = useMetaDataContext();
+  const { deleteStatus, updateStatus } = useMetaDataContext();
   const [tableParams, setTableParams] = useState({
     current: 1,
     pageSize: 10,
     total: 0,
   });
 
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      fetchElectionList(currentPage, 10);
+      getElectionExcel();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentPage, deleteStatus.election, updateStatus.election]);
+  console.log(excelData, "excelDta");
   const fetchElectionList = async (page, limit) => {
     setLoading(true);
     try {
@@ -54,36 +68,18 @@ function ElectionsList() {
     }
   };
 
-  const getElectionExcelData = async () => {
-    try {
-      const response = await GetElectionsList({
-        url: DOWNLOAD_ELECTION_EXCEL,
-        type: "details",
-        token: true,
+  const getElectionExcel = () => {
+    GetElectionsExcelData({
+      url: DOWNLOAD_ELECTION_EXCEL,
+      type: "details",
+      token: true,
+    })
+      .then((res) => {
+        setExcelData(res);
+      })
+      .catch((error) => {
+        console.error("Error fetching election list:", error);
       });
-
-      if (response) {
-        setExcelData(response.items);
-      }
-    } catch (error) {
-      console.error("Error fetching election list:", error);
-    }
-  };
-
-  useEffect(() => {
-    let isMounted = true; 
-
-    if (isMounted) {
-      fetchElectionList(currentPage, 3);
-    }
-
-    return () => {
-      isMounted = false; 
-    };
-  }, [currentPage, deleteStates.election, updateStatus.election]);
-
-  const handleDelete = () => {
-    fetchElectionList(currentPage, 3);
   };
 
   const onSelectChange = (newSelectedRowKeys, newSelectedRows) => {
@@ -100,10 +96,31 @@ function ElectionsList() {
     setTableParams({ ...tableParams, current: pagination.current });
     setCurrentPage(pagination.current);
   };
-
+  const handleFilterSubmit = async (filters) => {
+    // const id = loginUsers.id;
+    const filterParams = new URLSearchParams(filters).toString();
+    try {
+      const res = await GetElectionsList({
+        url: `${GET_ELECTION_LIST}?${filterParams}`,
+        type: "details",
+        token: true,
+      });
+      if (res) {
+        setElectionData(res?.items);
+      }
+    } catch (error) {
+      console.error("Error applying filters:", error);
+    }
+  };
   return (
     <ClientListSection>
       <Container>
+        <div className="py-[20px]">
+          <div className="Election-list-fillter">
+            <ElectionFilter onFilterSubmit={handleFilterSubmit} />
+          </div>
+        </div>
+
         <div className="py-4">
           <div className="client-list-header flex justify-between items-center bg-white p-5 border rounded">
             <div>
@@ -125,7 +142,6 @@ function ElectionsList() {
                 Icons={<ExcelIcons />}
                 data={excelData}
                 columns={electionExcelColumns}
-                handleDownload={getElectionExcelData}
                 excelName="ElectionList"
               />
             </div>
@@ -133,7 +149,7 @@ function ElectionsList() {
 
           <TableComponent
             rowSelection={rowSelection}
-            columns={ElectionTableColumns({ handleDelete })}
+            columns={ElectionTableColumns}
             data={electionData}
             tableParams={tableParams}
             handleTableChange={handleTableChange}

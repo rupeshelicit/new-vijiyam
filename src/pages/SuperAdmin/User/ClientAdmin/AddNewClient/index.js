@@ -56,7 +56,6 @@ const AddNewClient = () => {
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
   const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
-  console.log(candidateImage, partySymbole, "dddddddddddddddd");
   useEffect(() => {
     getStateList();
     getElectionParty();
@@ -69,7 +68,7 @@ const AddNewClient = () => {
   }, [selectState, selctedDistrict]);
 
   const getStateList = async () => {
-    await GetStateList({
+     await GetStateList({
       url: GET_STATE_LIST,
       type: "details",
     })
@@ -82,6 +81,8 @@ const AddNewClient = () => {
         console.log(error);
       });
   };
+
+
 
   const getAssemblyist = async () => {
     await GetAssemblyList({

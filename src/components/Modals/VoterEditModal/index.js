@@ -12,13 +12,14 @@ const { Option } = Select;
 
 const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
   const [form] = Form.useForm();
-  const { mutateAsync: GetPartyList } = useGet();
+  const [loading, setLoading] = useState(false);
   const { mutateAsync: UpdateVoterDetails } = usePatch();
-  const [party, setParty] = useState([]);
 
   useEffect(() => {
-    getElectionParty();
-  }, []);
+    if (isOpen === true) {
+      
+    }
+  }, [isOpen]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -28,25 +29,25 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
     if (creds) {
       const payload = {
         id: voterData?.id,
-        name: creds?.name,
-        fatherName: creds?.fatherName,
         mobileNumber: creds?.mobileNumber,
-        voterId: creds?.voterId,
-        gender: creds?.gender,
-        partyName: creds?.partyName,
         age: creds?.age,
         caste: creds?.caste,
+        religionId: creds?.religionId,
+        dateOfBirth: creds?.dateOfBirth,
         section: creds?.section,
         boothNo: creds?.boothNo,
+        houseNo: creds?.booth,
+        booth: creds?.booth,
+        vidhansabha: creds?.vidhansabha,
+        loksabha: creds?.loksabha,
         city: creds?.city,
-        supportingParty: creds?.supportingParty,
-        newAddress: creds?.newAddress,
       };
 
       await UpdateVoterDetails({
         url: UPDATE_VOTER_DETAILS,
         type: "details",
         payload: payload,
+        token:true
       })
         .then((res) => {
           if (res) {
@@ -67,21 +68,6 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
     setTimeout(() => {
       handleClose();
     }, 3000);
-  };
-
-  const getElectionParty = async () => {
-    await GetPartyList({
-      url: GET_ELECTION_PARTY,
-      type: "details",
-    })
-      .then((res) => {
-        if (res) {
-          setParty(res && res);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   return (
@@ -110,43 +96,48 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
         >
           <Col span={8}>
             <Form.Item
-              name="name"
-              label="Full Name"
-              rules={[{ required: true, message: "Please Enter Full Name " }]}
+              label="Age"
+              name="age"
+              rules={[{ required: true, message: "Please Input Your Age!" }]}
             >
               <FormInput
-                name="name"
-                placeholder="First Name"
+                type={"number"}
+                name="age"
+                placeholder="Enter Age"
+                required={false}
+                maxLength={10}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              name="caste"
+              label="Caste"
+              rules={[{ required: true, message: "Please Input Your Caste!" }]}
+            >
+              <FormInput
+                name="caste"
+                placeholder="Enter Caste"
+                required={false}
+                maxLength={10}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="City" name="city">
+              <FormInput
+                name="city"
+                placeholder="Enter City"
                 required={false}
               />
             </Form.Item>
           </Col>
 
           <Col span={8}>
-            <Form.Item
-              name="hiName"
-              label="Full Name (Hindi)"
-              rules={[
-                { required: true, message: "Please Enter Full Name in Hindi" },
-              ]}
-            >
+            <Form.Item label="House No" name="houseNo">
               <FormInput
-                name="hiName"
-                placeholder="First Name in Hindi"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name="fatherName"
-              label="Father Name"
-              rules={[{ required: true, message: "Please Enter Father Name" }]}
-            >
-              <FormInput
-                name="fatherName"
-                placeholder="Enter Father Name"
+                name="houseNo"
+                placeholder="Enter House No"
                 required={false}
               />
             </Form.Item>
@@ -172,6 +163,89 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
               />
             </Form.Item>
           </Col>
+          <Col span={8}>
+            <Form.Item label="Booth " name="booth">
+              <FormInput
+                name="booth"
+                placeholder="Enter Booth "
+                required={false}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="Booth Number " name="booth">
+              <FormInput
+                name="boothNo"
+                placeholder="Enter Booth  Number"
+                required={false}
+              />
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item label="Vidhansabha" name="vidhansabha">
+              <FormInput
+                name="vidhansabha"
+                placeholder="Enter Vidhansabha"
+                required={false}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="Loksabha" name="loksabha">
+              <FormInput
+                name="loksabha"
+                placeholder="Enter Loksabha"
+                required={false}
+              />
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item
+              name="name"
+              label="Full Name"
+              rules={[{ required: true, message: "Please Enter Full Name " }]}
+            >
+              <FormInput
+                name="name"
+                placeholder="First Name"
+                required={false}
+                disabled={true}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              name="hiName"
+              label="Full Name (Hindi)"
+              rules={[
+                { required: true, message: "Please Enter Full Name in Hindi" },
+              ]}
+            >
+              <FormInput
+                name="hiName"
+                placeholder="First Name in Hindi"
+                required={false}
+                disabled={true}
+              />
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item
+              name="fatherName"
+              label="Father Name"
+              rules={[{ required: true, message: "Please Enter Father Name" }]}
+            >
+              <FormInput
+                name="fatherName"
+                placeholder="Enter Father Name"
+                required={false}
+                disabled={true}
+              />
+            </Form.Item>
+          </Col>
 
           <Col span={8}>
             <Form.Item
@@ -186,6 +260,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
                 placeholder="Enter Voter ID"
                 required={false}
                 maxLength={10}
+                disabled={true}
               />
             </Form.Item>
           </Col>
@@ -205,37 +280,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
                   { id: "Other", name: "Other" },
                 ]}
                 required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              label="Age"
-              name="age"
-              rules={[{ required: true, message: "Please Input Your Age!" }]}
-            >
-              <FormInput
-                type={"number"}
-                name="age"
-                placeholder="Enter Age"
-                required={false}
-                maxLength={10}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name="caste"
-              label="Caste"
-              rules={[{ required: true, message: "Please Input Your Caste!" }]}
-            >
-              <FormInput
-                name="caste"
-                placeholder="Enter Caste"
-                required={false}
-                maxLength={10}
+                disabled={true}
               />
             </Form.Item>
           </Col>
@@ -244,82 +289,13 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
             <Form.Item
               label="Section"
               name="section"
-              rules={[{ required: true, message: "Please Enter Section" }]}
+              rules={[{ required: false, message: "Please Enter Section" }]}
             >
               <FormInput
                 name="section"
                 placeholder="Enter Section"
                 required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="Booth Number" name="booth">
-              <FormInput
-                name="booth"
-                placeholder="Enter Booth Number"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="City" name="city">
-              <FormInput
-                name="city"
-                placeholder="Enter City"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="Supporting Party" name="supportingParty">
-              <FormInput
-                name="supportingParty"
-                placeholder="Enter Supporting Party"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="House No" name="houseNo">
-              <FormInput
-                name="houseNo"
-                placeholder="Enter House No"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="Vidhansabha" name="vidhansabha">
-              <FormInput
-                name="vidhansabha"
-                placeholder="Enter Vidhansabha"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="Loksabha" name="loksabha">
-              <FormInput
-                name="loksabha"
-                placeholder="Enter Loksabha"
-                required={false}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item label="District" name="district">
-              <FormInput
-                name="district"
-                placeholder="Enter District"
-                required={false}
+                disabled={true}
               />
             </Form.Item>
           </Col>
@@ -337,7 +313,7 @@ const VoterEditModal = ({ isOpen, setIsOpen, voterData, onSubmit }) => {
         <Col span={24}>
           <Form.Item>
             <Button
-              // loading={loading}
+              loading={loading}
               type="primary"
               htmlType="submit"
               className="sigin-btn text-[16px] font-[500] h-[48px] bg-[#54408C]  mt-[30px]"

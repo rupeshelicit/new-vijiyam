@@ -31,9 +31,9 @@ const VoterViewModal = ({ isOpen, setIsOpen, voterData }) => {
           Close
         </Button>,
       ]}
-      width={700}
+      width={875}
     >
-      <div className="p-4">
+      <div className="">
         {voterData ? (
           <Descriptions bordered column={2}>
             <Descriptions.Item label="Father's Name" span={2}>
@@ -52,12 +52,7 @@ const VoterViewModal = ({ isOpen, setIsOpen, voterData }) => {
             <Descriptions.Item label="Alternate Number">
               {voterData.alternateNumber || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Party">
-              <Tag color="#54408C">
-                {voterData.party || "N/A"}{" "}
-                {voterData.hiParty && `(${voterData.hiParty})`}
-              </Tag>
-            </Descriptions.Item>
+          
             <Descriptions.Item label="Age">
               {voterData.age || "N/A"}
             </Descriptions.Item>
@@ -72,6 +67,17 @@ const VoterViewModal = ({ isOpen, setIsOpen, voterData }) => {
             <Descriptions.Item
               label={
                 <span className="flex items-center">
+                  City
+                </span>
+              }
+              span={2}
+            >
+           {voterData.city || "N/A"}{" "}
+             
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={
+                <span className="flex items-center">
                   <HomeOutlined className="mr-2" /> Address
                 </span>
               }
@@ -80,6 +86,7 @@ const VoterViewModal = ({ isOpen, setIsOpen, voterData }) => {
               {voterData.houseNo}, {voterData.newAddress || "N/A"}{" "}
               {voterData.hiNewAddress && `(${voterData.hiNewAddress})`}
             </Descriptions.Item>
+        
             <Descriptions.Item label="Section" span={2}>
               {voterData.section || "N/A"}{" "}
               {voterData.hiSection && `(${voterData.hiSection})`}
@@ -97,8 +104,11 @@ const VoterViewModal = ({ isOpen, setIsOpen, voterData }) => {
               {voterData.caste?.name || "N/A"}{" "}
               {voterData.caste?.hiName && `(${voterData.caste.hiName})`}
             </Descriptions.Item>
-            <Descriptions.Item label="Assembly">
+            <Descriptions.Item label="Vidhansabha">
               {voterData.assembly || "N/A"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Loksabha">
+              {voterData.loksabha || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Booth">
               {voterData.booth || "N/A"}

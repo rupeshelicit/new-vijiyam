@@ -81,19 +81,19 @@ const SidebarData = [
         id: 1202,
         title: "KaryaKarta",
         icon: <UserIcon />,
-        path: "/karyaKarta",
+        path: "/karyakarta-list",
         disable: true,
         roleId: ["5"],
-        // children: [
-        //   {
-        //     id: 1203,
-        //     icons: <UserIcon />,
-        //     title: "Add Authourized User",
-        //     path: "/add-new-authorized-users",
-        //     disable: true,
-        //     roleId: ["5"],
-        //   },
-        // ],
+ 
+      },
+      {
+        id: 1203,
+        title: "Voter",
+        icon: <UserIcon />,
+        path: "/voter-list",
+        disable: true,
+        roleId: ["5"],
+ 
       },
     ],
   },
@@ -172,20 +172,13 @@ const SidebarData = [
       },
       {
         id: 1603,
-        title: "Upload guidelines",
+        title: "Guidelines",
         icon: <SettingsIcon />,
-        path: "/upload-guidlines",
+        path: "/guidelines",
         disable: true,
         roleId: ["5"],
       },
-      {
-        id: 1603,
-        title: "Upload guidelines",
-        icon: <SettingsIcon />,
-        path: "/upload-guidlines",
-        disable: true,
-        roleId: ["5"],
-      },
+     
       {
         id: 1604,
         title: "Upload Vidhansabha",

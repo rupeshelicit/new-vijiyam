@@ -3,13 +3,21 @@ import EditComponent from "components/common/Action/Edit";
 import DeleteComponent from "components/common/Action/Delete";
 import ViewComponent from "components/common/Action/View";
 
-const ElectionTableColumns = ({ handleDelete }) => [
+const ElectionTableColumns = [
   {
     title: "S.NO",
     dataIndex: "serialNumber",
     key: "serialNumber",
     align: "center",
     render: (_, __, index) => index + 1,
+  },
+  {
+    title: "Election Name",
+    dataIndex: "name",
+    key: "name",
+    align: "center",
+    sorter: (a, b) => a.name.localeCompare(b.name),
+    render: (text) => text || "NA",
   },
   {
     title: "Election Type",
@@ -41,7 +49,7 @@ const ElectionTableColumns = ({ handleDelete }) => [
     key: "vidhansabha",
     align: "center",
     sorter: (a, b) => a.vidhansabha?.localeCompare(b.vidhansabha),
-    render: (_, record) => record?.name || "NA",
+    render: (_, record) => record?.vidhansabha?.name || "NA",
   },
   {
     title: "Achar Sanhita Date",
@@ -85,7 +93,6 @@ const ElectionTableColumns = ({ handleDelete }) => [
         <DeleteComponent
           record={record}
           roleType={"election"}
-          handleDelete={handleDelete}
         />
         <ViewComponent record={record} roleType={"election"} />
       </div>

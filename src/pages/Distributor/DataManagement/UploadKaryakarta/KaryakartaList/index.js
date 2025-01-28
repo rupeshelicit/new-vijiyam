@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container } from "styles/components/common/Layout";
 import { ManageDataContainer } from "styles/pages/ClientAdmin/ManageKaryakarta";
-import VoterFilter from "components/common/FiltersComponent";
+import VoterFilter from "components/common/Filters/Voter";
 import ExcelIcons from "assets/svg/excelIcons";
 import PlusIcons from "assets/svg/plusIcons";
 import SwitchComponent from "components/common/SwitchComponent";

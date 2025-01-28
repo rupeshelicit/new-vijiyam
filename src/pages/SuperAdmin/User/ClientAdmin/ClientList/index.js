@@ -4,7 +4,6 @@ import deleteIcon from "assets/svg/trans-icon.svg";
 
 import TableComponent from "components/common/Table";
 import ButtonComponent from "components/common/FormControl/ButtonComponent";
-import VoterFilter from "components/common/FiltersComponent";
 import PlusIcons from "assets/svg/plusIcons";
 import SwitchComponent from "components/common/SwitchComponent";
 import { ClientListSection } from "styles/pages/SuperAdmin/user";
@@ -17,10 +16,10 @@ import DeleteComponet from "components/common/Action/Delete";
 import ViewComponent from "components/common/Action/View";
 import { render } from "@testing-library/react";
 import { useMetaDataContext } from "context/metaData";
+import ClientFilter from "components/common/Filters/Client";
 
 function ClientList() {
   const navigate = useNavigate();
-
   const [accountStatus, setAccountStatus] = useState();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -29,11 +28,10 @@ function ClientList() {
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const { mutateAsync: ClientList } = useGet();
   const [currentPage, setCurrentPage] = useState(1);
-  const [prevPage, setPrevPage] = useState(0);
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
   const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
   const clientId = clientRole[0]?.id;
-  const { deleteStates, updateStatus } = useMetaDataContext();
+  const { deleteStatus, updateStatus } = useMetaDataContext();
   const [tableParams, setTableParams] = useState({
     current: 1,
     pageSize: 1,
@@ -50,8 +48,8 @@ function ClientList() {
     return () => {
       isMounted = false;
     };
-  }, [currentPage, deleteStates?.client, updateStatus?.client]);
-  console.log(updateStatus?.deleteStates);
+  }, [currentPage, deleteStatus?.client, updateStatus?.client]);
+
   const getClietnList = async (page, limit) => {
     setLoading(true);
     const id = loginUsers.role;
@@ -74,6 +72,22 @@ function ClientList() {
     }, 3000);
   };
 
+  const handleFilterSubmit = async (filters) => {
+    // const id = loginUsers.id;
+    const filterParams = new URLSearchParams(filters).toString();
+    try {
+      const res = await ClientList({
+        url: `${GET_CLIENTS_LIST + clientId}?${filterParams}`,
+        type: "details",
+        token: true,
+      });
+      if (res) {
+        setClientData(res?.items);
+      }
+    } catch (error) {
+      console.error("Error applying filters:", error);
+    }
+  };
   const handleTableChange = (pagination) => {
     setTableParams({ ...tableParams, current: pagination.current });
     setCurrentPage(pagination.current);
@@ -326,7 +340,7 @@ function ClientList() {
       <Container>
         <div className="py-[20px]">
           <div className="client-list-fillter">
-            <VoterFilter />
+            <ClientFilter onFilterSubmit={handleFilterSubmit} />
           </div>
           <div className="client-list-header flex justify-between items-center px-[22px] py-[20px] flex-wrap bg-[#FFFFFF] border-[1px] border-[#EAECF0] rounded-[4px]">
             <div>

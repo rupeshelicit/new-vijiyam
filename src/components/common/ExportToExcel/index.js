@@ -10,14 +10,13 @@ const ExportToExcel = ({
   Icons,
   buttonText,
   type,
-  handleDownload,
   excelName,
   disabled,
+  
 }) => {
   const [loading, setLoading] = useState(false);
 
   const handleExportExcel = () => {
-    handleDownload && handleDownload();
 
     setLoading(true);
     if (!Array.isArray(columns) || columns.length === 0) {
