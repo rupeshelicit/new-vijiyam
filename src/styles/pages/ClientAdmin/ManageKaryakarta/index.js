@@ -10,4 +10,16 @@ export const ManageDataContainer = styled.div`
     width: 100%;
     box-shadow: none;
   }
+    
+  .assign-survey {
+   &:hover{ color: #55418d !important;
+    border-color: #55418d !important;
+    background: #55418d36 !important;
+    b {
+      background: #55418d !important;
+    }
+      }
+  }
+
+
 `;

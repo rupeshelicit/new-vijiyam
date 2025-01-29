@@ -105,7 +105,11 @@ const Filters = () => {
             <DropdownSelect
               name="gender"
               placeholder="By Gender"
-              options={["Male", "Female", "Other"]}
+              options={[
+                { id: "Male", name: "Male" },
+                { id: "Female", name: "Female" },
+                { id: "Other", name: "Other" },
+              ]}
               required={false}
             />
           </Form.Item>

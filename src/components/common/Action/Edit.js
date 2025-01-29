@@ -6,7 +6,6 @@ import KarykartaEditModal from "components/Modals/KarykartaEdit";
 import ElectionEditModal from "components/Modals/ElectionEditModal";
 import ClietEditModal from "components/Modals/ClientEditModal";
 import DistributorEditModal from "components/Modals/DistributorEditModal";
-import DistributorViewModal from "components/Modals/DistributorViewModal";
 const EditComponent = ({ record, roleType }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isVoterEdit, setIsVoterEdit] = useState(false);
@@ -53,7 +52,7 @@ const EditComponent = ({ record, roleType }) => {
       <KarykartaEditModal
         isOpen={isKaryakartaEdit}
         setIsOpen={setIsKaryakartaEdit}
-        karykartaData={record}
+        karyakartaData={record}
       />
       <ElectionEditModal
         isOpen={isElectionEdit}

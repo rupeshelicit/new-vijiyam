@@ -26,8 +26,8 @@ const VoterList = () => {
   const [voterExcelData, setVoterExcelData] = useState([]);
   const [openExportDrawer, setOpeExportDrawer] = useState(false);
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
-  const { mutateAsync: GetVoterList } = useGet(); 
-  const { mutateAsync: GetVoterExcelList } = useGet(); 
+  const { mutateAsync: GetVoterList } = useGet();
+  const { mutateAsync: GetVoterExcelList } = useGet();
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const { deleteStatus, updateStatus } = useMetaDataContext();
@@ -52,10 +52,9 @@ const VoterList = () => {
   };
 
   const handleVoterExcel = async () => {
-      const id = loginUsers.id;
+    const id = loginUsers.id;
     try {
       const res = await GetVoterExcelList({
-        
         url: DOWNLOAD_VOTER_EXCEL,
         type: "details",
         token: true,
@@ -91,7 +90,6 @@ const VoterList = () => {
     }
   };
 
-  // Handle Filter Submit
   const handleFilterSubmit = async (filters) => {
     const id = loginUsers.id;
     const filterParams = new URLSearchParams(filters).toString();
@@ -108,6 +106,10 @@ const VoterList = () => {
       console.error("Error applying filters:", error);
     }
   };
+  const tableData = voterData.map((item) => ({
+    ...item,
+    key: item.id,
+  }));
 
   // Table Row Selection
   const rowSelection = {
@@ -170,7 +172,7 @@ const VoterList = () => {
             <TableComponent
               rowSelection={rowSelection}
               columns={columns}
-              data={voterData}
+              data={tableData}
               tableParams={tableParams}
               handleTableChange={handleTableChange}
               loading={loading}

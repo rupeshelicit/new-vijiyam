@@ -24,15 +24,15 @@ import { useMetaDataContext } from "context/metaData";
 
 const { Option } = Select;
 
-const KarykartaEditModal = ({ isOpen, setIsOpen, karykartaData, onSubmit }) => {
+const KarykartaEditModal = ({ isOpen, setIsOpen, karyakartaData, onSubmit }) => {
   const [states, setStates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [assambly, setAssambly] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [district, setSelctedDistrict] = useState();
-  const [status, setStatus] = useState(karykartaData?.status || false);
+  const [status, setStatus] = useState(karyakartaData?.status || false);
   const [isPermission, setIsPermission] = useState(
-    karykartaData?.isPermission || false
+    karyakartaData?.isPermission || false
   );
   const { updateEditState } = useMetaDataContext();
   const [party, setParty] = useState([]);
@@ -45,10 +45,10 @@ const KarykartaEditModal = ({ isOpen, setIsOpen, karykartaData, onSubmit }) => {
 
   const { mutateAsync: UpdateKarykartaDetails } = usePatch();
   const data = {
-    ...karykartaData,
-    dateOfBirth: karykartaData?.dateOfBirth
-      ? moment(karykartaData.dateOfBirth).isValid()
-        ? moment(karykartaData.dateOfBirth)
+    ...karyakartaData,
+    dateOfBirth: karyakartaData?.dateOfBirth
+      ? moment(karyakartaData.dateOfBirth).isValid()
+        ? moment(karyakartaData.dateOfBirth)
         : null
       : null,
   };
@@ -123,7 +123,7 @@ const KarykartaEditModal = ({ isOpen, setIsOpen, karykartaData, onSubmit }) => {
     setLoading(true);
     if (creds) {
       const payload = {
-        id: karykartaData?.id,
+        id: karyakartaData?.id,
         name: creds?.name,
         email: creds?.email,
         mobileNumber: creds?.mobileNumber,
@@ -146,12 +146,12 @@ const KarykartaEditModal = ({ isOpen, setIsOpen, karykartaData, onSubmit }) => {
         .then((res) => {
           if (res) {
             toast.success(
-              "Success! You have successfully update karykarta details",
+              "Success! You have successfully update karyakarta details",
               {
                 position: "top-right",
               }
             );
-            updateEditState("karykarta", true);
+            updateEditState("karyakarta", true);
           }
         })
         .catch((error) => {

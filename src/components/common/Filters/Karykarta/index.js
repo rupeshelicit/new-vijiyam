@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { FilterOutlined } from "@ant-design/icons";
 import { Button, Card, Slider, Form, Tag } from "antd";
@@ -8,12 +6,11 @@ import DropdownSelect from "components/common/FormControl/DropdownSelect";
 import ButtonComponent from "components/common/FormControl/ButtonComponent";
 import { VoterFilterContainer } from "styles/components/common/FiltersComponent";
 
-export default function KaryakartaFilter ( { onFilterSubmit } )
-{
-  const [ form ] = Form.useForm();
-  const [ isExpanded, setIsExpanded ] = useState( false );
-  const [ filters, setFilters ] = useState( [] );
-  const [ age, setAge ] = useState( [ 18, 100 ] );
+export default function KaryakartaFilter({ onFilterSubmit }) {
+  const [form] = Form.useForm();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [filters, setFilters] = useState([]);
+  const [age, setAge] = useState([18, 100]);
 
   const initialValues = {
     Name: "",
@@ -29,75 +26,70 @@ export default function KaryakartaFilter ( { onFilterSubmit } )
     Age: "18-100",
   };
 
-  const updateFilter = ( field, value ) =>
-  {
-    if ( !value || ( typeof value === "string" && !value.trim() ) )
-    {
-      setFilters( ( current ) => current.filter( ( filter ) => filter.field !== field ) );
+  const updateFilter = (field, value) => {
+    if (!value || (typeof value === "string" && !value.trim())) {
+      setFilters((current) =>
+        current.filter((filter) => filter.field !== field)
+      );
       return;
     }
 
-    setFilters( ( current ) =>
-    {
-      const newFilters = current.filter( ( filter ) => filter.field !== field );
-      const displayValue = Array.isArray( value ) ? `${ value[ 0 ] }-${ value[ 1 ] }` : value.trim();
+    setFilters((current) => {
+      const newFilters = current.filter((filter) => filter.field !== field);
+      const displayValue = Array.isArray(value)
+        ? `${value[0]}-${value[1]}`
+        : value.trim();
       return [
         ...newFilters,
         {
           field,
           value: displayValue,
-          display: `${ field }: ${ displayValue }`,
+          display: `${field}: ${displayValue}`,
         },
       ];
-    } );
+    });
   };
 
-  const removeFilter = ( field ) =>
-  {
-    setFilters( filters.filter( ( filter ) => filter.field !== field ) );
-    form.setFieldsValue( { [ field ]: undefined } );
+  const removeFilter = (field) => {
+    setFilters(filters.filter((filter) => filter.field !== field));
+    form.setFieldsValue({ [field]: undefined });
   };
 
-  const clearAllFilters = () =>
-  {
-    setFilters( [] );
+  const clearAllFilters = () => {
+    setFilters([]);
     form.resetFields();
-    setAge( [ 18, 100 ] );
+    setAge([18, 100]);
   };
 
-  const handleSubmit = () =>
-  {
+  const handleSubmit = () => {
     const formValues = form.getFieldsValue();
 
-    const changedValues = Object.entries( formValues ).reduce( ( acc, [ key, value ] ) =>
-    {
-      const initialValue = initialValues[ key ];
-      if ( value !== initialValue && value !== undefined && value !== "" )
-      {
-        acc[ key ] = value;
-      }
-      return acc;
-    }, {} );
+    const changedValues = Object.entries(formValues).reduce(
+      (acc, [key, value]) => {
+        const initialValue = initialValues[key];
+        if (value !== initialValue && value !== undefined && value !== "") {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
 
-    if ( age[ 0 ] !== 18 || age[ 1 ] !== 100 )
-    {
-      changedValues.Age = `${ age[ 0 ] }-${ age[ 1 ] }`;
+    if (age[0] !== 18 || age[1] !== 100) {
+      changedValues.Age = `${age[0]}-${age[1]}`;
     }
 
-    console.log( "Changed filters:", changedValues );
+    console.log("Changed filters:", changedValues);
 
-    onFilterSubmit( changedValues );
+    onFilterSubmit(changedValues);
   };
 
-  const handleValuesChange = ( changedValues, allValues ) =>
-  {
-    Object.entries( changedValues ).forEach( ( [ field, value ] ) =>
-    {
-      if ( value !== undefined )
-      {
-        updateFilter( field, value );
+  const handleValuesChange = (changedValues, allValues) => {
+    Object.entries(changedValues).forEach(([field, value]) => {
+      if (value !== undefined) {
+        updateFilter(field, value);
       }
-    } );
+    });
   };
 
   return (
@@ -107,14 +99,16 @@ export default function KaryakartaFilter ( { onFilterSubmit } )
           <div>
             <div
               className="flex items-center justify-between cursor-pointer"
-              onClick={ () => setIsExpanded( !isExpanded ) }
+              onClick={() => setIsExpanded(!isExpanded)}
             >
               <div className="flex items-center gap-2">
                 <FilterOutlined className="text-lg" />
                 <h3 className="text-xl font-bold">Filters</h3>
               </div>
               <svg
-                className={ `transition-[0.3s] ${ isExpanded ? "-rotate-180" : "" }` }
+                className={`transition-[0.3s] ${
+                  isExpanded ? "-rotate-180" : ""
+                }`}
                 width="12"
                 height="7"
                 viewBox="0 0 12 7"
@@ -130,49 +124,57 @@ export default function KaryakartaFilter ( { onFilterSubmit } )
               </svg>
             </div>
 
-            { filters.length > 0 && (
+            {filters.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
-                { filters.map( ( filter ) => (
+                {filters.map((filter) => (
                   <Tag
-                    key={ filter.field }
+                    key={filter.field}
                     closable
-                    onClose={ () => removeFilter( filter.field ) }
+                    onClose={() => removeFilter(filter.field)}
                     className="flex items-center gap-1 bg-gray-100 text-gray-700 py-1 px-2"
                   >
-                    { filter.display }
+                    {filter.display}
                   </Tag>
-                ) ) }
+                ))}
                 <Button
                   type="link"
                   className="text-red-500 h-6 px-2 hover:text-red-600"
-                  onClick={ clearAllFilters }
+                  onClick={clearAllFilters}
                 >
                   Clear All
                 </Button>
               </div>
-            ) }
+            )}
 
-            { isExpanded && (
+            {isExpanded && (
               <Form
-                form={ form }
+                form={form}
                 layout="vertical"
-                onValuesChange={ handleValuesChange }
-                onFinish={ handleSubmit }
+                onValuesChange={handleValuesChange}
+                onFinish={handleSubmit}
                 className="mt-4"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <Form.Item name="Name">
-                    <FormInput name="name" placeholder="By Name" required={ false } />
+                    <FormInput
+                      name="name"
+                      placeholder="By Name"
+                      required={false}
+                    />
                   </Form.Item>
                   <Form.Item name="Mobile">
-                    <FormInput name="mobileNumber" placeholder="Mobile number" required={ false } />
+                    <FormInput
+                      name="mobileNumber"
+                      placeholder="Mobile number"
+                      required={false}
+                    />
                   </Form.Item>
                   <Form.Item name="Client Name">
                     <DropdownSelect
                       name="Client"
                       placeholder="Select Client"
-                      options={ [ "Devid", "Brent", "Ted" ] }
-                      required={ false }
+                      options={["Devid", "Brent", "Ted"]}
+                      required={false}
                     />
                   </Form.Item>
                   <Form.Item name="Gender">
@@ -184,61 +186,59 @@ export default function KaryakartaFilter ( { onFilterSubmit } )
                         { id: "Female", name: "Female" },
                         { id: "Other", name: "Other" },
                       ]}
-                      required={ false }
+                      required={false}
                     />
                   </Form.Item>
-               
-           
+
                   <Form.Item name="Part/Booth">
                     <DropdownSelect
                       name="Part/Booth"
                       placeholder="Select part/booth"
-                      options={ [ "Indore 121", "Indore 12", "Indore 123" ] }
-                      required={ false }
+                      options={["Indore 121", "Indore 12", "Indore 123"]}
+                      required={false}
                     />
                   </Form.Item>
-             
+
                   <Form.Item name="Looksabha">
                     <DropdownSelect
                       name="Looksabha"
                       placeholder="Select Looksabha"
-                      options={ [ "Indore-1", "Indore-2", "Indore-3" ] }
-                      required={ false }
+                      options={["Indore-1", "Indore-2", "Indore-3"]}
+                      required={false}
                     />
                   </Form.Item>
                   <Form.Item name="Vidhansabha">
                     <DropdownSelect
                       name="Vidhansabha"
                       placeholder="Select Vidhansabha"
-                      options={ [ "Indore-1", "Indore-2", "Indore-3" ] }
-                      required={ false }
+                      options={["Indore-1", "Indore-2", "Indore-3"]}
+                      required={false}
                     />
                   </Form.Item>
 
                   <Form.Item className="col-span-2">
                     <Slider
                       range
-                      min={ 18 }
-                      max={ 100 }
-                      value={ age }
-                      onChange={ ( value ) =>
-                      {
-                        setAge( value );
-                        updateFilter( "Age", value );
-                      } }
+                      min={18}
+                      max={100}
+                      value={age}
+                      onChange={(value) => {
+                        setAge(value);
+                        updateFilter("Age", value);
+                      }}
                       className="max-w-[30%]"
                     />
                     <div className="text-sm text-gray-600 mt-2">
-                      Age: { age[ 0 ] } - { age[ 1 ] } years
+                      Age: {age[0]} - {age[1]} years
                     </div>
                   </Form.Item>
                 </div>
                 <div className="flex justify-end gap-4 mt-6">
-                  <ButtonComponent text="Reset" onClick={ clearAllFilters } />
+                  <ButtonComponent text="Reset" onClick={clearAllFilters} />
                   <ButtonComponent text="Filter List" />
                 </div>
               </Form>
-            ) }
+            )}
           </div>
         </Card>
       </div>

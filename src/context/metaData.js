@@ -18,14 +18,14 @@ export const MetaDataProvider = ({ children }) => {
     voter: false,
     client: false,
     distributor: false,
-    karykarta: false,
+    karyakarta: false,
   });
   const [updateStatus, setUpdateStatus] = useState({
     election: false,
     voter: false,
     client: false,
     distributor: false,
-    karykarta: false,
+    karyakarta: false,
   });
   const updateDeleteState = (key, value) => {
     setdeleteStatus((prevState) => ({

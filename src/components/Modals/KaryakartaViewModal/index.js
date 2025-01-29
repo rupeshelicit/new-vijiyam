@@ -36,18 +36,14 @@ const ViewKaryakartaModal = ({ isOpen, setIsOpen, karyakartaData }) => {
       <div className="">
         {karyakartaData ? (
           <Descriptions bordered column={2}>
-                <Descriptions.Item label="Client's Name" span={2}>
+            <Descriptions.Item label="Client's Name" >
               {karyakartaData.createdBy || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Father's Name" span={2}>
+            <Descriptions.Item label="Father's Name" >
               {karyakartaData.fatherName || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item
-              label={
-                <span className="flex items-center">
-                  <PhoneOutlined className="mr-2" /> Mobile Number
-                </span>
-              }
+              label={<span className="flex items-center">Mobile Number</span>}
             >
               {karyakartaData.mobileNumber || "N/A"}
             </Descriptions.Item>
@@ -93,6 +89,11 @@ const ViewKaryakartaModal = ({ isOpen, setIsOpen, karyakartaData }) => {
             <Descriptions.Item label="Status">
               <Tag color={karyakartaData.status ? "green" : "red"}>
                 {karyakartaData.status ? "Active" : "Inactive"}
+              </Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label="Survey Assign">
+              <Tag color={karyakartaData?.isSurveyAssign === true ? "green" : "red"}>
+                {karyakartaData?.isSurveyAssign === true ? "Assign" : "Not Assign"}
               </Tag>
             </Descriptions.Item>
           </Descriptions>

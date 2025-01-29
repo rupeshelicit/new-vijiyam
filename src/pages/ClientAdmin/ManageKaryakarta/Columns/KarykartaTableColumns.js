@@ -4,7 +4,7 @@ import EditComponent from "components/common/Action/Edit";
 import ViewComponent from "components/common/Action/View";
 import SwitchComponent from "components/common/SwitchComponent";
 
-const KaryaKartaTableColumns = ({ accountStatus, setAccountStatus }) => [
+const KaryaKartaTableColumns = ({ accountStatus, setAccountStatus,handleAssignSurvey }) => [
   {
     title: "S.NO",
     dataIndex: "serialNumber",
@@ -24,6 +24,7 @@ const KaryaKartaTableColumns = ({ accountStatus, setAccountStatus }) => [
         switchStates={accountStatus}
         setSwitchStates={setAccountStatus}
         record={record}
+        disabled={true}
       />
     ),
   },
@@ -37,7 +38,7 @@ const KaryaKartaTableColumns = ({ accountStatus, setAccountStatus }) => [
       record.status === true ? (
         <Button
           disabled={true}
-          className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#54408C] text-[12px] font-medium bg-[#54408C66] border-[none]"
+          className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] !border-[1px] !border-[solid] !border-[green] !bg-[#00800014] !text-[green]"
         >
           <b className="h-[8px] w-[8px] bg-[#14BA6D] rounded-[50px]"></b> Active
         </Button>
@@ -58,18 +59,19 @@ const KaryaKartaTableColumns = ({ accountStatus, setAccountStatus }) => [
     key: "isSurveyAssign",
     align: "center",
     render: (text, record) =>
-      record.isSurveyAssign === false ? (
+      record.isSurveyAssign === true ? (
         <Button
-          disabled={true}
-          className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] text-[#594698] border-[1px] border-[solid] font-medium bg-[#54408C66] "
-        >
-          <b className="h-[8px] w-[8px] bg-[#594698] rounded-[50px]"></b>
-          Survey Assign
-        </Button>
+          disabled={false}
+          onClick={ handleAssignSurvey}
+
+        className="items-center px-[30px] text-[11px] py-[15px] rounded-[40px] !border-[1px] !border-[solid] !border-[green] !bg-[#00800014] !text-[green]"
+      >
+        <b className="h-[8px] w-[8px] bg-[#14BA6D] rounded-[50px]"></b> Survey Assign
+      </Button>
       ) : (
         <Button
           disabled={false}
-          className="font-medium text-[11px] bg-[#F2F4F7] border-[1px] border-[solid] border-[#C00000] text-[#C00000] rounded-[40px]"
+          className="font-medium assign-survey text-[11px] bg-[#F2F4F7] border-[1px] border-[solid] border-[#C00000] text-[#C00000] rounded-[40px] !bg-[#ff00000d]"
         >
           <b className="h-[8px] w-[8px]  bg-[#C00000] rounded-[50px]"></b>{" "}
           Survey Not Assign

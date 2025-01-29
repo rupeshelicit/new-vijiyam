@@ -253,7 +253,7 @@ export const UploadVoterListDistributorRoute = {
 
 export const UploadKarykartaDistributorRoute = {
   component: UploadKarykartaDistributor,
-  path: "/upload-karykarta-list",
+  path: "/upload-karyakarta-list",
   restricted: true,
 };
 export const UploadElectionListDistributorRoute = {

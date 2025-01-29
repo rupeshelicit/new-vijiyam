@@ -25,6 +25,7 @@ const KaryaKartaList = () => {
   const [accountStatus, setAccountStatus] = useState({});
   const [addNew, setAddNew] = useState(false);
   const [kayrkartaData, setKayrkartaData] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const { mutateAsync: GetKarykarta } = useGet();
   const { mutateAsync: GetKarykartaExcelData } = useGet();
@@ -52,7 +53,7 @@ const KaryaKartaList = () => {
     return () => {
       isMounted = false;
     };
-  }, [currentPage, deleteStatus.karykarta, updateStatus.karykarta]);
+  }, [currentPage, deleteStatus.karyakarta, updateStatus.karyakarta]);
 
   const handleTableChange = (pagination) => {
     setTableParams({ ...tableParams, current: pagination.current });
@@ -62,11 +63,12 @@ const KaryaKartaList = () => {
 
 
   const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log("Selected Row Keys:", selectedRowKeys);
-      console.log("Selected Rows:", selectedRows);
+    selectedRowKeys,
+    onSelect: (record) => {
+      setSelectedRowKeys([record.key]); // Select only the clicked row
     },
   };
+  
   const handleAddNewKaryakarta = () => {
     setAddNew(true);
   };

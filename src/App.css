@@ -331,3 +331,8 @@ p {
 .ant-picker-outlined:hover {
   border-color: #55418d;
 }
+
+.ant-switch.ant-switch-disabled {
+
+  opacity: 0.75;
+}

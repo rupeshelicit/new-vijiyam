@@ -363,7 +363,7 @@ const SidebarData = [
         id: 3202,
         title: "Upload KaryaKarta",
         icon: <UserIcon />,
-        path: "/upload-karykarta-list",
+        path: "/upload-karyakarta-list",
         disable: true,
         roleId: ["4"],
       },
