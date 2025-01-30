@@ -33,25 +33,19 @@ const ElectionEditModal = ({ isOpen, setIsOpen, ElectionData, onSubmit }) => {
 
   useEffect(() => {
     if (isOpen) {
+      getStateList();
       if (ElectionData) {
         setSelectState(ElectionData?.stateId);
         setSelectDistrict(ElectionData?.districtId);
       }
-      getStateList();
+      if (selectState) {
+        getDistrict();
+      }
+      if (selectDistrict) {
+        getAssemblyList();
+      }
     }
-  }, [ElectionData, isOpen]);
-
-  useEffect(() => {
-    if (selectState) {
-      getDistrict();
-    }
-  }, [selectState]);
-
-  useEffect(() => {
-    if (selectDistrict) {
-      getAssemblyList();
-    }
-  }, [selectDistrict]);
+  }, [ElectionData, isOpen, selectState, selectDistrict]);
 
   const getStateList = async () => {
     const res = await GetStateList({

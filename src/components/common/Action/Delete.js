@@ -55,24 +55,25 @@ const DeleteComponent = ({ record, roleType, handleDelete }) => {
     }
 
     setLoading(true);
-    try {
-      const response = await Delete({
-        url: `${endpoint}${record?.id}`,
-        type: "details",
-        token: true,
+    Delete({
+      url: `${endpoint}${record?.id}`,
+      type: "details",
+      token: true,
+    })
+      .then((res) => {
+        // handleDelete();
+        if (res) {
+          toast.success(successMessage, { position: "top-right" });
+          updateDeleteState(roleType, true);
+        }
+ 
+      })
+      .catch((error) => {
+        const errorMessage =
+          error?.response?.data?.message || "An unexpected error occurred!";
+        toast.error(`Error! ${errorMessage}`, { position: "top-right" });
       });
-      if (response?.success) {
-        handleDelete();
-        toast.success(successMessage, { position: "top-right" });
-        updateDeleteState(roleType, true);
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "An unexpected error occurred!";
-      toast.error(`Error! ${errorMessage}`, { position: "top-right" });
-    } finally {
-      setLoading(false);
-    }
+   
   };
 
   return (

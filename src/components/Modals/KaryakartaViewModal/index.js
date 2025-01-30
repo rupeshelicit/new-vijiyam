@@ -33,20 +33,17 @@ const ViewKaryakartaModal = ({ isOpen, setIsOpen, karyakartaData }) => {
       ]}
       width={700}
     >
-      <div className="p-4">
+      <div className="">
         {karyakartaData ? (
           <Descriptions bordered column={2}>
-            <Descriptions.Item label="Father's Name" span={2}>
-              {karyakartaData.fatherName || "N/A"}{" "}
-              {karyakartaData.hiFatherName &&
-                `(${karyakartaData.hiFatherName})`}
+            <Descriptions.Item label="Client's Name" >
+              {karyakartaData.createdBy || "N/A"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Father's Name" >
+              {karyakartaData.fatherName || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item
-              label={
-                <span className="flex items-center">
-                  <PhoneOutlined className="mr-2" /> Mobile Number
-                </span>
-              }
+              label={<span className="flex items-center">Mobile Number</span>}
             >
               {karyakartaData.mobileNumber || "N/A"}
             </Descriptions.Item>
@@ -73,26 +70,30 @@ const ViewKaryakartaModal = ({ isOpen, setIsOpen, karyakartaData }) => {
               span={2}
             >
               {karyakartaData.address || "N/A"}
-              {karyakartaData.hiAddress && ` (${karyakartaData.hiAddress})`}
             </Descriptions.Item>
             <Descriptions.Item label="Voter ID">
               {karyakartaData.voterId || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Party">
-              {karyakartaData.party || "N/A"}
+              {karyakartaData.party?.name || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Role">
               {karyakartaData.designation || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="State">
-              {karyakartaData.state || "N/A"}
+              {karyakartaData.state?.name || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="District">
-              {karyakartaData.district || "N/A"}
+              {karyakartaData.district?.name || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Status">
               <Tag color={karyakartaData.status ? "green" : "red"}>
                 {karyakartaData.status ? "Active" : "Inactive"}
+              </Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label="Survey Assign">
+              <Tag color={karyakartaData?.isSurveyAssign === true ? "green" : "red"}>
+                {karyakartaData?.isSurveyAssign === true ? "Assign" : "Not Assign"}
               </Tag>
             </Descriptions.Item>
           </Descriptions>

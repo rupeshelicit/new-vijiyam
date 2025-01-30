@@ -50,7 +50,7 @@ const AddNewDistributor = () => {
 
   useEffect(() => {
     getStateList();
-    getElectionParty();
+    // getElectionParty();
     {
       selectDistrict && getAssemblyist();
     }

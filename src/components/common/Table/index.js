@@ -24,9 +24,9 @@ const TableComponent = ({
             columns={columns}
             dataSource={data}
             pagination={{
-              current: tableParams.current,
-              pageSize: tableParams.pageSize,
-              total: tableParams.total,
+              current: tableParams?.current,
+              pageSize: tableParams?.pageSize,
+              total: tableParams?.total,
             }}
             onChange={handleTableChange}
             loading={loading}

@@ -11,6 +11,7 @@ const FormInput = ({
   value,
   required,
   onchange,
+  disabled,
   defaultValue,
   placeholder = "",
   ...rest
@@ -34,6 +35,7 @@ const FormInput = ({
           defaultValue={defaultValue}
           {...rest}
           onChange={onchange}
+          disabled={disabled}
         />
       </Form.Item>
     </FormInputFeild>

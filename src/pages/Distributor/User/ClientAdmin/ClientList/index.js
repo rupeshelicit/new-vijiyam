@@ -4,7 +4,7 @@ import deleteIcon from "assets/svg/trans-icon.svg";
 
 import TableComponent from "components/common/Table";
 import ButtonComponent from "components/common/FormControl/ButtonComponent";
-import VoterFilter from "components/common/FiltersComponent";
+import VoterFilter from "components/common/Filters/Voter";
 import PlusIcons from "assets/svg/plusIcons";
 import SwitchComponent from "components/common/SwitchComponent";
 import { ClientListSection } from "styles/pages/SuperAdmin/user";

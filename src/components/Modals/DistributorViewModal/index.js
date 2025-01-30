@@ -8,8 +8,9 @@ import {
 } from "@ant-design/icons";
 
 const DistributorViewModal = ({ isOpen, setIsOpen, distributorData }) => {
+  console.log(distributorData,'distributorData')
   const handleClose = () => {
-    setIsOpen(false); // Close the modal
+    setIsOpen(false);
   };
 
   return (
@@ -19,8 +20,8 @@ const DistributorViewModal = ({ isOpen, setIsOpen, distributorData }) => {
         <div className="flex items-center space-x-2">
           <UserOutlined className="text-#54408C-500" />
           <span className="text-xl font-semibold">
-            {distributorData?.name || "Voter Name"}{" "}
-            {distributorData?.hiName && `(${distributorData?.hiName})`}
+            {distributorData?.name || "Distributor Name"}{" "}
+            {distributorData?.hiName && `(${distributorData.hiName})`}
           </span>
         </div>
       }
@@ -37,9 +38,7 @@ const DistributorViewModal = ({ isOpen, setIsOpen, distributorData }) => {
         {distributorData ? (
           <Descriptions bordered column={2}>
             <Descriptions.Item label="Father's Name" span={2}>
-              {distributorData.fatherName || "N/A"}{" "}
-              {distributorData.hiFatherName &&
-                `(${distributorData.hiFatherName})`}
+              {distributorData.fatherName || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item
               label={
@@ -50,14 +49,11 @@ const DistributorViewModal = ({ isOpen, setIsOpen, distributorData }) => {
             >
               {distributorData.mobileNumber || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Alternate Number">
-              {distributorData.alternateNumber || "N/A"}
+            <Descriptions.Item label="Email">
+              {distributorData.email || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item label="Party">
-              <Tag color="#54408C">
-                {distributorData.party || "N/A"}{" "}
-                {distributorData.hiParty && `(${distributorData.hiParty})`}
-              </Tag>
+              <Tag color="#54408C">{distributorData.party?.name || "N/A"}</Tag>
             </Descriptions.Item>
             <Descriptions.Item label="Age">
               {distributorData.age || "N/A"}
@@ -78,53 +74,33 @@ const DistributorViewModal = ({ isOpen, setIsOpen, distributorData }) => {
               }
               span={2}
             >
-              {distributorData.houseNo}, {distributorData.newAddress || "N/A"}{" "}
-              {distributorData.hiNewAddress &&
-                `(${distributorData.hiNewAddress})`}
+              {distributorData.address || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Section" span={2}>
-              {distributorData.section || "N/A"}{" "}
-              {distributorData.hiSection && `(${distributorData.hiSection})`}
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={
-                <span className="flex items-center">
-                  <IdcardOutlined className="mr-2" /> Voter ID
-                </span>
-              }
-            >
+            <Descriptions.Item label="Voter ID">
               {distributorData.voterId || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Caste">
-              {distributorData.caste?.name || "N/A"}{" "}
-              {distributorData.caste?.hiName &&
-                `(${distributorData.caste.hiName})`}
+            <Descriptions.Item label="State">
+              {distributorData.state?.name || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Assembly">
-              {distributorData.assembly || "N/A"}
+            <Descriptions.Item label="District">
+              {distributorData.district?.name || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Booth">
-              {distributorData.booth || "N/A"}
+            <Descriptions.Item label="Designation">
+              {distributorData.designation || "N/A"}
             </Descriptions.Item>
-            <Descriptions.Item label="Supporting Party">
-              <Tag
-                color={
-                  distributorData.supportingParty === "Neutral"
-                    ? "orange"
-                    : "green"
-                }
-              >
-                {distributorData.supportingParty || "N/A"}
+            <Descriptions.Item label="Status">
+              <Tag color={distributorData.status ? "green" : "red"}>
+                {distributorData.status ? "Active" : "Inactive"}
               </Tag>
             </Descriptions.Item>
-            <Descriptions.Item label="Voted">
-              <Tag color={distributorData.isVoted ? "green" : "red"}>
-                {distributorData.isVoted ? "Yes" : "No"}
+            <Descriptions.Item label="Permission">
+              <Tag color={distributorData.isPermission ? "blue" : "orange"}>
+                {distributorData.isPermission ? "Granted" : "Revoked"}
               </Tag>
             </Descriptions.Item>
           </Descriptions>
         ) : (
-          <p>No voter data available</p>
+          <p>No distributor data available</p>
         )}
       </div>
     </Modal>

@@ -16,10 +16,10 @@ export const VoterListSection = styled.div`
     border-radius: 0px;
     box-shadow: none;
   }
-   .ant-table-content table tr th {
+  .ant-table-content table tr th {
     background-color: #eaecf0;
   }
-   .ant-table-wrapper {
+  .ant-table-wrapper {
     padding: 0px;
   }
   button.active svg path {
@@ -78,7 +78,11 @@ export const ExportTables = styled.div`
   .ant-row {
     flex-direction: column !important;
   }
-    .ant-select{
-        box-shadow: none;
-    }
+  .ant-select {
+    box-shadow: none;
+  }
+  .ant-drawer-content.drowr lable {
+    color: #000000b5 !important;
+    font-size: 12px !important;
+  }
 `;

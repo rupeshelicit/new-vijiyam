@@ -44,9 +44,13 @@ const AddNewClient = () => {
   const [selectState, setSelectState] = useState();
   const [selctedDistrict, setSelctedDistrict] = useState();
   const [slipSettings, setSlipSettings] = useState(false);
+  const [viewVoterSettings, setViewVoterSettings] = useState(false);
+  const [isSlipPrintWithImage, setSlipPrintWithImage] = useState(false);
   const [candidateImage, setCandidateImage] = useState(false);
   const [isOnline, setiIsOnline] = useState(false);
   const [status, setStatus] = useState(false);
+  const [isLogin, setLogin] = useState(false);
+
   const [isPermission, setIsPermission] = useState(false);
   const { mutateAsync: AddNewClients } = usePost();
   const { mutateAsync: GetStateList } = useGet();
@@ -56,7 +60,6 @@ const AddNewClient = () => {
   const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
   const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
-  console.log(candidateImage, partySymbole, "dddddddddddddddd");
   useEffect(() => {
     getStateList();
     getElectionParty();
@@ -512,15 +515,28 @@ const AddNewClient = () => {
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
                     <Switch
-                      onChange={(checked) => setSlipSettings(checked)}
+                      onChange={(checked) => setViewVoterSettings(checked)}
                       checkedChildren="On"
                       unCheckedChildren="Off"
                     />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    Slip Settings{" "}
+                    View Voter
                   </label>
                 </div>
+                <div className="flex gap-[50px] items-center mb-[10px]">
+                  <div className="settings ">
+                    <Switch
+                      onChange={(checked) => setSlipPrintWithImage(checked)}
+                      checkedChildren="On"
+                      unCheckedChildren="Off"
+                    />
+                  </div>
+                  <label className="text-[20px] font-semibold items-center">
+                    Slip Printing With Image{" "}
+                  </label>
+                </div>
+
                 <div className="flex gap-[50px] items-center mb-[10px]">
                   <div className="settings ">
                     <Switch
@@ -530,7 +546,7 @@ const AddNewClient = () => {
                     />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    with Candidate Image
+                    Candidate Image
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
@@ -543,7 +559,7 @@ const AddNewClient = () => {
                     />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    isOnline
+                    Online
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
@@ -556,7 +572,7 @@ const AddNewClient = () => {
                     />
                   </div>
                   <label className="text-[20px] font-semibold items-center">
-                    status
+                    Status
                   </label>
                 </div>
                 <div className="flex gap-[50px] items-center mb-[10px]">
@@ -570,6 +586,19 @@ const AddNewClient = () => {
                   </div>
                   <label className="text-[20px] font-semibold items-center">
                     Permission
+                  </label>
+                </div>
+                <div className="flex gap-[50px] items-center mb-[10px]">
+                  <div className="settings ">
+                    <Switch
+                      onChange={(checked) => setLogin(checked)}
+                      checked={isLogin}
+                      checkedChildren="On"
+                      unCheckedChildren="Off"
+                    />
+                  </div>
+                  <label className="text-[20px] font-semibold items-center">
+                    Login Permission
                   </label>
                 </div>
               </Col>

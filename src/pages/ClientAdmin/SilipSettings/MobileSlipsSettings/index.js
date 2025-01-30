@@ -30,7 +30,7 @@ const MobileSlipsSettings = () => {
   };
 
   useEffect(() => {
-    getElectionParty();
+    // getElectionParty();
   }, []);
 
   const getElectionParty = async () => {

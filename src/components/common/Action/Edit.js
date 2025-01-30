@@ -13,7 +13,7 @@ const EditComponent = ({ record, roleType }) => {
   const [isElectionEdit, setIsElectionEdit] = useState(false);
   const [isClientEdit, setIsClientEdit] = useState(false);
   const [isDistributorEdit, setIsDistributorEdit] = useState(false);
-
+  console.log(roleType, "roleTypesssssss");
   const handleEditClick = () => {
     setIsEditing(true);
     handleEditAction();
@@ -46,13 +46,13 @@ const EditComponent = ({ record, roleType }) => {
       <VoterEditModal
         isOpen={isVoterEdit}
         setIsOpen={setIsVoterEdit}
-        voterData={record}
+        voterData={isVoterEdit && record}
       />
 
       <KarykartaEditModal
         isOpen={isKaryakartaEdit}
         setIsOpen={setIsKaryakartaEdit}
-        karykartaData={record}
+        karyakartaData={record}
       />
       <ElectionEditModal
         isOpen={isElectionEdit}

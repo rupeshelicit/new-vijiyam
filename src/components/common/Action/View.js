@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import DistributorViewModal from "components/Modals/DistributorViewModal";
 import { useNavigate } from "react-router-dom";
 import { useMetaDataContext } from "context/metaData";
+import TermsAndConditions from "components/Modals/Terms&ConditionView";
 const ViewComponent = ({ record, roleType }) => {
   const navigate = useNavigate();
 
@@ -16,6 +17,7 @@ const ViewComponent = ({ record, roleType }) => {
   const [isElectionOpen, setIsElectionOpen] = useState(false);
   const [isClientOpen, setIsClientOpen] = useState(false);
   const [isDistributorOpen, setIsDistributorOpen] = useState(false);
+  const [isTermsConditionOpen, setTermsConditionOpen] = useState(false);
   const { setClientProfile } = useMetaDataContext();
   const handleViewClick = () => {
     if (roleType === "voter") {
@@ -28,7 +30,10 @@ const ViewComponent = ({ record, roleType }) => {
       setClientProfile(record);
       navigate("/client-profile");
     } else if (roleType === "distributor") {
-      setIsClientOpen(true);
+      setIsDistributorOpen(true);
+    } else if (roleType === "termsCondition") {
+      setTermsConditionOpen(true);
+      console.log(record,'recordsssssssssss')
     }
   };
   return (
@@ -71,7 +76,14 @@ const ViewComponent = ({ record, roleType }) => {
         <DistributorViewModal
           isOpen={isDistributorOpen}
           setIsOpen={setIsDistributorOpen}
-          clientData={record}
+          distributorData={record}
+        />
+      )}
+      {roleType === "termsCondition" && (
+        <TermsAndConditions
+          isOpen={isTermsConditionOpen}
+          setIsOpen={setTermsConditionOpen}
+          termsAndConditionData={record}
         />
       )}
     </div>

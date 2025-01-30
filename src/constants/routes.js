@@ -38,11 +38,11 @@ import TrainingMaterial from "pages/SuperAdmin/Settings/TrainingMaterial";
 import TermsAndConditionsList from "pages/SuperAdmin/Settings/UploadedTerms&Conditions";
 import TermsAndConditions from "pages/SuperAdmin/Settings/Terms&Conditions";
 import UploadGuidelinesAndTerms from "pages/SuperAdmin/Settings/UploadedTerms&Conditions";
-import AuthorizedUserSuperAdmin from "pages/SuperAdmin/User/AuthorizedUser";
-import AddNewAuthorizedUsers from "pages/SuperAdmin/User/AuthorizedUser/AddNewUser";
 import UploadVidhansabha from "pages/SuperAdmin/Settings/UploadVidhansabha";
 import UploadLoksabha from "pages/SuperAdmin/Settings/UploadLoksabha";
 import PersonalProfile from "pages/ClientAdmin/ClientProfile";
+import UploadGuidelines from "pages/SuperAdmin/Settings/Guidlines";
+import Guidlines from "pages/SuperAdmin/Settings/Guidlines/UploadedGuidlines";
 export const LoginRoute = {
   component: Login,
   path: "/",
@@ -158,16 +158,7 @@ export const AddNewClientRoute = {
   path: "/add-new-client",
   restricted: true,
 };
-export const AuthorizedUserRoute = {
-  component: AuthorizedUserSuperAdmin,
-  path: "/karyaKarta",
-  restricted: true,
-};
-export const AddNewAuthorizedUserRoute = {
-  component: AddNewAuthorizedUsers,
-  path: "/add-new-authorized-users",
-  restricted: true,
-};
+
 export const ClientProfileRoute = {
   component: ClientProfile,
   path: "/client-profile",
@@ -222,9 +213,19 @@ export const TermsandConditionRoute = {
   path: "/terms-conditions",
   restricted: true,
 };
-export const UploadguidelinesRoute = {
+export const UploadTermsConditionRoute = {
   component: UploadGuidelinesAndTerms,
-  path: "/upload-guidlines",
+  path: "/upload-terms-conditions",
+  restricted: true, 
+};
+export const GuidlinsRoute = {
+  component: Guidlines,
+  path: "/guidelines",
+  restricted: true,
+};
+export const UploadGuidlinsRoute = {
+  component: UploadGuidelines,
+  path: "/upload-guidelines",
   restricted: true,
 };
 export const UploadVidhansabhaRoute = {
@@ -252,7 +253,7 @@ export const UploadVoterListDistributorRoute = {
 
 export const UploadKarykartaDistributorRoute = {
   component: UploadKarykartaDistributor,
-  path: "/upload-karykarta-list",
+  path: "/upload-karyakarta-list",
   restricted: true,
 };
 export const UploadElectionListDistributorRoute = {
@@ -321,10 +322,12 @@ const IRouteS = {
     AddBulkElectionsRoute,
     TrainingMaterialRoute,
     TermsandConditionRoute,
-    UploadguidelinesRoute,
-    AuthorizedUserRoute,
     UploadVidhansabhaRoute,
-UploadLoksabhaRoute
+    UploadLoksabhaRoute,
+    UploadTermsConditionRoute,
+    GuidlinsRoute,
+    UploadGuidlinsRoute,
+    
   ],
   // Distributor Admin
   4: [

@@ -317,3 +317,22 @@ p {
   background: #54408cbf;
 
 }
+
+.view-modal .ant-descriptions-item-label {
+  padding: 10px 10px !important;
+}
+
+.add-terms-condition button:hover {
+  color: #55418d !important;
+  border-color: #55418d !important;
+  background: #ffffff !important;
+}
+
+.ant-picker-outlined:hover {
+  border-color: #55418d;
+}
+
+.ant-switch.ant-switch-disabled {
+
+  opacity: 0.75;
+}

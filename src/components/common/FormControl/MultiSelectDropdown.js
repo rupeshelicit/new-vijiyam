@@ -1,21 +1,24 @@
-import React from "react";
-import { SmileOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { Select, Space } from "antd";
 import { MultiSelectDropdownContainer } from "styles/components/common/FormControl";
-
-const smileIcon = <SmileOutlined />;
 
 const MultiSelectDropdown = ({
   selectOption,
   setSelectOption,
   options = [],
   title,
+  name,
 }) => {
-  console.log(options, "Options passed to MultiSelectDropdown");
+  const [open, setOpen] = useState(false); // Track the dropdown open state
 
   const handleChange = (value) => {
     console.log(`Selected: ${value}`);
     setSelectOption(value);
+  };
+
+  const handleDropdownVisibleChange = (open) => {
+    setOpen(open); // Set open state when dropdown visibility changes
   };
 
   return (
@@ -25,18 +28,23 @@ const MultiSelectDropdown = ({
           {title}
         </label>
         <Select
-          suffixIcon={smileIcon}
+          name={name}
+          suffixIcon={open ? <UpOutlined /> : <DownOutlined />} // Toggle the icon based on open state
           value={selectOption}
           mode="multiple"
           style={{ width: "100%" }}
           onChange={handleChange}
-          options={options.map((item) => ({ label: item, value: item }))}
+          onDropdownVisibleChange={handleDropdownVisibleChange} // Track dropdown visibility
+          options={options.map((item) => ({
+            label: item?.name,
+            value: item?.id,
+          }))}
           placeholder="Select options"
           showSearch
-          optionFilterProp="label" 
+          optionFilterProp="label"
           filterOption={(input, option) =>
             option.label.toLowerCase().includes(input.toLowerCase())
-          } 
+          }
         />
       </Space>
     </MultiSelectDropdownContainer>

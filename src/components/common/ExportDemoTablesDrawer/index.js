@@ -17,7 +17,7 @@ const ExportTable = ({ setOpen, open, title, columns, data = [] }) => {
   };
 
   useEffect(() => {
-    const newHeaderOptions = columns.map((item) => item.title);
+    const newHeaderOptions = columns?.map((item) => item.title);
     setHeaderOptions(newHeaderOptions);
   }, [columns]);
 
@@ -28,7 +28,6 @@ const ExportTable = ({ setOpen, open, title, columns, data = [] }) => {
           return selectHeaders.includes(keyName);
         });
       });
-      console.log(newData, "newData");
     }
   }, [selectHeaders, data]);
 

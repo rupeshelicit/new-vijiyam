@@ -33,6 +33,7 @@ import { toast } from "react-toastify";
 import UploadFile from "components/common/FormControl/UploadFile";
 import moment from "moment";
 import { id } from "date-fns/locale";
+import { useMetaDataContext } from "context/metaData";
 
 const { Option } = Select;
 
@@ -47,8 +48,7 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
   const [districtList, setDistrictList] = useState([]);
   const [district, setSelctedDistrict] = useState();
   const [party, setParty] = useState([]);
-  const [password, setPassword] = useState();
-  const [confirmassword, setConfirmPassword] = useState();
+  const { updateEditState } = useMetaDataContext();
   const [selectState, setSelectState] = useState();
   const [slipSettings, setSlipSettings] = useState(
     ClientData?.isOnline || false
@@ -66,7 +66,6 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
   const { mutateAsync: GetDistrictList } = useGet();
   const { mutateAsync: GetPartyList } = useGet();
   const { mutateAsync: updateClientDetails } = usePatch();
-  const loginUsers = JSON.parse(localStorage.getItem("userDetails"));
   const usersRole = JSON.parse(localStorage.getItem("roleList"));
   const clientRole = usersRole.filter((item) => item.name === "clientAdmin");
   const data = {
@@ -80,15 +79,17 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
   const stateId = selectState ? selectState : data?.stateId;
   const districtId = district ? district : data?.districtId;
   useEffect(() => {
-    getStateList();
-    getElectionParty();
-    {
-      districtId && getAssemblyist();
+    if (isOpen) {
+      getStateList();
+      getElectionParty();
+      {
+        districtId && getAssemblyist();
+      }
+      {
+        stateId && getDistrict();
+      }
     }
-    {
-      stateId && getDistrict();
-    }
-  }, [selectState, stateId, districtId]);
+  }, [selectState, stateId, districtId, isOpen]);
 
   const getStateList = async () => {
     await GetStateList({
@@ -180,10 +181,14 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
     })
       .then((res) => {
         if (res) {
-          toast.success("Success! You have successfully created a new client", {
-            position: "top-right",
-          });
+          toast.success(
+            "Success! You have successfully updated client details",
+            {
+              position: "top-right",
+            }
+          );
           form.resetFields();
+          updateEditState("client", true);
         }
       })
       .catch((error) => {
@@ -201,7 +206,6 @@ const ClietEditModal = ({ isOpen, setIsOpen, ClientData }) => {
     setIsOpen(false);
   };
 
-  console.log(data, "datasa");
   return (
     <Modal
       className="edit-modal"

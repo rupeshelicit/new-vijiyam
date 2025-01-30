@@ -26,6 +26,7 @@ export const columns = [
     dataIndex: "name",
     key: "name",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.name.localeCompare(b.name),
   },
   {
@@ -33,6 +34,7 @@ export const columns = [
     dataIndex: "hiName",
     key: "hiName",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.hiName.localeCompare(b.hiName),
   },
   {
@@ -40,6 +42,8 @@ export const columns = [
     dataIndex: "fatherName",
     key: "fatherName",
     align: "center",
+    render: (record) => (record ? record : "NA"),
+
     sorter: (a, b) => a.fatherName.localeCompare(b.fatherName),
   },
   {
@@ -47,6 +51,8 @@ export const columns = [
     dataIndex: "hiFatherName",
     key: "hiFatherName",
     align: "center",
+    render: (record) => (record ? record : "NA"),
+
     sorter: (a, b) => a.hiFatherName.localeCompare(b.hiFatherName),
   },
   {
@@ -54,6 +60,8 @@ export const columns = [
     dataIndex: "gender",
     key: "gender",
     align: "center",
+    render: (record) => (record ? record : "NA"),
+
     sorter: (a, b) => a.gender.localeCompare(b.gender),
   },
   {
@@ -61,6 +69,8 @@ export const columns = [
     dataIndex: "age",
     key: "age",
     align: "center",
+    render: (record) => (record ? record : "NA"),
+
     sorter: (a, b) => a.gender.localeCompare(b.gender),
   },
   {
@@ -68,22 +78,25 @@ export const columns = [
     dataIndex: "caste.name",
     key: "caste",
     align: "center",
+    render: (record) => (record ? record?.caste?.name : "NA"),
+
     sorter: (a, b) => a.caste.name.localeCompare(b.caste.name),
-    render: (text, record) => record?.caste?.name,
   },
   {
     title: "जाति",
     dataIndex: "caste.hiName",
     key: "hiCasteName",
     align: "center",
+    render: (record) => (record ? record?.caste?.hiName : "NA"),
+
     sorter: (a, b) => a.caste.hiName.localeCompare(b.caste.hiName),
-    render: (text, record) => record?.caste?.hiName,
   },
   {
     title: "Religion Name",
     dataIndex: "religionId",
     key: "religion",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.religionId.localeCompare(b.religionId),
   },
   {
@@ -91,6 +104,7 @@ export const columns = [
     dataIndex: "hiReligionName",
     key: "hiReligionName",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.hiReligionName.localeCompare(b.hiReligionName),
   },
   {
@@ -98,6 +112,7 @@ export const columns = [
     dataIndex: "section",
     key: "section",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.section.localeCompare(b.section),
   },
   {
@@ -105,6 +120,7 @@ export const columns = [
     dataIndex: "hiSection",
     key: "hiSection",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.hiSection.localeCompare(b.hiSection),
   },
   {
@@ -112,6 +128,7 @@ export const columns = [
     dataIndex: "boothNo",
     key: "boothNo",
     align: "boothNo",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.booth.localeCompare(b.booth),
   },
   {
@@ -119,6 +136,7 @@ export const columns = [
     dataIndex: "booth",
     key: "booth",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.booth.localeCompare(b.booth),
   },
   {
@@ -126,6 +144,7 @@ export const columns = [
     dataIndex: "hiBooth",
     key: "hiBooth",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.hiBooth.localeCompare(b.hiBooth),
   },
   {
@@ -133,6 +152,7 @@ export const columns = [
     dataIndex: "houseNo",
     key: "houseNo",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => parseInt(a.houseNo) - parseInt(b.houseNo),
   },
   {
@@ -140,6 +160,7 @@ export const columns = [
     dataIndex: "city",
     key: "city",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.city.localeCompare(b.city),
   },
   {
@@ -147,6 +168,7 @@ export const columns = [
     dataIndex: "vidhansabha",
     key: "vidhansabha",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.vidhansabha.localeCompare(b.vidhansabha),
   },
   {
@@ -154,6 +176,7 @@ export const columns = [
     dataIndex: "loksabha",
     key: "loksabha",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.loksabha.localeCompare(b.loksabha),
   },
   {
@@ -161,6 +184,7 @@ export const columns = [
     dataIndex: "mobileNumber",
     key: "mobileNumber",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
   },
   {
@@ -168,6 +192,7 @@ export const columns = [
     dataIndex: "alternateNumber",
     key: "alternateNumber",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.alternateNumber.localeCompare(b.alternateNumber),
   },
   {
@@ -175,6 +200,7 @@ export const columns = [
     dataIndex: "district",
     key: "district",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.district.localeCompare(b.district),
   },
   {
@@ -182,6 +208,7 @@ export const columns = [
     dataIndex: "newAddress",
     key: "newAddress",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.newAddress.localeCompare(b.newAddress),
   },
   {
@@ -189,6 +216,7 @@ export const columns = [
     dataIndex: "hiNewAddress",
     key: "hiNewAddress",
     align: "center",
+    render: (record) => (record ? record : "NA"),
     sorter: (a, b) => a.hiNewAddress.localeCompare(b.hiNewAddress),
   },
   {
@@ -215,7 +243,7 @@ export const columns = [
     render: (text, record) => (
       <div className="flex gap-[10px]">
         <EditComponent record={record} roleType={"voter"} />
-        <DeleteComponet record={record} />
+        <DeleteComponet record={record}  roleType={"voter"}/>
         <ViewComponent record={record} roleType={"voter"} />
       </div>
     ),

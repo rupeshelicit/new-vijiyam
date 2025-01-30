@@ -70,14 +70,14 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
   const handleUploadExcel = async () => {
     if (uploadFile) {
       console.log(uploadFile);
-      const upladeFileName = uploadFile; // Seems unused, consider removing if unnecessary
+      const upladeFileName = uploadFile;
       const formData = new FormData();
       formData.append("excelFile", uploadFile);
       formData.append("createdBy", loginUsers.id);
-  
+
       try {
         setLoading(true);
-  
+
         const response = await UploadVotersExcel({
           url: UPLOAD_VOTER_EXCEL,
           type: "details",
@@ -85,18 +85,15 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
           token: true,
           file: true,
         });
-  
+
         if (response) {
           toast.success("Files uploaded successfully!", {
             position: "top-right",
           });
           setIsModalOpen(false);
         }
-      } catch (err) { 
-        toast.error(`Error! ${err?.response?.data?.message || "Something went wrong"}`, {
-          position: "top-right",
-        });
-        console.error(err); 
+      } catch (err) {
+        console.error("Error uploading file:", err);
       } finally {
         setLoading(false);
       }
@@ -104,7 +101,6 @@ const AddNewVoters = ({ setIsModalOpen, isModalOpen }) => {
       console.warn("No file selected for upload.");
     }
   };
-  
   return (
     <StyledModal
       title="Upload Voter List"
